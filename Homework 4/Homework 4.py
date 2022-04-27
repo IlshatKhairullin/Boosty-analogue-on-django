@@ -5,9 +5,8 @@ import os
 def write_data(url):
     base_url = url
 
-    result = json.loads(
-        requests.get(url=base_url, params={'page': 2}).text
-    )
+    result = requests.get(url=base_url, params={'page': 2}).json()
+    
     print(result)
     path_to_dir = r'C:\Users\Ильшат\Python Infa + private\venv\Homework 4\users_data'  # путь поменять везде
 
