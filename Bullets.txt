@@ -1,4 +1,0 @@
-"Bullet 1 : 6.65, 12, 80"
-"Bullet 2 : 5.56, 10, 56"
-"Bullet 3 : 40, 3, 120"
-The number of bullets in the magazine - 3
