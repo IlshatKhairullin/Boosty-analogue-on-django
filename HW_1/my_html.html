@@ -1,13 +1,28 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+    <script>
+        function ChangeColor(Element) {
+            if (Element.style.color === 'black') Element.style.color = 'green';
+            else Element.style.color = 'black';
+            return false;
+        }
+    </script>
+    <script>
+        function ChangeColorOut(Element) {
+            if (Element.style.color === 'green') Element.style.color = 'black';
+            else Element.style.color = 'green';
+            return false;
+        }
+    </script>
     <link rel="stylesheet" href="my_css.css">
     <title>Charity for humanity</title>
+    <meta charset="utf-8">
 </head>
 <div class="wrapper">
     <header class="page-header">
         <nav>
-            <img src="logo1.png" width="200">
+            <a href=""><img src="logo1.png" width="180" alt="Our logo"></a>
             <ul>
                 <li>
                     <a href="">Team</a>
@@ -23,13 +38,15 @@
                 </li>
             </ul>
             <ul>
-                <button class="donate">Donate</button>
-                <button class="sign_in">Sign in</button>
+                <button class="donate" style="color: black;" onclick="return ChangeColor(this);">Donate</button>
+                <button class="sign_in" style="color: black;" onmouseenter="return ChangeColor(this);"
+                        onmouseout="return ChangeColorOut(this)">Sign in
+                </button>
                 <button class="register">Register</button>
             </ul>
         </nav>
     </header>
-    <main class="page-main">
+    <main class="page-main" oncopy="alert('Копирование запрещено!');return false">
         <p class="main_page_text">Our planet Earth is only a tiny part of the universe, and it is so far the only place
             where human beings can live.
             <br>
@@ -60,14 +77,14 @@
     <footer class="page-footer">
         <small>© Good Footer</small>
         <div>
-            <a href="https://www.youtube.com/watch?v=TtMzTGfs-fc&ab_channel=Cumcrete">
-                <img src="F.png" width="40" height="20">
+            <a href="https://ru-ru.facebook.com/">
+                <img src="F.png" width="40" height="20" alt="Facebook">
             </a>
-            <a href="https://www.youtube.com/watch?v=TtMzTGfs-fc&ab_channel=Cumcrete">
-                <img src="F.png" width="40" height="20">
+            <a href="https://vk.com/id313094917">
+                <img src="VK.png" width="40" height="21" alt="VK">
             </a>
-            <a href="https://www.youtube.com/watch?v=TtMzTGfs-fc&ab_channel=Cumcrete">
-                <img src="F.png" width="40" height="20">
+            <a href="https://ok.ru/">
+                <img src="Odn.png" width="40" height="22" alt="Odnoklassniki">
             </a>
         </div>
     </footer>

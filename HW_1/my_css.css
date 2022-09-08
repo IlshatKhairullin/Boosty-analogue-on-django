@@ -29,9 +29,6 @@ a {
 
 body {
     font: 16px/1.5 "Dosis", sans-serif;
-    /*IE FIX*/
-    /*display: flex;
-    flex-direction: column;*/
 }
 
 /* CONTAINER
