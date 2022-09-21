@@ -1,4 +1,4 @@
-#Django_project_Informatika
+# Django_project_Informatika
 
 - python3 -m venv .venv - создание виртуального окружения
 
