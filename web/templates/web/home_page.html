@@ -1,0 +1,96 @@
+{% load static %}
+
+
+<html lang="ru">
+<head>
+    <script>
+        function ChangeColor(Element) {
+            if (Element.style.color === 'black') Element.style.color = 'green';
+            else Element.style.color = 'black';
+            return false;
+        }
+    </script>
+    <script>
+        function ChangeColorOut(Element) {
+            if (Element.style.color === 'green') Element.style.color = 'black';
+            else Element.style.color = 'green';
+            return false;
+        }
+    </script>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}" type="text/css">
+    <title>Charity for humanity</title>
+    <meta charset="utf-8">
+</head>
+<div class="wrapper">
+    <header class="page-header">
+        <nav>
+            <a href=""><img src="{% static 'images/logo1.png' %}" width="180" alt="Our logo"></a>
+            <ul>
+                <li>
+                    <a href="">Team</a>
+                </li>
+                <li>
+                    <a href="">Services</a>
+                </li>
+                <li>
+                    <a href="">Help</a>
+                </li>
+                <li>
+                    <a href="">About us</a>
+                </li>
+            </ul>
+            <ul>
+                <button class="donate" style="color: black;" onclick="return ChangeColor(this);">Donate</button>
+                <button class="sign_in" style="color: black;" onmouseenter="return ChangeColor(this);"
+                        onmouseout="return ChangeColorOut(this)">Sign in
+                </button>
+                <button class="register">Register</button>
+            </ul>
+        </nav>
+    </header>
+    <main class="page-main" oncopy="alert('Копирование запрещено!');return false">
+        <p class="main_page_text">Our planet Earth is only a tiny part of the universe, and it is so far the only place
+            where human beings can live.
+            <br>
+            <br>
+            We always polluted our surroundings. But until now pollution was not such a huge problem. People lived in
+            the countryside and could not produce such amount of pollution that would lead to a dangerous situation on a
+            global scale.
+            <br>
+            <br>
+            With the development of industrial cities, which create huge amounts of pollutants, the problem has become
+            real. Nowadays our planet is in serious danger. Global warming, acid rains, air and water pollution,
+            overpopulation are the problems that threaten human lives on the Earth.</p>
+        <div class="main_img">
+            <div class="card bg-dark text-white">
+                <img src="{% static 'images/logo.jpg' %}" class="card-img" alt="Enot Picture">
+                <div class="card-img-overlay">
+                    <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                </div>
+            </div>
+            <div class="card bg-dark text-white">
+                <img src="{% static 'images/Firefighter.jpg' %}" class="card-img" alt="Enot Picture">
+                <div class="card-img-overlay">
+                    <p class="card-text">Nullam interdum, nisl quis tincidunt sollicitudin, massa.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="page-footer">
+        <small>© Good Footer</small>
+        <div>
+            <a href="https://ru-ru.facebook.com/">
+                <img src="{% static 'images/F.png'%}" width="40" height="20" alt="Facebook">
+            </a>
+            <a href="https://vk.com/id313094917">
+                <img src="{% static 'images/VK.png'%}" width="40" height="21" alt="VK">
+            </a>
+            <a href="https://ok.ru/">
+                <img src="{% static 'images/Odn.png'%}" width="40" height="22" alt="Odnoklassniki">
+            </a>
+        </div>
+    </footer>
+</div>
+<body>
+</body>
+</html>
