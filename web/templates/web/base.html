@@ -1,0 +1,79 @@
+{% load static %}
+
+
+<html lang="ru">
+
+<head>
+    <script>
+        function ChangeColor(Element) {
+            if (Element.style.color === 'black') Element.style.color = 'green';
+            else Element.style.color = 'black';
+            return false;
+        }
+    </script>
+    <script>
+        function ChangeColorOut(Element) {
+            if (Element.style.color === 'green') Element.style.color = 'black';
+            else Element.style.color = 'green';
+            return false;
+        }
+    </script>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}" type="text/css">
+    <title>{% block title %}{% endblock %}</title>
+    <meta charset="utf-8">
+</head>
+
+<div class="wrapper">
+
+    <header class="page-header">
+        <nav>
+            <a href="{% url 'main_page' %}"><img src="{% static 'images/logo1.png' %}" width="180" alt="Our logo"></a>
+            <ul>
+                <li>
+                    <a href="">Team</a>
+                </li>
+                <li>
+                    <a href="">Services</a>
+                </li>
+                <li>
+                    <a href="">Help</a>
+                </li>
+                <li>
+                    <a href="">About us</a>
+                </li>
+            </ul>
+            <ul>
+                <button class="donate" style="color: black;" onclick="return ChangeColor(this);">Donate</button>
+                <button class="sign_in" style="color: black;" onmouseenter="return ChangeColor(this);"
+                        onmouseout="return ChangeColorOut(this)">Sign in
+                </button>
+                <button class="register">Register</button>
+            </ul>
+        </nav>
+    </header>
+
+    <body>
+    <div id="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+    </body>
+
+    <footer class="page-footer">
+        <small>© Good Footer</small>
+        <div>
+            <a href="https://ru-ru.facebook.com/">
+                <img src="{% static 'images/F.png' %}" width="40" height="20" alt="Facebook">
+            </a>
+            <a href="https://vk.com/id313094917">
+                <img src="{% static 'images/VK.png' %}" width="40" height="21" alt="VK">
+            </a>
+            <a href="https://ok.ru/">
+                <img src="{% static 'images/Odn.png' %}" width="40" height="22" alt="Odnoklassniki">
+            </a>
+        </div>
+    </footer>
+
+</div>
+
+</html>
