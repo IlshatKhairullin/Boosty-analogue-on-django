@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
+from django.urls import reverse
 
 User = get_user_model()
 
@@ -15,14 +16,41 @@ class BaseModel(models.Model):
 
 
 class Post(BaseModel):
-    title = models.CharField(max_length=500)
-    text = models.TextField()
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    STATUS_CHOICES = (
+        ('draft', 'Draft'),
+        ('published', 'Published'),
+    )
+    title = models.CharField(max_length=250)
+    slug = models.SlugField(max_length=250, unique_for_date='publish')
+    author = models.ForeignKey(User, related_name='blog_posts', on_delete=models.CASCADE)
+    body = models.TextField()
+    publish = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
+
+    def get_absolute_url(self):
+        return reverse('post_detail',
+                       args=[self.publish.year,
+                             self.publish.strftime('%m'),
+                             self.publish.strftime('%d'),
+                             self.slug])
+
+    class Meta:
+        ordering = ('-publish',)
+
+    def __str__(self):
+        return self.title
 
 
 class AuthorInfo(models.Model):
     description = models.CharField(max_length=500)
     goals = models.CharField(max_length=500)
+    img = models.ImageField(null=True)
+
+
+# class Subscriber(models.Model):
+#     user = models.ForeignKey(User, related_name='subscriber',
+#                              on_delete=models.CASCADE)
+#     object_id = models.PositiveIntegerField()
 
 
 class Like(models.Model):
