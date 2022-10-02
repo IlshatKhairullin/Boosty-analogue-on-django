@@ -4,7 +4,7 @@
 
 - source ./.venv/bin/activate - вход в виртуальное окружение
 
-- docker-compose up -d - поднять PostgreSQL с помощью Docker или с помощью pgAdmin
+- docker-compose up -d - поднять PostgreSQL с помощью Docker или pgAdmin
 
 - pip install -r requirements.txt - установка зависимостей
 
