@@ -94,6 +94,24 @@ body {
     margin-left: 10px;
 }
 
+.page-header .logout {
+    font-family: inherit;
+    font-size: 1.2rem;
+    padding: 5px 18px;
+    border: 1px solid;
+    border-radius: 15px;
+    margin-left: 10px;
+}
+
+.page-header .profile {
+    font-family: inherit;
+    font-size: 1.2rem;
+    padding: 5px 18px;
+    border: 1px solid;
+    border-radius: 15px;
+    margin-left: 10px;
+}
+
 /* MAIN
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 .page-main {
