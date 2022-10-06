@@ -1,10 +1,12 @@
-from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AbstractUser
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.urls import reverse
 
-User = get_user_model()
+
+class User(AbstractUser):
+    pass
 
 
 class BaseModel(models.Model):
@@ -28,11 +30,8 @@ class Post(BaseModel):
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
 
     def get_absolute_url(self):
-        return reverse('post_detail',
-                       args=[self.publish.year,
-                             self.publish.strftime('%m'),
-                             self.publish.strftime('%d'),
-                             self.slug])
+        return reverse('post_detail', args=[self.slug,
+                                            self.id, ])
 
     class Meta:
         ordering = ('-publish',)
