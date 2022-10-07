@@ -1,0 +1,26 @@
+{% extends 'web/base.html' %}
+{% load static %}
+
+{% block content %}
+<section>
+    <blockquote>
+        <font face="Cinzel" color="#ffffff" size="6">Registration</font>
+    </blockquote>
+    <br/>
+    <br/>
+    <div>
+        <nav>
+            <form action="{% url 'register' %}" method="post" style="color: #1b1b1b">
+
+                {% for f in form %}
+                <p><label class="form-label" for="{{ f.id_for_label }}">{{f.label}}: </label>{{ f }}</p>
+                <div class="form-error">{{ f.errors }}</div>
+                {% endfor %}
+
+                {% csrf_token %}
+                <button type="submit" class="input-button-register" >Register</button>
+            </form>
+        </nav>
+    </div>
+</section>
+{% endblock %}

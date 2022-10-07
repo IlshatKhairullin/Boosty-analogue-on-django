@@ -1,40 +1,46 @@
-from django.shortcuts import render, get_object_or_404
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.views.generic import ListView
+from django.views import View
+from django.views.generic import ListView, DetailView
+from .forms import UserCreationForm, RegisterUserForm
+from django.contrib.auth import authenticate, login
+from django.shortcuts import render, redirect
 from .models import *
 
-# class PostListView(ListView):
-#     queryset = Post.objects.all()
-#     context_object_name = 'posts'
-#     paginate_by = 4
-#     template_name = 'web/main_page.html'
 
-def post_list(request):
-    posts = Post.objects.all()
-    paginator = Paginator(posts, 4)
-    page = request.GET.get('page')
-    try:
-        posts = paginator.page(page)
-    except PageNotAnInteger:
-        # If page is not an integer deliver the first page
-        posts = paginator.page(1)
-    except EmptyPage:
-        # If page is out of range deliver last page of results
-        posts = paginator.page(paginator.num_pages)
-    return render(request,
-                  'web/main_page.html',
-                  {'page': page,
-                   'posts': posts})
+class Register(View):
+    template_name = 'registration/register.html'
 
+    def get(self, request):
+        context = {
+            'form': RegisterUserForm()
+        }
+        return render(request, self.template_name, context)
 
-def author(request):
-    pass
+    def post(self, request):
+        form = UserCreationForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=password)
+            login(request, user)
+            return redirect('/home')
+        context = {
+            'form': form
+        }
+        return render(request, self.template_name, context)
 
 
-def post_detail(request, year, month, day, post):
-    post = get_object_or_404(Post, slug=post,
-                             status='published',
-                             publish__year=year,
-                             publish__month=month,
-                             publish__day=day)
-    return render(request, 'web/detail.html', {'post': post})
+class PostListView(ListView):
+    queryset = Post.objects.all()
+    template_name = 'web/main_page.html'
+    context_object_name = 'posts'
+    paginate_by = 4
+
+
+class DetailPostView(DetailView):
+    model = Post
+    template_name = 'web/detail.html'
+    context_object_name = 'post'
+    slug_url_kwarg = 'post'
+
