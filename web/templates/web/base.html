@@ -46,7 +46,7 @@
                 <button class="donate" style="color: black;" onclick="return ChangeColor(this);">Donate</button>
 
                 {% if user.is_authenticated %}
-                    <button onclick="location.href= '/'" class="profile" style="color: black;"
+                    <button onclick="location.href= '{% url 'profile' %}'" class="profile" style="color: black;"
                             onmouseenter="return ChangeColor(this);"
                             onmouseout="return ChangeColorOut(this)">Profile</button>
 

@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect
 from .models import *
 
 
+
 class Register(View):
     template_name = 'registration/register.html'
 
@@ -44,3 +45,14 @@ class DetailPostView(DetailView):
     context_object_name = 'post'
     slug_field = 'id'
     slug_url_kwarg = 'id'
+
+
+class ProfileView(ListView):
+    template_name = 'web/profile.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Post.objects.none()
+        queryset = Post.objects.filter(author=self.request.user).order_by('publish')
+        return queryset
