@@ -5,16 +5,16 @@ from django.db import models
 from django.urls import reverse
 
 
-class User(AbstractUser):
-    pass
-
-
 class BaseModel(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
 
     class Meta:
         abstract = True
+
+
+class User(AbstractUser):
+    email = models.EmailField('Email', unique=True)
 
 
 class Post(BaseModel):
