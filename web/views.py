@@ -42,5 +42,5 @@ class DetailPostView(DetailView):
     model = Post
     template_name = 'web/detail.html'
     context_object_name = 'post'
-    slug_url_kwarg = 'post'
-
+    slug_field = 'id'
+    slug_url_kwarg = 'id'

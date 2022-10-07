@@ -30,8 +30,7 @@ class Post(BaseModel):
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
 
     def get_absolute_url(self):
-        return reverse('post_detail', args=[self.slug,
-                                            self.id, ])
+        return reverse('post_detail', args=[self.title, self.id])
 
     class Meta:
         ordering = ('-publish',)
