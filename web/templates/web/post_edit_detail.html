@@ -1,0 +1,14 @@
+{% extends "web/base.html" %}
+
+{% block title %}Edit {{ post.title }}{% endblock %}
+{% block content %}
+    <a href="{% url 'profile' %}">Назад</a>
+    <a href="{% url 'post_edit' post.title post.id %}">Редактировать</a>
+    <a href="{% url 'post_delete' post.title post.id %}">Удалить</a>
+    <h1>{{ post.title }}</h1>
+    <p class="date">
+        Published {{ post.publish }} by {{ post.author }}
+    </p>
+    <br>
+{{ post.body|linebreaks }}
+{% endblock %}

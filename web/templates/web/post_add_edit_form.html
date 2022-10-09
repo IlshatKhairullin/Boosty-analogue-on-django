@@ -1,0 +1,24 @@
+{% extends "web/base.html" %}
+
+{% block content %}
+    <a href="{{ post.get_edit_absolute_url }}">Назад</a>
+
+    {% if id %}
+        <h1>Редактирование поста</h1>
+    {% else %}
+        <h1>Добавление поста</h1>
+    {% endif %}
+
+    <form action="" method="post">
+
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        {% if id %}
+            <button>Редактировать пост</button>
+        {% else %}
+            <button>Добавить пост</button>
+        {% endif %}
+
+    </form>
+{% endblock %}

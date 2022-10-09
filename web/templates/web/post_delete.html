@@ -1,0 +1,13 @@
+{% extends "web/base.html" %}
+
+{% block content %}
+
+    <a href="{{ post.get_edit_absolute_url }}">Назад</a>
+    <h1>Вы действительно хотите удалить пост?</h1>
+    <form action="" method="post">
+        {{ form.as_p }}
+        {% csrf_token %}
+        <button>Удалить пост</button>
+    </form>
+
+{% endblock %}

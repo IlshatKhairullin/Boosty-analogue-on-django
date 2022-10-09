@@ -1,6 +1,6 @@
 from django.views import View
-from django.views.generic import ListView, DetailView
-from .forms import UserCreationForm, RegisterUserForm
+from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView
+from .forms import UserCreationForm, RegisterUserForm, PostForm
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from .models import *
@@ -31,7 +31,7 @@ class Register(View):
         return render(request, self.template_name, context)
 
 
-class PostListView(ListView):
+class PostListView(ListView):  # сделать ф-ю get_queryset с filter по published постам
     queryset = Post.objects.all()
     template_name = 'web/main_page.html'
     context_object_name = 'posts'
@@ -42,5 +42,93 @@ class DetailPostView(DetailView):
     model = Post
     template_name = 'web/detail.html'
     context_object_name = 'post'
-    slug_url_kwarg = 'post'
+    slug_field = 'id'
+    slug_url_kwarg = 'id'
 
+
+class DetailPostEditView(DetailView):
+    model = Post
+    template_name = 'web/post_edit_detail.html'
+    context_object_name = 'post'
+    slug_field = 'id'
+    slug_url_kwarg = 'id'
+
+
+def post_add_view(request):  # переписать через класс -> не работает кнопка назад в добавлении поста;
+    # добавить выбор статуса и если статус draft - не выводить всем пользователям
+    user = request.user
+    form = PostForm(request.POST)
+    post, title, body = None, None, None
+    slug_field = 'id'
+    slug_url_kwarg = 'id'
+
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        body = request.POST.get('body')
+        if form.is_valid():
+            if post is None:
+                post = Post()
+            post.title = title
+            post.body = body
+            post.author = user
+            post.save()
+            return redirect('profile')
+    return render(request, 'web/post_add_edit_form.html', {
+        'form': form,
+    })
+
+
+class PostUpdateView(UpdateView):
+    template_name = 'web/post_add_edit_form.html'
+    form_class = PostForm
+    slug_field = 'id'
+    slug_url_kwarg = 'id'
+
+    def get_context_data(self, **kwargs):
+        return {
+            **super(PostUpdateView, self).get_context_data(**kwargs),
+            'id': self.kwargs[self.slug_url_kwarg],
+            'title': self.object.title
+        }
+
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Post.objects.none()
+        return Post.objects.filter(author=self.request.user)
+
+    def get_initial(self):
+        return {'user': self.request.user}
+
+    def get_success_url(self):
+        return reverse('post_edit_detail', args=(self.object.title, self.object.id))
+
+
+class PostDeleteView(DeleteView):
+    template_name = 'web/post_delete.html'
+    slug_field = 'id'
+    slug_url_kwarg = 'id'
+
+    def get_context_data(self, **kwargs):
+        return {
+            **super(PostDeleteView, self).get_context_data(**kwargs),
+            'id': self.kwargs[self.slug_url_kwarg],
+            'title': self.object.title
+        }
+
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Post.objects.none()
+        return Post.objects.filter(author=self.request.user)
+
+    def get_success_url(self):
+        return reverse('profile')
+
+
+class ProfileView(ListView):
+    template_name = 'web/profile.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Post.objects.none()
+        return Post.objects.filter(author=self.request.user).order_by('publish')
