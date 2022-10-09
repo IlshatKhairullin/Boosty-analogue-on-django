@@ -2,6 +2,7 @@
 
 {% block title %}{{ post.title }}{% endblock %}
 {% block content %}
+    <a href="{% url 'post_list' %}">Назад</a>
     <h1>{{ post.title }}</h1>
     <p class="date">
         Published {{ post.publish }} by {{ post.author }}
