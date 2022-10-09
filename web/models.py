@@ -17,7 +17,8 @@ class User(AbstractUser):
     email = models.EmailField('Email', unique=True)
 
 
-class Post(BaseModel):
+class Post(BaseModel):  # добавить атрибуты, чтобы были похожи на объявления (цену, еще что то)
+    # + добавить категории к постам
     STATUS_CHOICES = (
         ('draft', 'Draft'),
         ('published', 'Published'),
@@ -31,6 +32,9 @@ class Post(BaseModel):
 
     def get_absolute_url(self):
         return reverse('post_detail', args=[self.title, self.id])
+
+    def get_edit_absolute_url(self):
+        return reverse('post_edit_detail', args=[self.title, self.id])
 
     class Meta:
         ordering = ('-publish',)
