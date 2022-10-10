@@ -1,7 +1,7 @@
 {% extends "web/base.html" %}
 
 {% block content %}
-    <a href="{{ post.get_edit_absolute_url }}">Назад</a>
+    <a href="{% url 'profile' %}">Назад</a>
 
     {% if id %}
         <h1>Редактирование поста</h1>
