@@ -1,4 +1,4 @@
-# Django_project_Informatika
+# Boosty/patreon analogue
 
 - python3 -m venv .venv - создание виртуального окружения
 
