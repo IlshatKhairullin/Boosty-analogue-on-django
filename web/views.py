@@ -54,28 +54,15 @@ class DetailPostEditView(DetailView):
     slug_url_kwarg = 'id'
 
 
-def post_add_view(request):  # переписать через класс -> не работает кнопка назад в добавлении поста;
-    # добавить выбор статуса и если статус draft - не выводить всем пользователям
-    user = request.user
-    form = PostForm(request.POST)
-    post, title, body = None, None, None
-    slug_field = 'id'
-    slug_url_kwarg = 'id'
+class PostCreateFormView(CreateView):
+    template_name = 'web/post_add_edit_form.html'
+    form_class = PostForm
 
-    if request.method == 'POST':
-        title = request.POST.get('title')
-        body = request.POST.get('body')
-        if form.is_valid():
-            if post is None:
-                post = Post()
-            post.title = title
-            post.body = body
-            post.author = user
-            post.save()
-            return redirect('profile')
-    return render(request, 'web/post_add_edit_form.html', {
-        'form': form,
-    })
+    def get_initial(self):
+        return {'user': self.request.user}
+
+    def get_success_url(self):
+        return reverse('profile')
 
 
 class PostUpdateView(UpdateView):
