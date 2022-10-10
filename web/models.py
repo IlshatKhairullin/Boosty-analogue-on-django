@@ -4,6 +4,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.urls import reverse
 
+from web.enums import Status
+
 
 class BaseModel(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
@@ -19,16 +21,12 @@ class User(AbstractUser):
 
 class Post(BaseModel):  # добавить атрибуты, чтобы были похожи на объявления (цену, еще что то)
     # + добавить категории к постам
-    STATUS_CHOICES = (
-        ('draft', 'Draft'),
-        ('published', 'Published'),
-    )
     title = models.CharField(max_length=250)
     slug = models.SlugField(max_length=250, unique_for_date='publish')
     author = models.ForeignKey(User, related_name='blog_posts', on_delete=models.CASCADE)
     body = models.TextField()
     publish = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
+    status = models.CharField(max_length=10, choices=Status.choices, default=Status.draft)
 
     def get_absolute_url(self):
         return reverse('post_detail', args=[self.title, self.id])

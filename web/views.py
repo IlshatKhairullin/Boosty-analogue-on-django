@@ -31,8 +31,8 @@ class Register(View):
         return render(request, self.template_name, context)
 
 
-class PostListView(ListView):  # сделать ф-ю get_queryset с filter по published постам
-    queryset = Post.objects.all()
+class PostListView(ListView):
+    queryset = Post.objects.filter(status=Status.published)
     template_name = 'web/main_page.html'
     context_object_name = 'posts'
     paginate_by = 4

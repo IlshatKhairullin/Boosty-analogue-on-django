@@ -9,6 +9,12 @@
     <p class="date">
         Published {{ post.publish }} by {{ post.author }}
     </p>
+    {% if post.status == 'Published' %}
+        Status: Опубликовано
+    {% else %}
+        Status: Черновик
+    {% endif %}
     <br>
-{{ post.body|linebreaks }}
+    <br>
+    {{ post.body|linebreaks }}
 {% endblock %}
