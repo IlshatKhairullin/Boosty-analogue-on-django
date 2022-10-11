@@ -29,10 +29,10 @@ class Post(BaseModel):  # добавить атрибуты, чтобы были
     status = models.CharField(max_length=10, choices=Status.choices, default=Status.draft)
 
     def get_absolute_url(self):
-        return reverse('post_detail', args=[self.title, self.id])
+        return reverse('post_detail', args=[self.slug, self.id])
 
     def get_edit_absolute_url(self):
-        return reverse('post_edit_detail', args=[self.title, self.id])
+        return reverse('post_edit_detail', args=[self.slug, self.id])
 
     class Meta:
         ordering = ('-publish',)
