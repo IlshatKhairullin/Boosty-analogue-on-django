@@ -1,0 +1,9 @@
+{% if is_active %} <u>
+{% else %} <a href="?{{ url_part }}">
+{% endif %}
+
+    {{ title }}
+
+{% if is_active %} </u>
+{% else %} </a>
+{% endif %}

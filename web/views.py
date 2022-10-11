@@ -118,4 +118,29 @@ class ProfileView(ListView):
     def get_queryset(self):
         if not self.request.user.is_authenticated:
             return Post.objects.none()
-        return Post.objects.filter(author=self.request.user).order_by('publish')
+        queryset = Post.objects.filter(author=self.request.user).order_by('publish')
+        return self.filter_queryset(queryset)
+
+    def filter_queryset(self, posts):
+
+        self.published_posts = 'published_posts' in self.request.GET
+        self.draft_posts = 'draft_posts' in self.request.GET
+
+        if self.published_posts:
+            posts = posts.filter(status=Status.published)
+
+        if self.draft_posts:
+            posts = posts.filter(status=Status.draft)
+
+        return posts
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+
+        if not self.request.user.is_authenticated:
+            return {}
+        return {
+            **super(ProfileView, self).get_context_data(),
+            'query_params': self.request.GET,
+            'published_posts': self.published_posts,
+            'draft_posts': self.draft_posts
+        }
