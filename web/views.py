@@ -36,6 +36,8 @@ class PostListView(ListView):
     template_name = 'web/main_page.html'
     context_object_name = 'posts'
     paginate_by = 4
+    slug_field = 'id'
+    slug_url_kwarg = 'id'
 
 
 class DetailPostView(DetailView):
@@ -52,6 +54,12 @@ class DetailPostEditView(DetailView):
     context_object_name = 'post'
     slug_field = 'id'
     slug_url_kwarg = 'id'
+
+    def get_context_data(self, **kwargs):
+        return {
+            **super(DetailPostEditView, self).get_context_data(**kwargs),
+            'id': self.kwargs[self.slug_url_kwarg]
+        }
 
 
 class PostCreateFormView(CreateView):
@@ -74,8 +82,7 @@ class PostUpdateView(UpdateView):
     def get_context_data(self, **kwargs):
         return {
             **super(PostUpdateView, self).get_context_data(**kwargs),
-            'id': self.kwargs[self.slug_url_kwarg],
-            'title': self.object.title
+            'id': self.kwargs[self.slug_url_kwarg]
         }
 
     def get_queryset(self):
@@ -98,8 +105,7 @@ class PostDeleteView(DeleteView):
     def get_context_data(self, **kwargs):
         return {
             **super(PostDeleteView, self).get_context_data(**kwargs),
-            'id': self.kwargs[self.slug_url_kwarg],
-            'title': self.object.title
+            'id': self.kwargs[self.slug_url_kwarg]
         }
 
     def get_queryset(self):

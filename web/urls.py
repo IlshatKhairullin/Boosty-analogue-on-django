@@ -10,6 +10,6 @@ urlpatterns = [
     path('profile/', views.ProfileView.as_view(), name='profile'),
     path('profile/<slug:slug>/<int:id>', views.DetailPostEditView.as_view(), name='post_edit_detail'),
     path('profile/post-add/', views.PostCreateFormView.as_view(), name='post_create'),
-    path('profile/<str:title>/<int:id>/delete', views.PostDeleteView.as_view(), name='post_delete'),
-    path('profile/<str:title>/<int:id>/edit', views.PostUpdateView.as_view(), name='post_edit')
+    path('profile/<str:slug>/<int:id>/delete', views.PostDeleteView.as_view(), name='post_delete'),
+    path('profile/<str:slug>/<int:id>/edit', views.PostUpdateView.as_view(), name='post_edit')
 ]
