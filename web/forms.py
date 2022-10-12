@@ -32,9 +32,6 @@ class RegisterUserForm(UserCreationForm):
 
 
 class PostForm(forms.ModelForm):
-    def save(self, *args, **kwargs):
-        self.instance.author = self.initial['user']
-        return super(PostForm, self).save(*args, **kwargs)
 
     class Meta:
         model = Post

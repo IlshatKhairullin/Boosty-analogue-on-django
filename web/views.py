@@ -1,3 +1,4 @@
+from django.utils.text import slugify
 from django.views import View
 from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView
 from .forms import UserCreationForm, RegisterUserForm, PostForm
@@ -66,8 +67,10 @@ class PostCreateFormView(CreateView):
     template_name = 'web/post_add_edit_form.html'
     form_class = PostForm
 
-    def get_initial(self):
-        return {'user': self.request.user}
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        form.instance.slug = slugify(form.instance.title)
+        return super().form_valid(form)
 
     def get_success_url(self):
         return reverse('profile')
@@ -78,6 +81,11 @@ class PostUpdateView(UpdateView):
     form_class = PostForm
     slug_field = 'id'
     slug_url_kwarg = 'id'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        form.instance.slug = slugify(form.instance.title)
+        return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         return {
@@ -90,11 +98,8 @@ class PostUpdateView(UpdateView):
             return Post.objects.none()
         return Post.objects.filter(author=self.request.user)
 
-    def get_initial(self):
-        return {'user': self.request.user}
-
     def get_success_url(self):
-        return reverse('post_edit_detail', args=(self.object.title, self.object.id))
+        return reverse('post_edit_detail', args=(self.object.slug, self.object.id))
 
 
 class PostDeleteView(DeleteView):
