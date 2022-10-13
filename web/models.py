@@ -1,8 +1,11 @@
 from django.contrib.auth.models import AbstractUser
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.urls import reverse
+
+from web.enums import Status
 
 
 class BaseModel(models.Model):
@@ -19,22 +22,19 @@ class User(AbstractUser):
 
 class Post(BaseModel):  # добавить атрибуты, чтобы были похожи на объявления (цену, еще что то)
     # + добавить категории к постам
-    STATUS_CHOICES = (
-        ('draft', 'Draft'),
-        ('published', 'Published'),
-    )
     title = models.CharField(max_length=250)
     slug = models.SlugField(max_length=250, unique_for_date='publish')
     author = models.ForeignKey(User, related_name='blog_posts', on_delete=models.CASCADE)
     body = models.TextField()
+    rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)], default=0)
     publish = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
+    status = models.CharField(max_length=10, choices=Status.choices, default=Status.draft)
 
     def get_absolute_url(self):
-        return reverse('post_detail', args=[self.title, self.id])
+        return reverse('post_detail', args=[self.slug, self.id])
 
     def get_edit_absolute_url(self):
-        return reverse('post_edit_detail', args=[self.title, self.id])
+        return reverse('post_edit_detail', args=[self.slug, self.id])
 
     class Meta:
         ordering = ('-publish',)
@@ -42,6 +42,15 @@ class Post(BaseModel):  # добавить атрибуты, чтобы были
     def __str__(self):
         return self.title
 
+
+# class Tag(BaseModel):
+#     title = models.CharField(max_length=200)
+#     author = models.ForeignKey(User, on_delete=models.CASCADE)
+#     parent_tag = models.ForeignKey(
+#         "self",
+#         on_delete=models.SET_NULL,
+#         null=True
+#     )
 
 class AuthorInfo(models.Model):
     description = models.CharField(max_length=500)

@@ -3,12 +3,18 @@
 {% block title %}Edit {{ post.title }}{% endblock %}
 {% block content %}
     <a href="{% url 'profile' %}">Назад</a>
-    <a href="{% url 'post_edit' post.title post.id %}">Редактировать</a>
-    <a href="{% url 'post_delete' post.title post.id %}">Удалить</a>
+    <a href="{% url 'post_edit' post.slug post.id %}">Редактировать</a>
+    <a href="{% url 'post_delete' post.slug post.id %}">Удалить</a>
     <h1>{{ post.title }}</h1>
     <p class="date">
         Published {{ post.publish }} by {{ post.author }}
     </p>
+    {% if post.status == 'Published' %}
+        Status: Опубликовано
+    {% else %}
+        Status: Черновик
+    {% endif %}
     <br>
-{{ post.body|linebreaks }}
+    <br>
+    {{ post.body|linebreaks }}
 {% endblock %}

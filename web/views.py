@@ -1,3 +1,4 @@
+from django.utils.text import slugify
 from django.views import View
 from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView
 from .forms import UserCreationForm, RegisterUserForm, PostForm
@@ -31,11 +32,13 @@ class Register(View):
         return render(request, self.template_name, context)
 
 
-class PostListView(ListView):  # сделать ф-ю get_queryset с filter по published постам
-    queryset = Post.objects.all()
+class PostListView(ListView):
+    queryset = Post.objects.filter(status=Status.published)
     template_name = 'web/main_page.html'
     context_object_name = 'posts'
     paginate_by = 4
+    slug_field = 'id'
+    slug_url_kwarg = 'id'
 
 
 class DetailPostView(DetailView):
@@ -53,29 +56,24 @@ class DetailPostEditView(DetailView):
     slug_field = 'id'
     slug_url_kwarg = 'id'
 
+    def get_context_data(self, **kwargs):
+        return {
+            **super(DetailPostEditView, self).get_context_data(**kwargs),
+            'id': self.kwargs[self.slug_url_kwarg]
+        }
 
-def post_add_view(request):  # переписать через класс -> не работает кнопка назад в добавлении поста;
-    # добавить выбор статуса и если статус draft - не выводить всем пользователям
-    user = request.user
-    form = PostForm(request.POST)
-    post, title, body = None, None, None
-    slug_field = 'id'
-    slug_url_kwarg = 'id'
 
-    if request.method == 'POST':
-        title = request.POST.get('title')
-        body = request.POST.get('body')
-        if form.is_valid():
-            if post is None:
-                post = Post()
-            post.title = title
-            post.body = body
-            post.author = user
-            post.save()
-            return redirect('profile')
-    return render(request, 'web/post_add_edit_form.html', {
-        'form': form,
-    })
+class PostCreateFormView(CreateView):
+    template_name = 'web/post_add_edit_form.html'
+    form_class = PostForm
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        form.instance.slug = slugify(form.instance.title)
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('profile')
 
 
 class PostUpdateView(UpdateView):
@@ -84,11 +82,15 @@ class PostUpdateView(UpdateView):
     slug_field = 'id'
     slug_url_kwarg = 'id'
 
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        form.instance.slug = slugify(form.instance.title)
+        return super().form_valid(form)
+
     def get_context_data(self, **kwargs):
         return {
             **super(PostUpdateView, self).get_context_data(**kwargs),
-            'id': self.kwargs[self.slug_url_kwarg],
-            'title': self.object.title
+            'id': self.kwargs[self.slug_url_kwarg]
         }
 
     def get_queryset(self):
@@ -96,11 +98,8 @@ class PostUpdateView(UpdateView):
             return Post.objects.none()
         return Post.objects.filter(author=self.request.user)
 
-    def get_initial(self):
-        return {'user': self.request.user}
-
     def get_success_url(self):
-        return reverse('post_edit_detail', args=(self.object.title, self.object.id))
+        return reverse('post_edit_detail', args=(self.object.slug, self.object.id))
 
 
 class PostDeleteView(DeleteView):
@@ -111,8 +110,7 @@ class PostDeleteView(DeleteView):
     def get_context_data(self, **kwargs):
         return {
             **super(PostDeleteView, self).get_context_data(**kwargs),
-            'id': self.kwargs[self.slug_url_kwarg],
-            'title': self.object.title
+            'id': self.kwargs[self.slug_url_kwarg]
         }
 
     def get_queryset(self):
@@ -131,4 +129,29 @@ class ProfileView(ListView):
     def get_queryset(self):
         if not self.request.user.is_authenticated:
             return Post.objects.none()
-        return Post.objects.filter(author=self.request.user).order_by('publish')
+        queryset = Post.objects.filter(author=self.request.user).order_by('publish')
+        return self.filter_queryset(queryset)
+
+    def filter_queryset(self, posts):
+
+        self.published_posts = 'published_posts' in self.request.GET
+        self.draft_posts = 'draft_posts' in self.request.GET
+
+        if self.published_posts:
+            posts = posts.filter(status=Status.published)
+
+        if self.draft_posts:
+            posts = posts.filter(status=Status.draft)
+
+        return posts
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+
+        if not self.request.user.is_authenticated:
+            return {}
+        return {
+            **super(ProfileView, self).get_context_data(),
+            'query_params': self.request.GET,
+            'published_posts': self.published_posts,
+            'draft_posts': self.draft_posts
+        }
