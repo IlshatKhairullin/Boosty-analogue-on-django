@@ -26,7 +26,7 @@ class Post(BaseModel):  # добавить атрибуты, чтобы были
     slug = models.SlugField(max_length=250, unique_for_date='publish')
     author = models.ForeignKey(User, related_name='blog_posts', on_delete=models.CASCADE)
     body = models.TextField()
-    rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)])
+    rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)], default=0)
     publish = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=10, choices=Status.choices, default=Status.draft)
 
