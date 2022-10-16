@@ -1,10 +1,23 @@
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.utils.text import slugify
 from django.views import View
 from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView
-from .forms import UserCreationForm, RegisterUserForm, PostForm
+from django.views.generic.edit import FormMixin
+from .forms import UserCreationForm, RegisterUserForm, PostForm, CommentForm
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from .models import *
+
+
+class CustomMessageMixin:
+    @property
+    def success_msg(self):
+        return False
+
+    def form_valid(self, form):
+        messages.success(self.request, self.success_msg)
+        return super().form_valid(form)
 
 
 class Register(View):
@@ -41,13 +54,60 @@ class PostListView(ListView):
     slug_url_kwarg = 'id'
 
 
-class DetailPostView(DetailView):
+class DetailPostView(CustomMessageMixin, DetailView, FormMixin):
+    # FormMixin - тк изначально в DetailView нет параметра form_class
     model = Post
+    form_class = CommentForm  # сделать редактирование и удаление коммента
+    success_msg = 'Комментарий успешно добавлен'
     template_name = 'web/detail.html'
-    context_object_name = 'post'
     slug_field = 'id'
     slug_url_kwarg = 'id'
 
+    def post(self, request, *args, **kwargs):
+
+        form = self.get_form()
+
+        # if login_required():  # выкинуть надпись: для add comm нужно войти на сайт
+        #     return redirect('login')
+
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.post = self.get_object()
+        self.object.author = self.request.user
+        self.object.save()
+        return super().form_valid(form)
+
+    def get_success_url(self, **kwargs):  # добавить AJAX чтобы не уезжать наверх после добавления коммента
+        return reverse('post_detail', args=(self.kwargs['slug'], self.kwargs[self.slug_url_kwarg]))
+
+
+class UpdateComment(UpdateView):
+    template_name = 'web/detail.html'
+    form_class = CommentForm
+
+    def get_queryset(self):
+        return Comment.objects.filter(id=self.kwargs['id'])
+
+    def get_success_url(self, **kwargs):
+        # return reverse('post_detail', args=(self.kwargs['slug'], self.kwargs[self.slug_url_kwarg]))
+        return reverse('post_list')
+
+class DeleteComment(DeleteView):
+    template_name = 'web/detail.html'
+    slug_field = 'id'
+    slug_url_kwarg = 'id'
+
+    def get_queryset(self):
+        return Post.objects.all()
+
+    def get_success_url(self, **kwargs):
+        # return reverse('post_detail', args=(self.kwargs['slug'], self.kwargs[self.slug_url_kwarg]))
+        return reverse('post_list')
 
 class DetailPostEditView(DetailView):
     model = Post

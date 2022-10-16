@@ -71,12 +71,20 @@ class Like(models.Model):
     content_object = GenericForeignKey('content_type', 'object_id')
 
 
+class IsActiveFilterComments(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_active=True)
+
+
 class Comment(BaseModel):
-    post = models.ForeignKey(Post, related_name='comments',
-                             on_delete=models.CASCADE)
-    name = models.CharField(max_length=80)
-    body = models.TextField()
+    post = models.ForeignKey(Post, related_name='comments_posts', on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='commenter')
+    body = models.TextField(verbose_name='comment_text')
     is_active = models.BooleanField(default=True)
+    objects = IsActiveFilterComments()
+
+    class Meta:
+        ordering = ('-created_date',)
 
     def __str__(self):
-        return f'Comment by {self.name} on {self.post}'
+        return f'Comment by {self.author} on {self.post}'
