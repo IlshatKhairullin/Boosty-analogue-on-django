@@ -86,19 +86,24 @@ class DetailPostView(CustomMessageMixin, DetailView, FormMixin):
         return reverse('post_detail', args=(self.kwargs['slug'], self.kwargs[self.slug_url_kwarg]))
 
 
-class UpdateComment(UpdateView):
-    template_name = 'web/detail.html'
+class UpdateCommentView(UpdateView, UserPassesTestMixin):
+    model = Comment
     form_class = CommentForm
-
-    def get_queryset(self):
-        return Comment.objects.filter(id=self.kwargs['id'])
+    template_name = 'web/comment_detail.html'
+    slug_field = 'id'
+    slug_url_kwarg = 'id'
 
     def get_success_url(self, **kwargs):
-        # return reverse('post_detail', args=(self.kwargs['slug'], self.kwargs[self.slug_url_kwarg]))
-        return reverse('post_list')
+        return reverse('post_detail', args=(self.kwargs['slug'], self.kwargs['post_id']))
+
+    def test_func(self):
+        comment = self.get_object()
+        if self.request.user == comment.author:
+            return True
+        return redirect('login')
 
 
-class DeleteComment(DeleteView, UserPassesTestMixin):
+class DeleteCommentView(DeleteView, UserPassesTestMixin):
     model = Comment
     slug_field = 'id'
     slug_url_kwarg = 'id'

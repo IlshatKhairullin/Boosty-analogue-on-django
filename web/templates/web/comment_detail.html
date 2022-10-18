@@ -1,0 +1,12 @@
+{% extends "web/base.html" %}
+
+{% block content %}
+    <a href="{{ post.get_edit_absolute_url }}">Назад</a>
+    <br>
+    <br>
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button>Редактировать комментарий</button>
+    </form>
+{% endblock %}
