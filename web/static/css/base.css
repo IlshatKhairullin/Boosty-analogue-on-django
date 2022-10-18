@@ -124,6 +124,15 @@ body {
     color: var(--main-white-color);
 }
 
+.edit_delete_comments {
+    display: inline-flex
+}
+
+.edit_delete_comments button {
+    border: none;
+    margin-left: 3px;
+}
+
 .page-main div {
     max-width: 500px;
 }

@@ -1,5 +1,5 @@
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.utils.text import slugify
 from django.views import View
 from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView
@@ -97,17 +97,24 @@ class UpdateComment(UpdateView):
         # return reverse('post_detail', args=(self.kwargs['slug'], self.kwargs[self.slug_url_kwarg]))
         return reverse('post_list')
 
-class DeleteComment(DeleteView):
-    template_name = 'web/detail.html'
+
+class DeleteComment(DeleteView, UserPassesTestMixin):
+    model = Comment
     slug_field = 'id'
     slug_url_kwarg = 'id'
 
-    def get_queryset(self):
-        return Post.objects.all()
+    def get(self, *args, **kwargs):
+        return self.post(*args, **kwargs)
+
+    def test_func(self):
+        comment = self.get_object()
+        if self.request.user == comment.author:
+            return True
+        return redirect('login')
 
     def get_success_url(self, **kwargs):
-        # return reverse('post_detail', args=(self.kwargs['slug'], self.kwargs[self.slug_url_kwarg]))
-        return reverse('post_list')
+        return reverse('post_detail', args=(self.kwargs['slug'], self.kwargs['post_id']))
+
 
 class DetailPostEditView(DetailView):
     model = Post
