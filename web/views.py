@@ -54,7 +54,7 @@ class PostListView(ListView):
     slug_url_kwarg = 'id'
 
 
-class DetailPostView(CustomMessageMixin, DetailView, FormMixin):
+class DetailPostView(CustomMessageMixin, DetailView, FormMixin, UserPassesTestMixin):
     # FormMixin - тк изначально в DetailView нет параметра form_class
     model = Post
     form_class = CommentForm  # сделать редактирование и удаление коммента
@@ -63,12 +63,15 @@ class DetailPostView(CustomMessageMixin, DetailView, FormMixin):
     slug_field = 'id'
     slug_url_kwarg = 'id'
 
+    def test_func(self):  # выкинуть надпись: для add comm нужно войти на сайт
+        comment = self.get_object()
+        if self.request.user == comment.author:
+            return True
+        return redirect('login')
+
     def post(self, request, *args, **kwargs):
 
         form = self.get_form()
-
-        # if login_required():  # выкинуть надпись: для add comm нужно войти на сайт
-        #     return redirect('login')
 
         if form.is_valid():
             return self.form_valid(form)
@@ -92,6 +95,13 @@ class UpdateCommentView(UpdateView, UserPassesTestMixin):
     template_name = 'web/comment_detail.html'
     slug_field = 'id'
     slug_url_kwarg = 'id'
+
+    def get_context_data(self, **kwargs):
+        return {
+            **super(UpdateCommentView, self).get_context_data(**kwargs),
+            'slug': self.kwargs['slug'],
+            'post_id': self.kwargs['post_id']
+        }
 
     def get_success_url(self, **kwargs):
         return reverse('post_detail', args=(self.kwargs['slug'], self.kwargs['post_id']))

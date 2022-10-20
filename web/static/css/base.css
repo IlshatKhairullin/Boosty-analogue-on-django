@@ -125,12 +125,15 @@ body {
 }
 
 .edit_delete_comments {
-    display: inline-flex
+    display: inline-flex;
 }
 
 .edit_delete_comments button {
     border: none;
-    margin-left: 3px;
+}
+
+.edit_delete_comments a {
+    margin: 3px;
 }
 
 .page-main div {
