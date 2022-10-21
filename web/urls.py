@@ -7,6 +7,7 @@ urlpatterns = [
     path('register/', views.Register.as_view(), name='register'),
     path('login/', views.login, name='login'),
     path('home/<slug:slug>/<int:id>', views.DetailPostView.as_view(), name='post_detail'),
+    path('home/<slug:tag_slug>/', views.TagIndexView.as_view(), name='posts_by_tag'),
     path('home/<slug:slug>/<int:post_id>/comment/<int:id>/delete', views.DeleteCommentView.as_view(), name='comment_delete'),
     path('home/<slug:slug>/<int:post_id>/comment/<int:id>/edit', views.UpdateCommentView.as_view(), name='comment_edit'),
     path('profile/', views.ProfileView.as_view(), name='profile'),

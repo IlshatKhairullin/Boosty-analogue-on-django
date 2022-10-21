@@ -7,6 +7,7 @@ from django.views.generic.edit import FormMixin
 from .forms import UserCreationForm, RegisterUserForm, PostForm, CommentForm
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
+
 from .models import *
 
 
@@ -52,6 +53,27 @@ class PostListView(ListView):
     paginate_by = 4
     slug_field = 'id'
     slug_url_kwarg = 'id'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        return {
+            **super(PostListView, self).get_context_data(**kwargs),
+            'most_popular_tags': Post.tags.most_common()[:4],
+        }
+
+
+class TagIndexView(ListView):
+    model = Post
+    template_name = 'web/main_page.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        return Post.objects.filter(tags__slug=self.kwargs.get('tag_slug'))
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        return {
+            **super(TagIndexView, self).get_context_data(**kwargs),
+            'most_popular_tags': Post.tags.most_common()[:4],
+        }
 
 
 class DetailPostView(CustomMessageMixin, DetailView, FormMixin, UserPassesTestMixin):
