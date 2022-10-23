@@ -4,12 +4,15 @@
 <html lang="ru">
 
 <head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script>
         function ChangeColor(Element) {
             if (Element.style.color === 'black') Element.style.color = 'green';
             else Element.style.color = 'black';
             return false;
         }
+
         function ChangeColorOut(Element) {
             if (Element.style.color === 'green') Element.style.color = 'black';
             else Element.style.color = 'green';
@@ -46,20 +49,24 @@
                 {% if user.is_authenticated %}
                     <button onclick="location.href= '{% url 'profile' %}'" class="profile" style="color: black;"
                             onmouseenter="return ChangeColor(this);"
-                            onmouseout="return ChangeColorOut(this)">Profile</button>
+                            onmouseout="return ChangeColorOut(this)">Profile
+                    </button>
 
                     <button onclick="location.href={% url 'logout' %}" class="logout" style="color: black"
                             onmouseenter="return ChangeColor(this);"
-                            onmouseout="return ChangeColorOut(this)">Logout</button>
+                            onmouseout="return ChangeColorOut(this)">Logout
+                    </button>
                 {% else %}
 
                     <button onclick="location.href={% url 'login' %}" class="sign_in" style="color: black;"
                             onmouseenter="return ChangeColor(this);"
-                            onmouseout="return ChangeColorOut(this)">Sign in</button>
+                            onmouseout="return ChangeColorOut(this)">Sign in
+                    </button>
 
                     <button onclick="location.href={% url 'register' %}" class="register" style="color: black"
                             onmouseenter="return ChangeColor(this);"
-                            onmouseout="return ChangeColorOut(this)">Register</button>
+                            onmouseout="return ChangeColorOut(this)">Register
+                    </button>
                 {% endif %}
             </ul>
         </nav>
