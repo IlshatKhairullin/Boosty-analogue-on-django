@@ -43,6 +43,15 @@
                     <a href="">About us</a>
                 </li>
             </ul>
+
+            <form action="" method="get" class="search">
+                <label>
+                    <input type="text" name="search" placeholder="Поиск..." value="{{ search|default_if_none:'' }}">
+                </label>
+                <button>Найти</button>
+            </form>
+
+
             <ul>
                 <button class="donate" style="color: black;" onclick="return ChangeColor(this);">Donate</button>
 

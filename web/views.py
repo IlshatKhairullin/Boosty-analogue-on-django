@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.db.models import Q
 from django.utils.text import slugify
 from django.views import View
 from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView
@@ -47,17 +48,32 @@ class Register(View):
 
 
 class PostListView(ListView):
-    queryset = Post.objects.filter(status=Status.published)
     template_name = 'web/main_page.html'
     context_object_name = 'posts'
     paginate_by = 4
     slug_field = 'id'
     slug_url_kwarg = 'id'
 
+    def get_queryset(self):
+        queryset = Post.objects.filter(status=Status.published)
+        return self.filter_queryset(queryset)
+
+    def filter_queryset(self, posts):
+        self.search = self.request.GET.get("search", None)
+
+        if self.search:
+            # Q - спец объект, у которого определены логические операции (и, или...)
+            posts = posts.filter(
+                Q(title__icontains=self.search) |
+                Q(body__icontains=self.search)
+            )
+        return posts
+
     def get_context_data(self, *, object_list=None, **kwargs):
         return {
             **super(PostListView, self).get_context_data(**kwargs),
             'most_popular_tags': Post.tags.most_common()[:4],
+            'search': self.request.GET.get('search')
         }
 
 
