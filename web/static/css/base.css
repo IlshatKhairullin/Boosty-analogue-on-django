@@ -124,16 +124,31 @@ body {
     color: var(--main-white-color);
 }
 
+.edit_delete_comments button {
+    margin-left: 4px;
+}
+
 .edit_delete_comments {
     display: inline-flex;
+    margin: 5px;
 }
+
+.comment_form {
+    display: flex;
+    align-items: end;
+}
+
+.comment_form button {
+    margin-left: 15px;
+}
+
+.comment_body_form {
+    height: 120px;
+}
+
 
 .edit_delete_comments button {
     border: none;
-}
-
-.edit_delete_comments a {
-    margin: 3px;
 }
 
 .page-main div {
