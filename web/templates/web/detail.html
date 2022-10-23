@@ -1,4 +1,5 @@
 {% extends "web/base.html" %}
+{% load posts %}
 
 {% block title %}{{ post.title }}{% endblock %}
 {% block content %}
@@ -53,12 +54,11 @@
         {% endfor %}
     {% endif %}
 
-    <form method="post">
+    <form method="post" class="comment_form">
 
         {% csrf_token %}
-        {{ form.as_p }}
-
-        <button name="add_comment">Добавить комментарий</button>
+        {{ form.body|addclass:'comment_body_form' }}
+        <button class="btn btn-success">Добавить комментарий</button>
 
     </form>
 

@@ -76,10 +76,10 @@ class TagIndexView(ListView):
         }
 
 
-class DetailPostView(CustomMessageMixin, DetailView, FormMixin, UserPassesTestMixin):
+class DetailPostView(CustomMessageMixin, FormMixin, DetailView, UserPassesTestMixin):
     # FormMixin - тк изначально в DetailView нет параметра form_class
     model = Post
-    form_class = CommentForm  # сделать редактирование и удаление коммента
+    form_class = CommentForm
     success_msg = 'Комментарий успешно добавлен'
     template_name = 'web/detail.html'
     slug_field = 'id'

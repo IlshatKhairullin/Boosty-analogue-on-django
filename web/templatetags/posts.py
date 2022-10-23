@@ -13,3 +13,7 @@ def filter_link(title, url_part, query_params):
         'url_part': url_part,
         'is_active': is_active
     }
+
+@register.filter(name='addclass')
+def addclass(value, arg):
+    return value.as_widget(attrs={'class': arg})
