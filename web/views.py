@@ -1,13 +1,14 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.db.models import Q
+from django.http import HttpResponseRedirect
 from django.utils.text import slugify
 from django.views import View
 from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView
 from django.views.generic.edit import FormMixin
 from .forms import UserCreationForm, RegisterUserForm, PostForm, CommentForm
 from django.contrib.auth import authenticate, login
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 from .models import *
 
@@ -77,6 +78,25 @@ class PostListView(ListView):
         }
 
 
+def LikePostView(request, post_slug, post_id):
+    if 'post_like' in request.POST:
+        if request.user.is_authenticated:
+            post = get_object_or_404(Post, id=request.POST.get('post_like'))
+            liked = False
+            if post.likes.filter(id=request.user.id).exists():
+                post.likes.remove(request.user)
+                liked = False
+            else:
+                post.likes.add(request.user)
+                liked = True
+
+            return HttpResponseRedirect(reverse('post_detail', args=(post_slug, post_id)))
+        else:
+            return HttpResponseRedirect(reverse('register'))  # message to do
+
+    if 'comment_like' in request.POST:
+        pass
+
 class TagIndexView(ListView):
     model = Post
     template_name = 'web/main_page.html'
@@ -100,6 +120,20 @@ class DetailPostView(CustomMessageMixin, FormMixin, DetailView, UserPassesTestMi
     template_name = 'web/detail.html'
     slug_field = 'id'
     slug_url_kwarg = 'id'
+
+    def get_context_data(self, **kwargs):
+        post = get_object_or_404(Post, id=self.kwargs['id'])
+        total_likes = post.number_of_likes()
+
+        liked = False
+        if post.likes.filter(id=self.request.user.id):
+            liked = True
+
+        return {
+            **super(DetailPostView, self).get_context_data(**kwargs),
+            'total_likes': total_likes,
+            'liked': liked
+        }
 
     def test_func(self):  # выкинуть надпись: для add comm нужно войти на сайт
         comment = self.get_object()

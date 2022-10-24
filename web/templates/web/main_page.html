@@ -14,12 +14,17 @@
 
     <br>
     {% for post in posts %}
+
         <h2>
             <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
         </h2>
-        {% for tag in post.tags.all %}
-            <a class="badge badge-secondary" href="{% url 'posts_by_tag' tag.slug %}">{{ tag }}</a>
-        {% endfor %}
+
+        <div>
+            {% for tag in post.tags.all %}
+                <a class="badge badge-secondary" href="{% url 'posts_by_tag' tag.slug %}">{{ tag }}</a>
+            {% endfor %}
+        </div>
+
         <p class="date">
             Published {{ post.publish }} by {{ post.author }}
         </p>

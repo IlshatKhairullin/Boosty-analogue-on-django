@@ -28,6 +28,10 @@ class Post(BaseModel):
     publish = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=10, choices=Status.choices, default=Status.draft)
     tags = TaggableManager()
+    likes = models.ManyToManyField(User, related_name='blog_post_from_like')
+
+    def number_of_likes(self):
+        return self.likes.count()
 
     def get_absolute_url(self):
         return reverse('post_detail', args=[self.slug, self.id])
@@ -52,13 +56,6 @@ class AuthorInfo(models.Model):
 #     user = models.ForeignKey(User, related_name='subscriber',
 #                              on_delete=models.CASCADE)
 #     object_id = models.PositiveIntegerField()
-
-
-class Like(models.Model):
-    user = models.ForeignKey(User, related_name='likes', on_delete=models.CASCADE)
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
-    content_object = GenericForeignKey('content_type', 'object_id')
 
 
 class IsActiveFilterComments(models.Manager):

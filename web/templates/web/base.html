@@ -6,6 +6,9 @@
 <head>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link
+            href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css"
+            rel="stylesheet" type='text/css'>
     <script>
         function ChangeColor(Element) {
             if (Element.style.color === 'black') Element.style.color = 'green';
@@ -46,9 +49,10 @@
 
             <form action="" method="get" class="search">
                 <label>
-                    <input type="text" name="search" placeholder="Поиск..." value="{{ search|default_if_none:'' }}">
+                    <input class="search_input" type="text" name="search" placeholder="Поиск..."
+                           value="{{ search|default_if_none:'' }}">
                 </label>
-                <button>Найти</button>
+                <button class="search_button"><i class="fa fa-search"></i></button>
             </form>
 
 
