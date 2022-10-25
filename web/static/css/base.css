@@ -150,6 +150,12 @@ body {
     border: none;
 }
 
+.like_form_on_comment button {
+    margin-left: 23px;
+    border: none;
+    color: green;
+}
+
 .like_form {
     display: flex;
 }

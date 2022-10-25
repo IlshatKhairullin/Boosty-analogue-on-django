@@ -69,6 +69,10 @@ class Comment(BaseModel):
     body = models.TextField(verbose_name='comment_text')
     is_active = models.BooleanField(default=True)
     objects = IsActiveFilterComments()
+    likes = models.ManyToManyField(User, related_name='post_comment_like')
+
+    def number_of_likes(self):
+        return self.likes.count()
 
     class Meta:
         ordering = ('-created_date',)
