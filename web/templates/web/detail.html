@@ -39,6 +39,21 @@
     <br>
     <br>
 
+    {% if messages %}
+        {% for m in messages %}
+            {{ m }}
+        {% endfor %}
+    {% endif %}
+
+    <form method="post" class="comment_form">
+
+        {% csrf_token %}
+        {{ form.body|addclass:'comment_body_form' }}
+        <button class="btn btn-success">Добавить комментарий</button>
+
+    </form>
+    <br>
+
     {% for comment in post.comments_posts.all %}
         {{ comment.created_date }} by {{ comment.author }}
         {% if request.user == comment.author %}
@@ -91,19 +106,5 @@
         <br>
         <br>
     {% endfor %}
-
-    {% if messages %}
-        {% for m in messages %}
-            {{ m }}
-        {% endfor %}
-    {% endif %}
-
-    <form method="post" class="comment_form">
-
-        {% csrf_token %}
-        {{ form.body|addclass:'comment_body_form' }}
-        <button class="btn btn-success">Добавить комментарий</button>
-
-    </form>
 
 {% endblock %}
