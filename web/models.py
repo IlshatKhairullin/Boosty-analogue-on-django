@@ -1,5 +1,4 @@
 from django.contrib.auth.models import AbstractUser
-from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.urls import reverse
@@ -60,22 +59,36 @@ class AuthorInfo(models.Model):
 
 class IsActiveFilterComments(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().filter(is_active=True)
+        return super().get_queryset().filter(parent=None)
+
+    # def get_queryset(self):
+    #     return super().get_queryset().filter(is_active=True)
 
 
 class Comment(BaseModel):
     post = models.ForeignKey(Post, related_name='comments_posts', on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='commenter')
+    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
     body = models.TextField(verbose_name='comment_text')
     is_active = models.BooleanField(default=True)
     objects = IsActiveFilterComments()
     likes = models.ManyToManyField(User, related_name='post_comment_like')
 
+    def children(self):  # replies to comment
+        return Comment.objects.filter(parent=self)  # мб скорее всего эт хуйня не робит
+
+    @property
+    def is_parent(self):
+        if self.parent is not None:
+            return False
+        else:
+            return True
+
     def number_of_likes(self):
         return self.likes.count()
 
-    class Meta:
-        ordering = ('-created_date',)
-
     def __str__(self):
         return f'Comment by {self.author} on {self.post}'
+
+    class Meta:
+        ordering = ('-created_date',)

@@ -127,6 +127,39 @@ class DetailPostView(CustomMessageMixin, FormMixin, DetailView, UserPassesTestMi
     slug_field = 'id'
     slug_url_kwarg = 'id'
 
+    def test_func(self):  # выкинуть надпись: для add comm нужно войти на сайт
+        comment = self.get_object()
+        if self.request.user == comment.author:
+            return True
+        return redirect('login')
+
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        self.parent_obj = None
+
+        try:  # проверка на тот случай, если к нам прилетел не тот parent_id откуда то еще
+            parent_id = int(request.POST.get('parent_id'))
+        except:
+            parent_id = None
+
+        if parent_id:
+            parent_qs = Comment.objects.filter(id=parent_id)
+            if parent_qs.exists() and parent_qs.count() == 1:
+                self.parent_obj = parent_qs.first()
+
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.post = self.get_object()
+        self.object.author = self.request.user
+        self.object.parent = self.parent_obj
+        self.object.save()
+        return super().form_valid(form)
+
     def get_context_data(self, **kwargs):
         post = get_object_or_404(Post, id=self.kwargs['id'])
         total_post_likes = post.number_of_likes()
@@ -138,32 +171,10 @@ class DetailPostView(CustomMessageMixin, FormMixin, DetailView, UserPassesTestMi
         return {
             **super(DetailPostView, self).get_context_data(**kwargs),
             'total_post_likes': total_post_likes,
-            'post_liked': post_liked,
+            'post_liked': post_liked
         }
 
-    def test_func(self):  # выкинуть надпись: для add comm нужно войти на сайт
-        comment = self.get_object()
-        if self.request.user == comment.author:
-            return True
-        return redirect('login')
-
-    def post(self, request, *args, **kwargs):
-
-        form = self.get_form()
-
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
-
-    def form_valid(self, form):
-        self.object = form.save(commit=False)
-        self.object.post = self.get_object()
-        self.object.author = self.request.user
-        self.object.save()
-        return super().form_valid(form)
-
-    def get_success_url(self, **kwargs):  # добавить AJAX чтобы не уезжать наверх после добавления коммента
+    def get_success_url(self, **kwargs):
         return reverse('post_detail', args=(self.kwargs['slug'], self.kwargs[self.slug_url_kwarg]))
 
 
