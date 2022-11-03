@@ -132,12 +132,32 @@ body {
     margin: 5px;
 }
 
-.comment_form {
+.reply_form button {
+    margin-left: 15px;
+}
+
+.reply_form {
     display: flex;
     align-items: end;
+    padding-bottom: 25px;
+}
+
+.reply_comment_block {
+    margin-left: 20px;
+}
+
+.like_form_on_reply {
+    margin-bottom: 20px;
+}
+
+.like_form_on_reply button {
+    margin-left: 23px;
+    border: none;
+    color: green;
 }
 
 .comment_form button {
+    margin-bottom: 30px;
     margin-left: 15px;
 }
 
@@ -145,9 +165,12 @@ body {
     height: 120px;
 }
 
-
 .edit_delete_comments button {
     border: none;
+}
+
+.like_form_on_comment {
+    margin-bottom: 10px;
 }
 
 .like_form_on_comment button {

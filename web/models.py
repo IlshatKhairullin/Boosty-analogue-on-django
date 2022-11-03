@@ -57,9 +57,9 @@ class AuthorInfo(models.Model):
 #     object_id = models.PositiveIntegerField()
 
 
-class IsActiveFilterComments(models.Manager):
-    def get_queryset(self):
-        return super().get_queryset().filter(parent=None)
+# class IsActiveFilterComments(models.Manager):
+#     def get_queryset(self):
+#         return super().get_queryset().filter(parent=None)
 
     # def get_queryset(self):
     #     return super().get_queryset().filter(is_active=True)
@@ -68,21 +68,22 @@ class IsActiveFilterComments(models.Manager):
 class Comment(BaseModel):
     post = models.ForeignKey(Post, related_name='comments_posts', on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='commenter')
-    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
+    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE,
+                               related_name='replies')
     body = models.TextField(verbose_name='comment_text')
     is_active = models.BooleanField(default=True)
-    objects = IsActiveFilterComments()
+    # objects = IsActiveFilterComments()
     likes = models.ManyToManyField(User, related_name='post_comment_like')
 
+    @property
     def children(self):  # replies to comment
-        return Comment.objects.filter(parent=self)  # мб скорее всего эт хуйня не робит
+        return Comment.objects.filter(parent=self)
 
     @property
     def is_parent(self):
-        if self.parent is not None:
-            return False
-        else:
+        if self.parent is None:
             return True
+        return False
 
     def number_of_likes(self):
         return self.likes.count()
