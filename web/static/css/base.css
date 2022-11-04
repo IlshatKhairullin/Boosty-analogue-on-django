@@ -144,6 +144,11 @@ body {
 
 .reply_comment_block {
     margin-left: 20px;
+    margin-bottom: 35px;
+}
+
+.comment_reply_btn {
+    color: blue;
 }
 
 .like_form_on_reply {
@@ -169,9 +174,6 @@ body {
     border: none;
 }
 
-.like_form_on_comment {
-    margin-bottom: 10px;
-}
 
 .like_form_on_comment button {
     margin-left: 23px;

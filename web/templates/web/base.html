@@ -9,19 +9,6 @@
     <link
             href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css"
             rel="stylesheet" type='text/css'>
-    <script>
-        function ChangeColor(Element) {
-            if (Element.style.color === 'black') Element.style.color = 'green';
-            else Element.style.color = 'black';
-            return false;
-        }
-
-        function ChangeColorOut(Element) {
-            if (Element.style.color === 'green') Element.style.color = 'black';
-            else Element.style.color = 'green';
-            return false;
-        }
-    </script>
     <link rel="stylesheet" href="{% static 'css/base.css' %}" type="text/css">
     <title>{% block title %}{% endblock %}</title>
     <meta charset="utf-8">
@@ -106,5 +93,21 @@
     </footer>
 
 </div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script src="{% static 'js/script.js' %}"></script>
+<script>
+    function ChangeColor(Element) {
+        if (Element.style.color === 'black') Element.style.color = 'green';
+        else Element.style.color = 'black';
+        return false;
+    }
+
+    function ChangeColorOut(Element) {
+        if (Element.style.color === 'green') Element.style.color = 'black';
+        else Element.style.color = 'green';
+        return false;
+    }
+</script>
 
 </html>
