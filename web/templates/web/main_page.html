@@ -2,16 +2,32 @@
 
 {% block title %}My Blog{% endblock %}
 {% block content %}
-    <h1>People's posts</h1>
+    <h1><a href="{% url 'post_list' %}">People's posts</a></h1>
+
+    <div>
+        <h4>The most popular tags:
+            {% for tag in most_popular_tags %}
+                <a class="badge badge-secondary" href="{% url 'posts_by_tag' tag.slug %}">{{ tag }}</a>
+            {% endfor %}
+        </h4>
+    </div>
+
     <br>
     {% for post in posts %}
+
         <h2>
             <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
         </h2>
+
+        <div>
+            {% for tag in post.tags.all %}
+                <a class="badge badge-secondary" href="{% url 'posts_by_tag' tag.slug %}">{{ tag }}</a>
+            {% endfor %}
+        </div>
+
         <p class="date">
             Published {{ post.publish }} by {{ post.author }}
         </p>
-        <br>
         {{ post.body|truncatewords:30|linebreaks }}
         <br>
     {% endfor %}

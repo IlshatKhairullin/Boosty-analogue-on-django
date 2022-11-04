@@ -1,0 +1,13 @@
+{% extends "web/base.html" %}
+{% load posts %}
+
+{% block content %}
+    <a href="{% url 'post_detail' slug post_id  %}">Назад</a>
+    <br>
+    <br>
+    <form action="" method="post" class="comment_form">
+        {% csrf_token %}
+        {{ form.body|addclass:'comment_body_form' }}
+        <button class="btn btn-success">Редактировать комментарий</button>
+    </form>
+{% endblock %}

@@ -1,9 +1,8 @@
 from django.contrib.auth.models import AbstractUser
-from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
-from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.urls import reverse
+from taggit.managers import TaggableManager
 
 from web.enums import Status
 
@@ -20,15 +19,18 @@ class User(AbstractUser):
     email = models.EmailField('Email', unique=True)
 
 
-class Post(BaseModel):  # добавить атрибуты, чтобы были похожи на объявления (цену, еще что то)
-    # + добавить категории к постам
+class Post(BaseModel):
     title = models.CharField(max_length=250)
     slug = models.SlugField(max_length=250, unique_for_date='publish')
     author = models.ForeignKey(User, related_name='blog_posts', on_delete=models.CASCADE)
     body = models.TextField()
-    rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)], default=0)
     publish = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=10, choices=Status.choices, default=Status.draft)
+    tags = TaggableManager()
+    likes = models.ManyToManyField(User, related_name='blog_post_from_like')
+
+    def number_of_likes(self):
+        return self.likes.count()
 
     def get_absolute_url(self):
         return reverse('post_detail', args=[self.slug, self.id])
@@ -43,15 +45,6 @@ class Post(BaseModel):  # добавить атрибуты, чтобы были
         return self.title
 
 
-# class Tag(BaseModel):
-#     title = models.CharField(max_length=200)
-#     author = models.ForeignKey(User, on_delete=models.CASCADE)
-#     parent_tag = models.ForeignKey(
-#         "self",
-#         on_delete=models.SET_NULL,
-#         null=True
-#     )
-
 class AuthorInfo(models.Model):
     description = models.CharField(max_length=500)
     goals = models.CharField(max_length=500)
@@ -64,19 +57,39 @@ class AuthorInfo(models.Model):
 #     object_id = models.PositiveIntegerField()
 
 
-class Like(models.Model):
-    user = models.ForeignKey(User, related_name='likes', on_delete=models.CASCADE)
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
-    content_object = GenericForeignKey('content_type', 'object_id')
+# class IsActiveFilterComments(models.Manager):
+#     def get_queryset(self):
+#         return super().get_queryset().filter(parent=None)
+
+    # def get_queryset(self):
+    #     return super().get_queryset().filter(is_active=True)
 
 
 class Comment(BaseModel):
-    post = models.ForeignKey(Post, related_name='comments',
-                             on_delete=models.CASCADE)
-    name = models.CharField(max_length=80)
-    body = models.TextField()
+    post = models.ForeignKey(Post, related_name='comments_posts', on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='commenter')
+    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE,
+                               related_name='replies')
+    body = models.TextField(verbose_name='comment_text')
     is_active = models.BooleanField(default=True)
+    # objects = IsActiveFilterComments()
+    likes = models.ManyToManyField(User, related_name='post_comment_like')
+
+    @property
+    def children(self):  # replies to comment
+        return Comment.objects.filter(parent=self)
+
+    @property
+    def is_parent(self):
+        if self.parent is None:
+            return True
+        return False
+
+    def number_of_likes(self):
+        return self.likes.count()
 
     def __str__(self):
-        return f'Comment by {self.name} on {self.post}'
+        return f'Comment by {self.author} on {self.post}'
+
+    class Meta:
+        ordering = ('-created_date',)

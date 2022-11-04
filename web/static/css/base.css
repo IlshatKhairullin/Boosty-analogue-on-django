@@ -119,9 +119,104 @@ body {
     justify-content: center;
     flex-grow: 1;
     min-height: 350px;
-    background: var(--main-purple-color) url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/162656/city.jpg) no-repeat center / cover;
     background-blend-mode: luminosity;
     color: var(--main-white-color);
+}
+
+.edit_delete_comments button {
+    margin-left: 4px;
+}
+
+.edit_delete_comments {
+    display: inline-flex;
+    margin: 5px;
+}
+
+.reply_form button {
+    margin-left: 15px;
+}
+
+.reply_form {
+    display: flex;
+    align-items: end;
+    padding-bottom: 25px;
+}
+
+.reply_comment_block {
+    margin-left: 20px;
+    margin-bottom: 35px;
+}
+
+.comment_reply_btn {
+    color: blue;
+}
+
+.like_form_on_reply {
+    margin-bottom: 20px;
+}
+
+.like_form_on_reply button {
+    margin-left: 23px;
+    border: none;
+    color: green;
+}
+
+.comment_form button {
+    margin-bottom: 30px;
+    margin-left: 15px;
+}
+
+.comment_body_form {
+    height: 120px;
+}
+
+.edit_delete_comments button {
+    border: none;
+}
+
+
+.like_form_on_comment button {
+    margin-left: 23px;
+    border: none;
+    color: green;
+}
+
+.like_form {
+    display: flex;
+}
+
+.like_form h1 {
+    font-size: 35px;
+    font-weight: lighter;
+    display: inline-flex;
+    font-family: inherit;
+}
+
+.like_form button {
+    color: green;
+    border: none;
+    padding: 12px;
+}
+
+.search_button, .search_input {
+    display: inline-block;
+    padding: 10px 15px;
+    font-size: 17px;
+    -webkit-appearance: none;
+    border-radius: 15px;
+}
+
+form.search button {
+    background: #2196F3;
+    color: white;
+    padding: 14px;
+    border: 1px solid grey;
+    cursor: pointer;
+}
+
+form.search input {
+    border: 1px solid grey;
+    background: #f1f1f1;
 }
 
 .page-main div {
