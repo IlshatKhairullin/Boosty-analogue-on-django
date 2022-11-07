@@ -163,6 +163,10 @@ class DetailPostView(CustomMessageMixin, FormMixin, DetailView, UserPassesTestMi
     def get_context_data(self, **kwargs):
         post = get_object_or_404(Post, id=self.kwargs['id'])
         total_post_likes = post.number_of_likes()
+        total_views = post.number_of_views()
+
+        if self.request.user.is_authenticated:
+            post.views.add(self.request.user)
 
         post_liked = False
         if post.likes.filter(id=self.request.user.id):
@@ -171,7 +175,8 @@ class DetailPostView(CustomMessageMixin, FormMixin, DetailView, UserPassesTestMi
         return {
             **super(DetailPostView, self).get_context_data(**kwargs),
             'total_post_likes': total_post_likes,
-            'post_liked': post_liked
+            'post_liked': post_liked,
+            'post_views': total_views,
         }
 
     def get_success_url(self, **kwargs):

@@ -28,9 +28,13 @@ class Post(BaseModel):
     status = models.CharField(max_length=10, choices=Status.choices, default=Status.draft)
     tags = TaggableManager()
     likes = models.ManyToManyField(User, related_name='blog_post_from_like')
+    views = models.ManyToManyField(User, related_name='post_views')
 
     def number_of_likes(self):
         return self.likes.count()
+
+    def number_of_views(self):
+        return self.views.count()
 
     def get_absolute_url(self):
         return reverse('post_detail', args=[self.slug, self.id])
