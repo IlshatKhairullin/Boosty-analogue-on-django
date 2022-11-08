@@ -1,8 +1,8 @@
 # Boosty/patreon analogue
 
-- python3 -m venv .venv - создание виртуального окружения
+- python3 -m venv venv - создание виртуального окружения
 
-- source ./.venv/bin/activate - вход в виртуальное окружение
+- venv/scripts/activate - вход в виртуальное окружение
 
 - docker-compose up -d - поднять PostgreSQL с помощью Docker или pgAdmin
 
