@@ -79,14 +79,25 @@ class PostListView(ListView):
 
 
 def LikePostView(request, post_slug, post_id):
-    if 'post_like' in request.POST:
+    if 'post_like_post_detail' in request.POST:
         if request.user.is_authenticated:
-            post = get_object_or_404(Post, id=request.POST.get('post_like'))
+            post = get_object_or_404(Post, id=request.POST.get('post_like_post_detail'))
             if post.likes.filter(id=request.user.id).exists():
                 post.likes.remove(request.user)
             else:
                 post.likes.add(request.user)
             return HttpResponseRedirect(reverse('post_detail', args=(post_slug, post_id)))
+        else:
+            return HttpResponseRedirect(reverse('register'))  # message to do
+
+    if 'post_like_main_page':
+        if request.user.is_authenticated:
+            post = get_object_or_404(Post, id=request.POST.get('post_like_main_page'))
+            if post.likes.filter(id=request.user.id).exists():
+                post.likes.remove(request.user)
+            else:
+                post.likes.add(request.user)
+            return HttpResponseRedirect(reverse('post_list'))
         else:
             return HttpResponseRedirect(reverse('register'))  # message to do
 
