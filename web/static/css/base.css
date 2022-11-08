@@ -283,6 +283,18 @@ form.search input {
         order: 1;
     }
 
+    .page-header form {
+        display: flex;
+    }
+
+    .page-header b {
+        margin-right: 12px;
+    }
+
+    .page-header button {
+        border: none;
+    }
+
     .page-footer {
         flex-direction: row;
         justify-content: space-between;

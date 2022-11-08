@@ -20,18 +20,19 @@
         <nav>
             <a href="{% url 'post_list' %}"><img src="{% static 'images/logo1.png' %}" width="180" alt="Our logo"></a>
             <ul>
-                <li>
-                    <a href="">Team</a>
-                </li>
-                <li>
-                    <a href="">Services</a>
-                </li>
-                <li>
-                    <a href="">Help</a>
-                </li>
-                <li>
-                    <a href="">About us</a>
-                </li>
+                <b>Filter posts by:</b>
+                <form action="{% url 'post_list' %}" method="get">
+                    {% csrf_token %}
+                    <li>
+                        <button name="relevance_post">Relevance</button>
+                    </li>
+                    <li>
+                        <button name="popularity_post">Popularity</button>
+                    </li>
+                    <li>
+                        <button name="rating_post">Rating</button>
+                    </li>
+                </form>
             </ul>
 
             <form action="" method="get" class="search">
@@ -41,7 +42,6 @@
                 </label>
                 <button class="search_button"><i class="fa fa-search"></i></button>
             </form>
-
 
             <ul>
                 <button class="donate" style="color: black;" onclick="return ChangeColor(this);">Donate</button>

@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.http import HttpResponseRedirect
 from django.utils.text import slugify
 from django.views import View
@@ -56,7 +56,13 @@ class PostListView(ListView):
     slug_url_kwarg = 'id'
 
     def get_queryset(self):
-        queryset = Post.objects.filter(status=Status.published)
+        if 'popularity_post' in self.request.GET:
+            queryset = Post.objects.filter(status=Status.published).annotate(Count('views')).order_by('views')
+        elif 'rating_post' in self.request.GET:
+            queryset = Post.objects.filter(status=Status.published).annotate(Count('likes')).order_by('likes')  # does not work
+        else:
+            queryset = Post.objects.filter(status=Status.published)
+
         return self.filter_queryset(queryset)
 
     def filter_queryset(self, posts):
