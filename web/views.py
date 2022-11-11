@@ -51,17 +51,21 @@ class Register(View):
 class PostListView(ListView):
     template_name = 'web/main_page.html'
     context_object_name = 'posts'
-    paginate_by = 4
+    paginate_by = 20
     slug_field = 'id'
     slug_url_kwarg = 'id'
 
     def get_queryset(self):
+        queryset = Post.objects.filter(status=Status.published)
+
         if 'popularity_post' in self.request.GET:
-            queryset = Post.objects.filter(status=Status.published).annotate(Count('views')).order_by('views')
+            queryset = queryset.annotate(
+                total_views=Count('views', distinct=True)
+            ).order_by('-total_views')
         elif 'rating_post' in self.request.GET:
-            queryset = Post.objects.filter(status=Status.published).annotate(Count('likes')).order_by('likes')  # does not work
-        else:
-            queryset = Post.objects.filter(status=Status.published)
+            queryset = queryset.annotate(
+                total_likes=Count('likes', distinct=True)
+            ).order_by('-total_likes')
 
         return self.filter_queryset(queryset)
 
