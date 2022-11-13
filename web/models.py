@@ -50,9 +50,14 @@ class Post(BaseModel):
 
 
 class AuthorInfo(models.Model):
-    description = models.CharField(max_length=500)
-    goals = models.CharField(max_length=500)
-    img = models.ImageField(null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Username')
+    email = models.EmailField('Email', unique=True)
+    bio = models.CharField(max_length=255)
+    profile_pic = models.ImageField(null=True, blank=True, upload_to='')
+    facebook_url = models.CharField(max_length=255, null=True, blank=True)
+    instagram_url = models.CharField(max_length=255, null=True, blank=True)
+    vk_url = models.CharField(max_length=255, null=True, blank=True)
+    github_url = models.CharField(max_length=255, null=True, blank=True)
 
 
 # class Subscriber(models.Model):
@@ -65,8 +70,8 @@ class AuthorInfo(models.Model):
 #     def get_queryset(self):
 #         return super().get_queryset().filter(parent=None)
 
-    # def get_queryset(self):
-    #     return super().get_queryset().filter(is_active=True)
+# def get_queryset(self):
+#     return super().get_queryset().filter(is_active=True)
 
 
 class Comment(BaseModel):
