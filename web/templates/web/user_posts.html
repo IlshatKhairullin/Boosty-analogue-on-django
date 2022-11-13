@@ -2,10 +2,9 @@
 {% load posts %}
 
 {% block content %}
-    <a href="{% url 'profile' %}">Back to profile</a>
+    {% include 'includes/sidebar_and_back_to_link.html' %}
     <a href="{% url 'post_create' %}">Add new post</a>
     <h1>Your posts</h1>
-    {% include 'includes/sidebar.html' %}
     <p>
         Выводить
         {% filter_link "все посты" "" query_params %} |

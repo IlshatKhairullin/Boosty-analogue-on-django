@@ -320,7 +320,7 @@ class PostDeleteView(DeleteView):
 
 
 class ProfileView(ListView):
-    template_name = 'web/profile.html'
+    template_name = 'web/profile_post_stats.html'
     model = Post
 
 

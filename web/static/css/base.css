@@ -263,6 +263,7 @@ form.search input {
     box-shadow: inset 5px 0 5px -5px #555555;
     font-style: italic;
     color: black;
+    margin-top: 45px;
 }
 
 .profile_aside > p {
