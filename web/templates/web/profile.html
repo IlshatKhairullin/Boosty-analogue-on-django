@@ -3,16 +3,6 @@
 
 {% block content %}
     <a href="{% url 'post_list' %}">Назад</a>
-    <a href="{% url 'post_create' %}">Добавить новый пост</a>
-    <h1>Your posts</h1>
-    <p>
-        Выводить
-        {% filter_link "все посты" "" query_params %} |
-        {% filter_link "опубликованные посты" "published_posts" query_params %} |
-        {% filter_link "черновики" "draft_posts" query_params %}
-    </p>
-    <br>
-    {% for post in posts %}
-        <h2><a href="{{ post.get_edit_absolute_url }}">{{ post.title }}</a></h2>
-    {% endfor %}
+    <h1>Your profile stats</h1>
+    {% include 'includes/sidebar.html' %}
 {% endblock %}

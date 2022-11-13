@@ -1,0 +1,19 @@
+{% extends "web/base.html" %}
+{% load posts %}
+
+{% block content %}
+    <a href="{% url 'profile' %}">Back to profile</a>
+    <a href="{% url 'post_create' %}">Add new post</a>
+    <h1>Your posts</h1>
+    {% include 'includes/sidebar.html' %}
+    <p>
+        Выводить
+        {% filter_link "все посты" "" query_params %} |
+        {% filter_link "опубликованные посты" "published_posts" query_params %} |
+        {% filter_link "черновики" "draft_posts" query_params %}
+    </p>
+    <br>
+    {% for post in posts %}
+        <h2><a href="{{ post.get_edit_absolute_url }}">{{ post.title }}</a></h2>
+    {% endfor %}
+{% endblock %}
