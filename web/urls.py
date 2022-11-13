@@ -12,8 +12,9 @@ urlpatterns = [
     path('home/<slug:slug>/<int:post_id>/comment/<int:id>/delete', views.DeleteCommentView.as_view(), name='comment_delete'),
     path('home/<slug:slug>/<int:post_id>/comment/<int:id>/edit', views.UpdateCommentView.as_view(), name='comment_edit'),
     path('profile/', views.ProfileView.as_view(), name='profile'),
-    path('profile/<slug:slug>/<int:id>', views.DetailPostEditView.as_view(), name='post_edit_detail'),
-    path('profile/post-add/', views.PostCreateFormView.as_view(), name='post_create'),
-    path('profile/<str:slug>/<int:id>/delete', views.PostDeleteView.as_view(), name='post_delete'),
-    path('profile/<str:slug>/<int:id>/edit', views.PostUpdateView.as_view(), name='post_edit')
+    path('profile/my_posts', views.ProfileUserPosts.as_view(), name='profile_user_posts'),
+    path('profile/my_posts/<slug:slug>/<int:id>', views.DetailPostEditView.as_view(), name='post_edit_detail'),
+    path('profile/my_posts/post-add/', views.PostCreateFormView.as_view(), name='post_create'),
+    path('profile/my_posts/<str:slug>/<int:id>/delete', views.PostDeleteView.as_view(), name='post_delete'),
+    path('profile/my_posts/<str:slug>/<int:id>/edit', views.PostUpdateView.as_view(), name='post_edit')
 ]

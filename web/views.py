@@ -270,7 +270,7 @@ class PostCreateFormView(CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse('profile')
+        return reverse('profile_user_posts')
 
 
 class PostUpdateView(UpdateView):
@@ -316,11 +316,16 @@ class PostDeleteView(DeleteView):
         return Post.objects.filter(author=self.request.user)
 
     def get_success_url(self):
-        return reverse('profile')
+        return reverse('profile_user_posts')
 
 
 class ProfileView(ListView):
     template_name = 'web/profile.html'
+    model = Post
+
+
+class ProfileUserPosts(ListView):
+    template_name = 'web/user_posts.html'
     context_object_name = 'posts'
 
     def get_queryset(self):
@@ -347,7 +352,7 @@ class ProfileView(ListView):
         if not self.request.user.is_authenticated:
             return {}
         return {
-            **super(ProfileView, self).get_context_data(),
+            **super(ProfileUserPosts, self).get_context_data(),
             'query_params': self.request.GET,
             'published_posts': self.published_posts,
             'draft_posts': self.draft_posts
