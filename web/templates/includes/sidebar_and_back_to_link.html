@@ -1,24 +1,28 @@
 {% block content %}
-<a href="{% url 'post_list' %}">Back to people's posts</a>
+    <a href="{% url 'post_list' %}">Back to people's posts</a>
 {% endblock %}
 
-<aside class="profile_aside">
-    {% if user.is_authenticated %}
-        <div class="side_links">
-            {{ user }}
-            <br>
-            <br>
-            <a href="">My comments</a>
-            <hr>
-            <a href="{% url 'profile_user_posts' %}">My posts</a>
-            <a href="">Favourite posts</a>
-            <a href="">Watched posts</a>
-            <a href="">Liked posts</a>
-            <hr>
-            <a href="{% url 'profile_post_stats' %}">Stats</a>
-            <a href="">Edit profile</a>
-            <a href="">Profile look for users</a>
-            <a href="">Profile settings</a>
-        </div>
-    {% endif %}
-</aside>
+<div class="profile_aside_block">
+    <aside class="profile_aside">
+        {% if user.is_authenticated %}
+            <div class="side_links">
+                Username - {{ user }}
+                <br>
+                <br>
+                <a href="">My comments</a>
+                <hr style="width: 30%">
+                <a href="{% url 'profile_user_posts' %}">My posts</a>
+                <a href="">Favourite posts</a>
+                <a href="">Watched posts</a>
+                <a href="">Liked posts</a>
+                <hr style="width: 30%">
+                <a href="{% url 'profile_post_stats' %}">Stats</a>
+                <a href="{% url 'user_profile_edit' id=user.author_info.id %}">Edit profile</a>
+                <a href="">Profile look for users</a>
+                <a href="">Profile settings</a>
+                <hr style="width: 30%">
+                <a href="">Edit User</a>
+            </div>
+        {% endif %}
+    </aside>
+</div>

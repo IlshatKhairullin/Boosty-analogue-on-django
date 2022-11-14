@@ -50,14 +50,19 @@ class Post(BaseModel):
 
 
 class AuthorInfo(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Username')
-    email = models.EmailField('Email', unique=True)
-    bio = models.CharField(max_length=255)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Username', related_name='author_info')
+    bio = models.TextField()
+    name = models.CharField(max_length=100, null=True, blank=True)
+    surname = models.CharField(max_length=100, null=True, blank=True)
     profile_pic = models.ImageField(null=True, blank=True, upload_to='')
     facebook_url = models.CharField(max_length=255, null=True, blank=True)
     instagram_url = models.CharField(max_length=255, null=True, blank=True)
     vk_url = models.CharField(max_length=255, null=True, blank=True)
     github_url = models.CharField(max_length=255, null=True, blank=True)
+    private = models.BooleanField(default=False)
+
+    def __str__(self):
+        return str(self.user)
 
 
 # class Subscriber(models.Model):

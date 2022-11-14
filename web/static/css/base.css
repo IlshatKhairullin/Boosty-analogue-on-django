@@ -255,6 +255,12 @@ form.search input {
 /* Aside
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 
+.profile_aside_block {
+    padding-left: 115px;
+}
+
+
+
 .profile_aside {
     width: 40%;
     padding-left: .5rem;

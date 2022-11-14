@@ -1,9 +1,9 @@
 from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
-from web.models import Post, Comment
+from web.models import Post, Comment, AuthorInfo
 
 User = get_user_model()
 
@@ -42,3 +42,14 @@ class CommentForm(forms.ModelForm):
         model = Comment
         fields = ('body',)
 
+
+class ProfileUserChangeForm(forms.ModelForm):
+    profile_pic = forms.ImageField(required=False, label='Profile picture')
+    facebook_url = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'user_profile_edit'}))
+    instagram_url = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'user_profile_edit'}))
+    vk_url = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'user_profile_edit'}))
+    github_url = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'user_profile_edit'}))
+
+    class Meta:
+        model = AuthorInfo
+        fields = ('name', 'surname', 'bio', 'profile_pic', 'facebook_url', 'instagram_url', 'vk_url', 'github_url')

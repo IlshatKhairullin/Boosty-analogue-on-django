@@ -1,1 +1,18 @@
+{% extends "web/base.html" %}
 
+
+{% block content %}
+    {% include 'includes/sidebar_and_back_to_link.html' %}
+    <h1>Edit profile</h1>
+
+    {% if user.is_authenticated %}
+            <div class="user_profile_edit">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button class="btn btn-success">Save</button>
+                </form>
+            </div>
+        {% endif %}
+
+{% endblock %}

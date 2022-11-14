@@ -6,7 +6,7 @@ from django.utils.text import slugify
 from django.views import View
 from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView
 from django.views.generic.edit import FormMixin
-from .forms import UserCreationForm, RegisterUserForm, PostForm, CommentForm
+from .forms import UserCreationForm, RegisterUserForm, PostForm, CommentForm, ProfileUserChangeForm
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect, get_object_or_404
 
@@ -280,7 +280,6 @@ class PostUpdateView(UpdateView):
     slug_url_kwarg = 'id'
 
     def form_valid(self, form):
-        form.instance.author = self.request.user
         form.instance.slug = slugify(form.instance.title)
         return super().form_valid(form)
 
@@ -304,12 +303,6 @@ class PostDeleteView(DeleteView):
     slug_field = 'id'
     slug_url_kwarg = 'id'
 
-    def get_context_data(self, **kwargs):
-        return {
-            **super(PostDeleteView, self).get_context_data(**kwargs),
-            'id': self.kwargs[self.slug_url_kwarg]
-        }
-
     def get_queryset(self):
         if not self.request.user.is_authenticated:
             return Post.objects.none()
@@ -324,7 +317,18 @@ class ProfileView(ListView):
     model = Post
 
 
-class ProfileUserPosts(ListView):
+class ProfileUserEditView(UpdateView):
+    model = AuthorInfo
+    form_class = ProfileUserChangeForm
+    template_name = 'web/profile_edit.html'
+    slug_field = 'id'
+    slug_url_kwarg = 'id'
+
+    def get_success_url(self):  # message данные успешно сохранены
+        return reverse('user_profile_edit', args=(self.kwargs['id'],))
+
+
+class ProfileUserPostsView(ListView):
     template_name = 'web/user_posts.html'
     context_object_name = 'posts'
 
@@ -352,7 +356,7 @@ class ProfileUserPosts(ListView):
         if not self.request.user.is_authenticated:
             return {}
         return {
-            **super(ProfileUserPosts, self).get_context_data(),
+            **super(ProfileUserPostsView, self).get_context_data(),
             'query_params': self.request.GET,
             'published_posts': self.published_posts,
             'draft_posts': self.draft_posts
