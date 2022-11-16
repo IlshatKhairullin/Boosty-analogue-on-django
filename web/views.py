@@ -113,9 +113,12 @@ def LikePostView(request, post_slug, post_id):
         else:
             return HttpResponseRedirect(reverse('register'))  # message to do
 
+def LikeCommentView(request, post_slug, post_id, comment_id):
+
     if 'comment_like' in request.POST:
+        print(comment_id)
         if request.user.is_authenticated:
-            comment = get_object_or_404(Comment, id=request.POST.get('comment_like'))
+            comment = get_object_or_404(Comment, id=comment_id)
             if comment.likes.filter(id=request.user.id).exists():
                 comment.likes.remove(request.user)
             else:
