@@ -81,9 +81,11 @@ class PostListView(ListView):
         return posts
 
     def get_context_data(self, *, object_list=None, **kwargs):
+        filtered_posts = Post.objects.filter(status=Status.published)
+
         return {
             **super(PostListView, self).get_context_data(**kwargs),
-            'most_popular_tags': Post.tags.most_common()[:4],
+            'most_popular_tags': Post.tags.most_common(extra_filters={'post__in': filtered_posts})[:4],
             'search': self.request.GET.get('search')
         }
 
