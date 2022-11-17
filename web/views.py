@@ -26,6 +26,11 @@ class CustomMessageMixin:
 class Register(View):
     template_name = 'registration/register.html'
 
+    def create_author_info_draft(self):
+        obj = AuthorInfo()
+        obj.user_id = self.request.user.id
+        obj.save()
+
     def get(self, request):
         context = {
             'form': RegisterUserForm()
@@ -41,6 +46,7 @@ class Register(View):
             password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=password)
             login(request, user)
+            self.create_author_info_draft()
             return redirect('/home')
         context = {
             'form': form
@@ -113,10 +119,9 @@ def LikePostView(request, post_slug, post_id):
         else:
             return HttpResponseRedirect(reverse('register'))  # message to do
 
-def LikeCommentView(request, post_slug, post_id, comment_id):
 
+def LikeCommentView(request, post_slug, post_id, comment_id):
     if 'comment_like' in request.POST:
-        print(comment_id)
         if request.user.is_authenticated:
             comment = get_object_or_404(Comment, id=comment_id)
             if comment.likes.filter(id=request.user.id).exists():
