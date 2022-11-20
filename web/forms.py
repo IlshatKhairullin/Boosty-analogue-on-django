@@ -44,7 +44,6 @@ class CommentForm(forms.ModelForm):
 
 
 class ProfileUserChangeForm(forms.ModelForm):
-    profile_pic = forms.ImageField(required=False, label='Profile picture')
     facebook_url = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'user_profile_edit'}))
     instagram_url = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'user_profile_edit'}))
     vk_url = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'user_profile_edit'}))
@@ -53,3 +52,4 @@ class ProfileUserChangeForm(forms.ModelForm):
     class Meta:
         model = AuthorInfo
         fields = ('name', 'surname', 'bio', 'profile_pic', 'facebook_url', 'instagram_url', 'vk_url', 'github_url')
+

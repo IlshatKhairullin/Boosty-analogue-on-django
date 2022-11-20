@@ -252,6 +252,10 @@ form.search input {
     margin-bottom: 20px;
 }
 
+.not-visible {
+    display: none;
+}
+
 /* Aside
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 

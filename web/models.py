@@ -55,6 +55,7 @@ class AuthorInfo(models.Model):
     name = models.CharField(max_length=100, null=True, blank=True)
     surname = models.CharField(max_length=100, null=True, blank=True)
     profile_pic = models.ImageField(null=True, blank=True, upload_to='user_avatars')
+    profile_background = models.ImageField(null=True, blank=True, upload_to='user_backgrounds')
     facebook_url = models.CharField(max_length=255, null=True, blank=True)
     instagram_url = models.CharField(max_length=255, null=True, blank=True)
     vk_url = models.CharField(max_length=255, null=True, blank=True)
