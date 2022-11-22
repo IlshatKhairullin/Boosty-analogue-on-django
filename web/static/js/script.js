@@ -3,14 +3,28 @@ $(".comment_reply_btn").click(function (event) {
     $(this).next('.reply_comment_block').find('.reply_jquery_block').fadeToggle();
 });
 
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
 console.log('hello world')
 const alertBox = document.getElementById('alert-box')
 const imageBox = document.getElementById('image-box')
 const imageForm = document.getElementById('image-form')
 const confirmBtn = document.getElementById('confirm-btn')
 const input = document.getElementById('id_profile_pic')
-
-const csrf = document.getElementsByName('csrfmiddlewaretoken')
 
 
 input.addEventListener('change', () => {
@@ -40,10 +54,13 @@ input.addEventListener('change', () => {
         cropper.getCroppedCanvas().toBlob((blob) => {
             console.log('confirmed')
 
+            const csrftoken = getCookie('csrftoken')
+            imageForm.append('profile_pic', blob, 'profile_pic.png');
 
             $.ajax({
                 type:'POST',
-                action: imageForm.action,
+                headers: {'X-CSRFToken': csrftoken},
+                url: imageForm.action,
                 enctype: 'multipart/form-data',
                 data: imageForm,
                 success: function(response){

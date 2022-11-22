@@ -8,7 +8,8 @@
     {% if user.is_authenticated %}
         <div id="alert-box"></div>
         <div class="user_profile_edit" id="image-box">
-            <form action="{% url 'user_profile_edit' id=authorinfo.id %}" method="post" id="image-form">
+            <form action="{% url 'user_profile_edit' id=authorinfo.id %}" method="post" id="image-form"
+                  enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form.as_p }}
                 <button class="btn btn-success">Save</button>

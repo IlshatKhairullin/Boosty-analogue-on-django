@@ -4,6 +4,7 @@ from django.db.models import Q, Count
 from django.http import HttpResponseRedirect
 from django.utils.text import slugify
 from django.views import View
+from django.views.decorators.csrf import csrf_protect
 from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView
 from django.views.generic.edit import FormMixin
 from .forms import UserCreationForm, RegisterUserForm, PostForm, CommentForm, ProfileUserChangeForm
