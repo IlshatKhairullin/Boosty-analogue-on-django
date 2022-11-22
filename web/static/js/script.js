@@ -55,14 +55,16 @@ input.addEventListener('change', () => {
             console.log('confirmed')
 
             const csrftoken = getCookie('csrftoken')
-            imageForm.append('profile_pic', blob, 'profile_pic.png');
+
+            const fd =  new FormData(imageForm);
+            fd.append('profile_pic', blob, 'profile_pic.png');
 
             $.ajax({
                 type:'POST',
                 headers: {'X-CSRFToken': csrftoken},
                 url: imageForm.action,
                 enctype: 'multipart/form-data',
-                data: imageForm,
+                data: fd,
                 success: function(response){
                     console.log('success', response)
                     alertBox.innerHTML = `<div class="alert alert-success" role="alert">
