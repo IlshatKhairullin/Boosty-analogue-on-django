@@ -51,11 +51,13 @@ class ProfileUserChangeForm(forms.ModelForm):
 
     class Meta:
         model = AuthorInfo
-        fields = ('name', 'surname', 'bio', 'profile_pic', 'facebook_url', 'instagram_url', 'vk_url', 'github_url')
+        fields = (
+            'name', 'surname', 'bio', 'profile_pic', 'profile_background', 'facebook_url', 'instagram_url', 'vk_url',
+            'github_url'
+        )
 
 
 class ProfileSettingsForm(forms.ModelForm):
-
     class Meta:
         model = AuthorInfo
-        fields = ('is_private', )
+        fields = ('is_private',)
