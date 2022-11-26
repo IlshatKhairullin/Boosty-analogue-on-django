@@ -25,11 +25,21 @@ const imageBox = document.getElementById('image-box')
 const imageForm = document.getElementById('image-form')
 const confirmBtn = document.getElementById('confirm-btn')
 const input = document.getElementById('id_profile_pic')
+const sidebar = document.getElementsByClassName('profile_aside_block')
+const back_link = document.getElementById('back_link')
+const post_list_button = document.getElementById('post_list_button')
 
 
 input.addEventListener('change', () => {
     alertBox.innerHTML = ""
     confirmBtn.classList.remove('not-visible')
+    back_link.classList.remove('not-visible')
+    post_list_button.classList.add('not-visible')
+
+    for (const box of sidebar) {
+        box.classList.add('not-visible');
+    }
+
     const img_data = input.files[0]
     const url = URL.createObjectURL(img_data)
 
@@ -50,28 +60,28 @@ input.addEventListener('change', () => {
     });
 
     var cropper = $image.data('cropper');
-    confirmBtn.addEventListener('click', ()=>{
+    confirmBtn.addEventListener('click', () => {
         cropper.getCroppedCanvas().toBlob((blob) => {
             console.log('confirmed')
 
             const csrftoken = getCookie('csrftoken')
 
-            const fd =  new FormData(imageForm);
+            const fd = new FormData(imageForm);
             fd.append('profile_pic', blob, 'profile_pic.png');
 
             $.ajax({
-                type:'POST',
+                type: 'POST',
                 headers: {'X-CSRFToken': csrftoken},
                 url: imageForm.action,
                 enctype: 'multipart/form-data',
                 data: fd,
-                success: function(response){
+                success: function (response) {
                     console.log('success', response)
                     alertBox.innerHTML = `<div class="alert alert-success" role="alert">
                                             Successfully saved and cropped the selected image
                                         </div>`
                 },
-                error: function(error){
+                error: function (error) {
                     console.log('error', error)
                     alertBox.innerHTML = `<div class="alert alert-danger" role="alert">
                                             Ups...something went wrong
