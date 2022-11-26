@@ -1,0 +1,16 @@
+{% extends "web/base.html" %}
+
+
+{% block content %}
+    {% include 'includes/sidebar_and_back_to_link.html' %}
+    <h1>Profile settings</h1>
+
+    {% if user.is_authenticated %}
+            <form action="{% url 'user_profile_settings' id=authorinfo.id %}" method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button class="btn btn-success">Save</button>
+            </form>
+    {% endif %}
+
+{% endblock %}

@@ -252,6 +252,39 @@ form.search input {
     margin-bottom: 20px;
 }
 
+.not-visible {
+    display: none;
+}
+
+/* Aside
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+
+.profile_aside_block {
+    padding-left: 115px;
+}
+
+
+
+.profile_aside {
+    width: 40%;
+    padding-left: .5rem;
+    margin-left: .5rem;
+    float: right;
+    box-shadow: inset 5px 0 5px -5px #555555;
+    font-style: italic;
+    color: black;
+    margin-top: 45px;
+}
+
+.profile_aside > p {
+    margin: .5rem;
+}
+
+.side_links {
+    display: grid;
+}
+
+
 /* FOOTER
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 .page-footer {
@@ -281,6 +314,18 @@ form.search input {
 
     .page-header .register {
         order: 1;
+    }
+
+    .page-header form {
+        display: flex;
+    }
+
+    .page-header b {
+        margin-right: 12px;
+    }
+
+    .page-header button {
+        border: none;
     }
 
     .page-footer {

@@ -28,9 +28,13 @@ class Post(BaseModel):
     status = models.CharField(max_length=10, choices=Status.choices, default=Status.draft)
     tags = TaggableManager()
     likes = models.ManyToManyField(User, related_name='blog_post_from_like')
+    views = models.ManyToManyField(User, related_name='post_views')
 
     def number_of_likes(self):
         return self.likes.count()
+
+    def number_of_views(self):
+        return self.views.count()
 
     def get_absolute_url(self):
         return reverse('post_detail', args=[self.slug, self.id])
@@ -46,9 +50,20 @@ class Post(BaseModel):
 
 
 class AuthorInfo(models.Model):
-    description = models.CharField(max_length=500)
-    goals = models.CharField(max_length=500)
-    img = models.ImageField(null=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Username', related_name='author_info')
+    bio = models.TextField(null=True)
+    name = models.CharField(max_length=100, null=True, blank=True)
+    surname = models.CharField(max_length=100, null=True, blank=True)
+    profile_pic = models.ImageField(null=True, blank=True, upload_to='user_avatars')
+    profile_background = models.ImageField(null=True, blank=True, upload_to='user_backgrounds')
+    facebook_url = models.CharField(max_length=255, null=True, blank=True)
+    instagram_url = models.CharField(max_length=255, null=True, blank=True)
+    vk_url = models.CharField(max_length=255, null=True, blank=True)
+    github_url = models.CharField(max_length=255, null=True, blank=True)
+    is_private = models.BooleanField(default=False)
+
+    def __str__(self):
+        return str(self.user)
 
 
 # class Subscriber(models.Model):
@@ -61,8 +76,8 @@ class AuthorInfo(models.Model):
 #     def get_queryset(self):
 #         return super().get_queryset().filter(parent=None)
 
-    # def get_queryset(self):
-    #     return super().get_queryset().filter(is_active=True)
+# def get_queryset(self):
+#     return super().get_queryset().filter(is_active=True)
 
 
 class Comment(BaseModel):

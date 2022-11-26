@@ -1,12 +1,13 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.http import HttpResponseRedirect
 from django.utils.text import slugify
 from django.views import View
+from django.views.decorators.csrf import csrf_protect
 from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView
 from django.views.generic.edit import FormMixin
-from .forms import UserCreationForm, RegisterUserForm, PostForm, CommentForm
+from .forms import UserCreationForm, RegisterUserForm, PostForm, CommentForm, ProfileUserChangeForm, ProfileSettingsForm
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect, get_object_or_404
 
@@ -26,6 +27,11 @@ class CustomMessageMixin:
 class Register(View):
     template_name = 'registration/register.html'
 
+    def create_author_info_draft(self):
+        obj = AuthorInfo()
+        obj.user_id = self.request.user.id
+        obj.save()
+
     def get(self, request):
         context = {
             'form': RegisterUserForm()
@@ -41,6 +47,7 @@ class Register(View):
             password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=password)
             login(request, user)
+            self.create_author_info_draft()
             return redirect('/home')
         context = {
             'form': form
@@ -51,12 +58,22 @@ class Register(View):
 class PostListView(ListView):
     template_name = 'web/main_page.html'
     context_object_name = 'posts'
-    paginate_by = 4
+    paginate_by = 20
     slug_field = 'id'
     slug_url_kwarg = 'id'
 
     def get_queryset(self):
         queryset = Post.objects.filter(status=Status.published)
+
+        if 'popularity_post' in self.request.GET:
+            queryset = queryset.annotate(
+                total_views=Count('views', distinct=True)
+            ).order_by('-total_views')
+        elif 'rating_post' in self.request.GET:
+            queryset = queryset.annotate(
+                total_likes=Count('likes', distinct=True)
+            ).order_by('-total_likes')
+
         return self.filter_queryset(queryset)
 
     def filter_queryset(self, posts):
@@ -71,17 +88,19 @@ class PostListView(ListView):
         return posts
 
     def get_context_data(self, *, object_list=None, **kwargs):
+        filtered_posts = Post.objects.filter(status=Status.published)
+
         return {
             **super(PostListView, self).get_context_data(**kwargs),
-            'most_popular_tags': Post.tags.most_common()[:4],
+            'most_popular_tags': Post.tags.most_common(extra_filters={'post__in': filtered_posts})[:4],
             'search': self.request.GET.get('search')
         }
 
 
 def LikePostView(request, post_slug, post_id):
-    if 'post_like' in request.POST:
+    if 'post_like_post_detail' in request.POST:
         if request.user.is_authenticated:
-            post = get_object_or_404(Post, id=request.POST.get('post_like'))
+            post = get_object_or_404(Post, id=request.POST.get('post_like_post_detail'))
             if post.likes.filter(id=request.user.id).exists():
                 post.likes.remove(request.user)
             else:
@@ -90,9 +109,22 @@ def LikePostView(request, post_slug, post_id):
         else:
             return HttpResponseRedirect(reverse('register'))  # message to do
 
+    if 'post_like_main_page':
+        if request.user.is_authenticated:
+            post = get_object_or_404(Post, id=request.POST.get('post_like_main_page'))
+            if post.likes.filter(id=request.user.id).exists():
+                post.likes.remove(request.user)
+            else:
+                post.likes.add(request.user)
+            return HttpResponseRedirect(reverse('post_list'))
+        else:
+            return HttpResponseRedirect(reverse('register'))  # message to do
+
+
+def LikeCommentView(request, post_slug, post_id, comment_id):
     if 'comment_like' in request.POST:
         if request.user.is_authenticated:
-            comment = get_object_or_404(Comment, id=request.POST.get('comment_like'))
+            comment = get_object_or_404(Comment, id=comment_id)
             if comment.likes.filter(id=request.user.id).exists():
                 comment.likes.remove(request.user)
             else:
@@ -163,6 +195,10 @@ class DetailPostView(CustomMessageMixin, FormMixin, DetailView, UserPassesTestMi
     def get_context_data(self, **kwargs):
         post = get_object_or_404(Post, id=self.kwargs['id'])
         total_post_likes = post.number_of_likes()
+        total_views = post.number_of_views()
+
+        if self.request.user.is_authenticated:
+            post.views.add(self.request.user)
 
         post_liked = False
         if post.likes.filter(id=self.request.user.id):
@@ -171,7 +207,8 @@ class DetailPostView(CustomMessageMixin, FormMixin, DetailView, UserPassesTestMi
         return {
             **super(DetailPostView, self).get_context_data(**kwargs),
             'total_post_likes': total_post_likes,
-            'post_liked': post_liked
+            'post_liked': post_liked,
+            'post_views': total_views,
         }
 
     def get_success_url(self, **kwargs):
@@ -244,7 +281,7 @@ class PostCreateFormView(CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse('profile')
+        return reverse('profile_user_posts')
 
 
 class PostUpdateView(UpdateView):
@@ -254,7 +291,6 @@ class PostUpdateView(UpdateView):
     slug_url_kwarg = 'id'
 
     def form_valid(self, form):
-        form.instance.author = self.request.user
         form.instance.slug = slugify(form.instance.title)
         return super().form_valid(form)
 
@@ -278,23 +314,44 @@ class PostDeleteView(DeleteView):
     slug_field = 'id'
     slug_url_kwarg = 'id'
 
-    def get_context_data(self, **kwargs):
-        return {
-            **super(PostDeleteView, self).get_context_data(**kwargs),
-            'id': self.kwargs[self.slug_url_kwarg]
-        }
-
     def get_queryset(self):
         if not self.request.user.is_authenticated:
             return Post.objects.none()
         return Post.objects.filter(author=self.request.user)
 
     def get_success_url(self):
-        return reverse('profile')
+        return reverse('profile_user_posts')
 
 
 class ProfileView(ListView):
-    template_name = 'web/profile.html'
+    template_name = 'web/profile_post_stats.html'
+    model = Post
+
+
+class ProfileUserEditView(UpdateView):
+    model = AuthorInfo
+    form_class = ProfileUserChangeForm
+    template_name = 'web/profile_edit.html'
+    slug_field = 'id'
+    slug_url_kwarg = 'id'
+
+    def get_success_url(self):  # message данные успешно сохранены
+        return reverse('user_profile_edit', args=(self.kwargs['id'],))
+
+
+class ProfileSettings(UpdateView):
+    model = AuthorInfo
+    form_class = ProfileSettingsForm
+    template_name = 'web/profile_settings.html'
+    slug_field = 'id'
+    slug_url_kwarg = 'id'
+
+    def get_success_url(self):
+        return reverse('user_profile_settings', args=(self.kwargs['id'],))
+
+
+class ProfileUserPostsView(ListView):
+    template_name = 'web/user_posts.html'
     context_object_name = 'posts'
 
     def get_queryset(self):
@@ -321,7 +378,7 @@ class ProfileView(ListView):
         if not self.request.user.is_authenticated:
             return {}
         return {
-            **super(ProfileView, self).get_context_data(),
+            **super(ProfileUserPostsView, self).get_context_data(),
             'query_params': self.request.GET,
             'published_posts': self.published_posts,
             'draft_posts': self.draft_posts

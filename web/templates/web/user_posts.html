@@ -2,8 +2,8 @@
 {% load posts %}
 
 {% block content %}
-    <a href="{% url 'post_list' %}">Назад</a>
-    <a href="{% url 'post_create' %}">Добавить новый пост</a>
+    {% include 'includes/sidebar_and_back_to_link.html' %}
+    <a href="{% url 'post_create' %}">Add new post</a>
     <h1>Your posts</h1>
     <p>
         Выводить
