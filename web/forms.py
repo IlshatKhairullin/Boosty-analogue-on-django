@@ -53,3 +53,9 @@ class ProfileUserChangeForm(forms.ModelForm):
         model = AuthorInfo
         fields = ('name', 'surname', 'bio', 'profile_pic', 'facebook_url', 'instagram_url', 'vk_url', 'github_url')
 
+
+class ProfileSettingsForm(forms.ModelForm):
+
+    class Meta:
+        model = AuthorInfo
+        fields = ('is_private', )

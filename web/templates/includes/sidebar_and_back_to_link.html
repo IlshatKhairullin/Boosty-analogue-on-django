@@ -1,6 +1,6 @@
 {% block content %}
     <a href="{% url 'post_list' %}" id="post_list_button">Back to people's posts</a>
-    <a href="{% url 'user_profile_edit' id=authorinfo.id %}" class="not-visible" id="back_link">Back to edit profile</a>
+    <a href="{% url 'user_profile_edit' id=user.author_info.id %}" class="not-visible" id="back_link">Back to edit profile</a>
 {% endblock %}
 
 <div class="profile_aside_block">
@@ -20,7 +20,7 @@
                 <a href="{% url 'profile_post_stats' %}">Stats</a>
                 <a href="{% url 'user_profile_edit' id=user.author_info.id %}">Edit profile</a>
                 <a href="">Profile look for users</a>
-                <a href="">Profile settings</a>
+                <a href="{% url 'user_profile_settings' id=user.author_info.id %}">Profile settings</a>
                 <hr style="width: 30%">
                 <a href="">Edit User</a>
             </div>

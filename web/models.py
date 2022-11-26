@@ -60,7 +60,7 @@ class AuthorInfo(models.Model):
     instagram_url = models.CharField(max_length=255, null=True, blank=True)
     vk_url = models.CharField(max_length=255, null=True, blank=True)
     github_url = models.CharField(max_length=255, null=True, blank=True)
-    private = models.BooleanField(default=False)
+    is_private = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.user)

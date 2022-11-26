@@ -7,7 +7,7 @@ from django.views import View
 from django.views.decorators.csrf import csrf_protect
 from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView
 from django.views.generic.edit import FormMixin
-from .forms import UserCreationForm, RegisterUserForm, PostForm, CommentForm, ProfileUserChangeForm
+from .forms import UserCreationForm, RegisterUserForm, PostForm, CommentForm, ProfileUserChangeForm, ProfileSettingsForm
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect, get_object_or_404
 
@@ -337,6 +337,17 @@ class ProfileUserEditView(UpdateView):
 
     def get_success_url(self):  # message данные успешно сохранены
         return reverse('user_profile_edit', args=(self.kwargs['id'],))
+
+
+class ProfileSettings(UpdateView):
+    model = AuthorInfo
+    form_class = ProfileSettingsForm
+    template_name = 'web/profile_settings.html'
+    slug_field = 'id'
+    slug_url_kwarg = 'id'
+
+    def get_success_url(self):
+        return reverse('user_profile_settings', args=(self.kwargs['id'],))
 
 
 class ProfileUserPostsView(ListView):

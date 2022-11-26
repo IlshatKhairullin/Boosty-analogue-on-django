@@ -14,6 +14,7 @@ urlpatterns = [
     path('home/<slug:slug>/<int:post_id>/comment/<int:id>/edit', views.UpdateCommentView.as_view(), name='comment_edit'),
     path('profile/stats', views.ProfileView.as_view(), name='profile_post_stats'),
     path('profile/edit/<int:id>', views.ProfileUserEditView.as_view(), name='user_profile_edit'),
+    path('profile/settings/<int:id>', views.ProfileSettings.as_view(), name='user_profile_settings'),
     path('profile/my_posts', views.ProfileUserPostsView.as_view(), name='profile_user_posts'),
     path('profile/my_posts/<slug:slug>/<int:id>', views.DetailPostEditView.as_view(), name='post_edit_detail'),
     path('profile/my_posts/post-add/', views.PostCreateFormView.as_view(), name='post_create'),
