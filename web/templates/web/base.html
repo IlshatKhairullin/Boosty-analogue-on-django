@@ -1,4 +1,4 @@
-{% load static %}
+{% load static socialaccount %}
 
 
 <html lang="ru">
@@ -24,82 +24,14 @@
 
 <div class="wrapper">
 
-    <header class="page-header">
-        <nav>
-            <a href="{% url 'post_list' %}"><img src="{% static 'images/logo1.png' %}" width="180" alt="Our logo"></a>
-            <ul>
-                <b>Filter posts by:</b>
-                <form action="{% url 'post_list' %}" method="get">
-                    {% csrf_token %}
-                    <li>
-                        <button name="relevance_post">Relevance</button>
-                    </li>
-                    <li>
-                        <button name="popularity_post">Popularity</button>
-                    </li>
-                    <li>
-                        <button name="rating_post">Rating</button>
-                    </li>
-                </form>
-            </ul>
-
-            <form action="" method="get" class="search">
-                <label>
-                    <input class="search_input" type="text" name="search" placeholder="Поиск..."
-                           value="{{ search|default_if_none:'' }}">
-                </label>
-                <button class="search_button"><i class="fa fa-search"></i></button>
-            </form>
-
-            <ul>
-                <button class="donate" style="color: black;" onclick="return ChangeColor(this);">Donate</button>
-
-                {% if user.is_authenticated %}
-                    <button onclick="location.href= '{% url 'profile_post_stats' %}'" class="profile"
-                            style="color: black;"
-                            onmouseenter="return ChangeColor(this);"
-                            onmouseout="return ChangeColorOut(this)">Profile
-                    </button>
-
-                    <button onclick="location.href={% url 'logout' %}" class="logout" style="color: black"
-                            onmouseenter="return ChangeColor(this);"
-                            onmouseout="return ChangeColorOut(this)">Logout
-                    </button>
-                {% else %}
-
-                    <button onclick="location.href={% url 'login' %}" class="sign_in" style="color: black;"
-                            onmouseenter="return ChangeColor(this);"
-                            onmouseout="return ChangeColorOut(this)">Sign in
-                    </button>
-
-                    <button onclick="location.href={% url 'register' %}" class="register" style="color: black"
-                            onmouseenter="return ChangeColor(this);"
-                            onmouseout="return ChangeColorOut(this)">Register
-                    </button>
-                {% endif %}
-            </ul>
-        </nav>
-    </header>
+    {% include 'includes/header.html' %}
 
     <div id="content">
         {% block content %}
         {% endblock %}
     </div>
 
-    <footer class="page-footer">
-        <small>© Good Footer</small>
-        <div>
-            <a href="https://ru-ru.facebook.com/">
-                <img src="{% static 'images/F.png' %}" width="40" height="20" alt="Facebook">
-            </a>
-            <a href="https://vk.com/id313094917">
-                <img src="{% static 'images/VK.png' %}" width="40" height="21" alt="VK">
-            </a>
-            <a href="https://ok.ru/">
-                <img src="{% static 'images/Odn.png' %}" width="40" height="22" alt="Odnoklassniki">
-            </a>
-        </div>
-    </footer>
+    {% include 'includes/footer.html' %}
 
 </div>
 
