@@ -1,0 +1,29 @@
+{% extends 'web/base.html' %}
+{% load static socialaccount account %}
+
+
+{% block content %}
+    {% get_providers as socialaccount_providers %}
+
+    <div>
+        {% if form.errors %}
+            <p>{{ form.errors.error }}</p>
+        {% endif %}
+
+        <form action="{% url 'account_login' %}" method="post" class="login_form">
+            {{ form }}
+            {% csrf_token %}
+            <button type="submit" class="input-button-enter btn-success">Enter</button>
+        </form>
+
+        <ul class="socialaccount_providers">
+            <div style="display: flex; gap: 8px">
+                Login via VK:
+                {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+            </div>
+        </ul>
+
+        <a href="{% url 'password_reset' %}">Forgot password?</a>
+    </div>
+
+{% endblock %}

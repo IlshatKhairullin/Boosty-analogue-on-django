@@ -94,6 +94,10 @@ body {
     margin-left: 10px;
 }
 
+.login_form {
+    margin-top: 122px;
+}
+
 .page-header .logout {
     font-family: inherit;
     font-size: 1.2rem;
@@ -262,7 +266,6 @@ form.search input {
 .profile_aside_block {
     padding-left: 115px;
 }
-
 
 
 .profile_aside {

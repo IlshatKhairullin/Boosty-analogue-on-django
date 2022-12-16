@@ -2,7 +2,7 @@
 
 <header class="page-header">
     <nav>
-        <a href="{% url 'post_list' %}"><img src="{% static 'images/logo1.png' %}" width="180" alt="Our logo"></a>
+        <a href="{% url 'post_list' %}"><h2>Bikabu</h2></a>
         <ul>
             <b>Filter posts by:</b>
             <form action="{% url 'post_list' %}" method="get">
@@ -43,7 +43,7 @@
                 </button>
             {% else %}
 
-                <button onclick="location.href={% url 'account_login' %}" class="sign_in" style="color: black;"
+                <button onclick="location.href={% url 'login' %}" class="sign_in" style="color: black;"
                         onmouseenter="return ChangeColor(this);"
                         onmouseout="return ChangeColorOut(this)">Sign in
                 </button>

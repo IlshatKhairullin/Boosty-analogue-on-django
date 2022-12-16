@@ -5,7 +5,6 @@ urlpatterns = [
     path('', include('django.contrib.auth.urls')),
     path('home/', views.PostListView.as_view(), name='post_list'),
     path('register/', views.Register.as_view(), name='register'),
-    path('login/', views.login, name='login'),
     path('home/<slug:slug>/<int:id>', views.DetailPostView.as_view(), name='post_detail'),
     path('post_like/<slug:post_slug>/<int:post_id>', views.LikePostView, name='post_like'),
     path('comment_like/<slug:post_slug>/<int:post_id>/<int:comment_id>', views.LikeCommentView, name='comment_like'),
