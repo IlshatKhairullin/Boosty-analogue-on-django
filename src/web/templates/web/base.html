@@ -1,0 +1,60 @@
+{% load static socialaccount %}
+
+
+<html lang="ru">
+
+<head>
+    <!-- cropper link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropper/4.1.0/cropper.min.css">
+
+    <!-- bootstrap link -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link
+            href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css"
+            rel="stylesheet" type='text/css'>
+
+    <!-- custom css link-->
+    <link rel="stylesheet" href="{% static 'css/base.css' %}" type="text/css">
+
+    <title>{% block title %}{% endblock %}</title>
+    <meta charset="utf-8">
+</head>
+
+<div class="wrapper">
+
+    {% include 'includes/header.html' %}
+
+    <div id="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    {% include 'includes/footer.html' %}
+
+</div>
+
+<!-- jquery script -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+<!-- cropper script -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropper/4.1.0/cropper.min.js"></script>
+
+<!-- custom js-->
+<script src="{% static 'js/script.js' %}"></script>
+<script>
+    function ChangeColor(Element) {
+        if (Element.style.color === 'black') Element.style.color = 'green';
+        else Element.style.color = 'black';
+        return false;
+    }
+
+    function ChangeColorOut(Element) {
+        if (Element.style.color === 'green') Element.style.color = 'black';
+        else Element.style.color = 'green';
+        return false;
+    }
+</script>
+
+</html>

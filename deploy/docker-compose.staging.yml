@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  nginx:
+    image: bikabu-nginx:latest
+    build:
+      context: ..
+      dockerfile: deploy/nginx/Dockerfile
+    ports:
+      - 84:84
+    depends_on:
+      - app
+
+  app:
+    image: bikabu:latest
+    build:
+      dockerfile: deploy/app/Dockerfile
+      context: ..
+    ports:
+      - 8000:8000
+    depends_on:
+      - postgres
+    environment:
+      DB_HOST: postgres
+      DEBUG: "false"
+    restart: always
+
+  postgres:
+    image: postgres:14-alpine
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 230999
+
+    volumes:
+      - "db:/var/lib/postgresql/data"
+
+volumes:
+  db:

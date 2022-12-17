@@ -51,7 +51,7 @@ class Post(BaseModel):
 
 class AuthorInfo(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Username', related_name='author_info')
-    bio = models.TextField(null=True)
+    bio = models.TextField(null=True, blank=True)
     name = models.CharField(max_length=100, null=True, blank=True)
     surname = models.CharField(max_length=100, null=True, blank=True)
     profile_pic = models.ImageField(null=True, blank=True, upload_to='user_avatars')
