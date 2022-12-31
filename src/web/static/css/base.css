@@ -159,6 +159,18 @@ body {
     margin-bottom: 20px;
 }
 
+.like_form h2 {
+    display: flex;
+}
+
+.like_form a {
+    margin-right: 25px;
+}
+
+.like_form div {
+    margin-right: 25px;
+}
+
 .like_form_on_reply button {
     margin-left: 23px;
     border: none;

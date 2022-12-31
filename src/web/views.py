@@ -1,5 +1,4 @@
 from django.contrib import messages
-from django.contrib.auth.mixins import UserPassesTestMixin
 from django.db.models import Q, Count
 from django.http import HttpResponseRedirect
 from django.utils.text import slugify
@@ -149,7 +148,7 @@ class TagIndexView(ListView):
         }
 
 
-class DetailPostView(CustomMessageMixin, FormMixin, DetailView, UserPassesTestMixin):
+class DetailPostView(CustomMessageMixin, FormMixin, DetailView):
     # FormMixin - тк изначально в DetailView нет параметра form_class
     model = Post
     form_class = CommentForm
@@ -157,12 +156,6 @@ class DetailPostView(CustomMessageMixin, FormMixin, DetailView, UserPassesTestMi
     template_name = 'web/detail.html'
     slug_field = 'id'
     slug_url_kwarg = 'id'
-
-    def test_func(self):  # выкинуть надпись: для add comm нужно войти на сайт
-        comment = self.get_object()
-        if self.request.user == comment.author:
-            return True
-        return redirect('login')
 
     def post(self, request, *args, **kwargs):
         form = self.get_form()
@@ -214,7 +207,7 @@ class DetailPostView(CustomMessageMixin, FormMixin, DetailView, UserPassesTestMi
         return reverse('post_detail', args=(self.kwargs['slug'], self.kwargs[self.slug_url_kwarg]))
 
 
-class UpdateCommentView(UpdateView, UserPassesTestMixin):
+class UpdateCommentView(UpdateView):
     model = Comment
     form_class = CommentForm
     template_name = 'web/comment_detail.html'
@@ -231,26 +224,14 @@ class UpdateCommentView(UpdateView, UserPassesTestMixin):
     def get_success_url(self, **kwargs):
         return reverse('post_detail', args=(self.kwargs['slug'], self.kwargs['post_id']))
 
-    def test_func(self):
-        comment = self.get_object()
-        if self.request.user == comment.author:
-            return True
-        return redirect('login')
 
-
-class DeleteCommentView(DeleteView, UserPassesTestMixin):
+class DeleteCommentView(DeleteView):
     model = Comment
     slug_field = 'id'
     slug_url_kwarg = 'id'
 
     def get(self, *args, **kwargs):
         return self.post(*args, **kwargs)
-
-    def test_func(self):
-        comment = self.get_object()
-        if self.request.user == comment.author:
-            return True
-        return redirect('login')
 
     def get_success_url(self, **kwargs):
         return reverse('post_detail', args=(self.kwargs['slug'], self.kwargs['post_id']))
@@ -270,7 +251,7 @@ class DetailPostEditView(DetailView):
         }
 
 
-class PostCreateFormView(CreateView):
+class PostCreateView(CreateView):
     template_name = 'web/post_add_edit_form.html'
     form_class = PostForm
 
