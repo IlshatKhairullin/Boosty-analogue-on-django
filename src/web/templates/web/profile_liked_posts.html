@@ -1,0 +1,17 @@
+{% extends "web/base.html" %}
+
+{% block content %}
+    {% include 'includes/sidebar_and_back_to_link.html' %}
+
+    <h2 style="margin-top: 25px">You liked {{ liked_posts.count }}
+        {% if liked_posts.count == 1 or liked_posts.count == 0 %}
+            post:
+        {% else %}
+            posts:
+        {% endif %}
+    </h2>
+
+    {% for post in liked_posts %}
+        <a href="{{ post.get_absolute_url }}" style="display: flex;">{{ post }}</a>
+    {% endfor %}
+{% endblock %}

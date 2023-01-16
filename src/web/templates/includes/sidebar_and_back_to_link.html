@@ -15,7 +15,7 @@
                 <a href="{% url 'profile_user_posts' %}">My posts</a>
                 <a href="">Favourite posts</a>
                 <a href="">Watched posts</a>
-                <a href="">Liked posts</a>
+                <a href="{% url 'profile_liked_posts' %}">Liked posts</a>
                 <hr style="width: 30%">
                 <a href="{% url 'profile_post_stats' %}">Stats</a>
                 <a href="{% url 'user_profile_edit' id=user.id %}">Edit profile</a>
