@@ -158,7 +158,7 @@ class DetailPostView(CustomMessageMixin, FormMixin, DetailView):
     model = Post
     form_class = CommentForm
     success_msg = 'Комментарий успешно добавлен'
-    template_name = 'web/detail.html'
+    template_name = 'web/post_detail.html'
     slug_field = 'id'
     slug_url_kwarg = 'id'
 
