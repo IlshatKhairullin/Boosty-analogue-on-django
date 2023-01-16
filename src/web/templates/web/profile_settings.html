@@ -6,7 +6,7 @@
     <h1>Profile settings</h1>
 
     {% if user.is_authenticated %}
-            <form action="{% url 'user_profile_settings' id=authorinfo.id %}" method="post">
+            <form action="{% url 'user_profile_settings' id=user.id %}" method="post">
                 {% csrf_token %}
                 {{ form.as_p }}
                 <button class="btn btn-success">Save</button>

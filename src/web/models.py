@@ -17,6 +17,12 @@ class BaseModel(models.Model):
 
 class User(AbstractUser):
     email = models.EmailField('Email', unique=True)
+    bio = models.TextField(null=True, blank=True)
+    profile_pic = models.ImageField(null=True, blank=True, upload_to='user_avatars')
+    profile_background = models.ImageField(null=True, blank=True, upload_to='user_backgrounds')
+    vk_url = models.CharField(max_length=255, null=True, blank=True)
+    github_url = models.CharField(max_length=255, null=True, blank=True)
+    is_private = models.BooleanField(default=False)
 
 
 class Post(BaseModel):
@@ -47,37 +53,6 @@ class Post(BaseModel):
 
     def __str__(self):
         return self.title
-
-
-class AuthorInfo(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Username', related_name='author_info')
-    bio = models.TextField(null=True, blank=True)
-    name = models.CharField(max_length=100, null=True, blank=True)
-    surname = models.CharField(max_length=100, null=True, blank=True)
-    profile_pic = models.ImageField(null=True, blank=True, upload_to='user_avatars')
-    profile_background = models.ImageField(null=True, blank=True, upload_to='user_backgrounds')
-    facebook_url = models.CharField(max_length=255, null=True, blank=True)
-    instagram_url = models.CharField(max_length=255, null=True, blank=True)
-    vk_url = models.CharField(max_length=255, null=True, blank=True)
-    github_url = models.CharField(max_length=255, null=True, blank=True)
-    is_private = models.BooleanField(default=False)
-
-    def __str__(self):
-        return str(self.user)
-
-
-# class Subscriber(models.Model):
-#     user = models.ForeignKey(User, related_name='subscriber',
-#                              on_delete=models.CASCADE)
-#     object_id = models.PositiveIntegerField()
-
-
-# class IsActiveFilterComments(models.Manager):
-#     def get_queryset(self):
-#         return super().get_queryset().filter(parent=None)
-
-# def get_queryset(self):
-#     return super().get_queryset().filter(is_active=True)
 
 
 class Comment(BaseModel):

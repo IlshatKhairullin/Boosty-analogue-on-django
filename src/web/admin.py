@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 
-from .models import Post, AuthorInfo, Comment
+from .models import Post, User, Comment
 
 User = get_user_model()
 
@@ -24,4 +24,3 @@ class PostAdmin(admin.ModelAdmin):
 
 admin.site.register(Post, PostAdmin)
 admin.site.register(Comment)
-admin.site.register(AuthorInfo)

@@ -25,11 +25,6 @@ class CustomMessageMixin:
 class Register(View):
     template_name = 'registration/register.html'
 
-    def create_author_info_draft(self):
-        obj = AuthorInfo()
-        obj.user_id = self.request.user.id
-        obj.save()
-
     def get(self, request):
         context = {
             'form': RegisterUserForm()
@@ -45,7 +40,6 @@ class Register(View):
             password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=password)
             login(request, user)
-            self.create_author_info_draft()
             return redirect('/home')
         context = {
             'form': form
@@ -309,7 +303,7 @@ class ProfileView(ListView):
 
 
 class ProfileUserEditView(UpdateView):
-    model = AuthorInfo
+    model = User
     form_class = ProfileUserChangeForm
     template_name = 'web/profile_edit.html'
     slug_field = 'id'
@@ -320,7 +314,7 @@ class ProfileUserEditView(UpdateView):
 
 
 class ProfileSettings(UpdateView):
-    model = AuthorInfo
+    model = User
     form_class = ProfileSettingsForm
     template_name = 'web/profile_settings.html'
     slug_field = 'id'

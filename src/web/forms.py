@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
-from web.models import Post, Comment, AuthorInfo
+from web.models import Post, Comment, User
 
 User = get_user_model()
 
@@ -44,20 +44,18 @@ class CommentForm(forms.ModelForm):
 
 
 class ProfileUserChangeForm(forms.ModelForm):
-    facebook_url = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'user_profile_edit'}))
-    instagram_url = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'user_profile_edit'}))
+    username = forms.CharField(required=True, widget=forms.TextInput(attrs={'class': 'user_profile_edit'}))
     vk_url = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'user_profile_edit'}))
     github_url = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'user_profile_edit'}))
 
     class Meta:
-        model = AuthorInfo
+        model = User
         fields = (
-            'name', 'surname', 'bio', 'profile_pic', 'profile_background', 'facebook_url', 'instagram_url', 'vk_url',
-            'github_url'
+            'username', 'first_name', 'last_name', 'bio', 'profile_pic', 'profile_background', 'vk_url', 'github_url'
         )
 
 
 class ProfileSettingsForm(forms.ModelForm):
     class Meta:
-        model = AuthorInfo
+        model = User
         fields = ('is_private',)
