@@ -50,6 +50,7 @@
                 {{ m }}
             {% endfor %}
         {% endif %}
+
         {% if user.is_authenticated %}
             <form method="post" class="comment_form">
                 {% csrf_token %}
@@ -62,6 +63,9 @@
         {% for comment in post.comments_posts.all %}
 
             {% if comment.is_parent %}
+                <p>
+                    <img src="/media/{{ comment.author.profile_pic }}" alt="profile picture" class="profile_img">
+                </p>
                 {{ comment.created_date }} by <b><a href="#" class="user_profile_link">{{ comment.author }}</a></b>
                 {% if request.user == comment.author %}
                     <div class="edit_delete_comments">
@@ -123,6 +127,10 @@
             <div class="reply_comment_block">
                 <div class="reply_jquery_block" style="display: none">
                     {% for child_comment in comment.children %}
+                        <p>
+                            <img src="/media/{{ child_comment.author.profile_pic }}" alt="profile picture"
+                                 class="profile_img">
+                        </p>
                         {{ child_comment.created_date }} by
                         <b><a href="#" class="user_profile_link">{{ child_comment.author }}</a></b>
 
