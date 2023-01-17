@@ -127,10 +127,24 @@ body {
     color: var(--main-white-color);
 }
 
-.profile_img {
+.profile_img_comment {
     height: 50px;
     width: 50px;
     margin-top: 20px;
+}
+
+.add_post_but {
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+.profile_img {
+    height: 200px;
+    width: 200px;
+}
+
+.author_profile_block {
+    text-align: center;
 }
 
 .edit_delete_comments button {
@@ -173,7 +187,7 @@ body {
     margin-right: 25px;
 }
 
-.like_form div {
+.like_form p {
     margin-right: 25px;
 }
 

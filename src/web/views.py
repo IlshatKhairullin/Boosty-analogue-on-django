@@ -47,6 +47,13 @@ class Register(View):
         return render(request, self.template_name, context)
 
 
+class AuthorProfile(DetailView):
+    model = User
+    template_name = 'web/profile_look_for_other_users.html'
+    slug_field = 'id'
+    slug_url_kwarg = 'id'
+
+
 class LikedPostsListView(ListView):
     template_name = 'web/profile_liked_posts.html'
     context_object_name = 'liked_posts'

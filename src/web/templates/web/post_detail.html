@@ -3,13 +3,13 @@
 
 {% block title %}{{ post.title }}{% endblock %}
 {% block content %}
-    <a href="{% url 'post_list' %}">Назад</a>
+   <a href="{% url 'post_list' %}"><button class="btn btn-dark">Previous page</button></a>
     <br>
     <br>
 
     <div class="like_form">
         <h1>
-            <div>{{ post.title }}</div>
+            <p>{{ post.title }}</p>
             <form action="{% url 'post_like' post_slug=post.slug post_id=post.id %}" method="post">
                 {% csrf_token %}
 
@@ -36,7 +36,7 @@
     </div>
 
     <p class="date">
-        Published {{ post.publish }} by {{ post.author }}
+        Published {{ post.publish }} by <b><a href="{% url 'author_profile' id=post.author.id %}">{{ post.author }}</a></b>
     </p>
     <br>
     {{ post.body|linebreaks }}
@@ -64,9 +64,12 @@
 
             {% if comment.is_parent %}
                 <p>
-                    <img src="/media/{{ comment.author.profile_pic }}" alt="profile picture" class="profile_img">
+                    <img src="/media/{{ comment.author.profile_pic }}" alt="profile picture"
+                         class="profile_img_comment">
                 </p>
-                {{ comment.created_date }} by <b><a href="#" class="user_profile_link">{{ comment.author }}</a></b>
+                {{ comment.created_date }} by
+                <b><a href="{% url 'author_profile' id=comment.author.id %}"
+                      class="user_profile_link">{{ comment.author }}</a></b>
                 {% if request.user == comment.author %}
                     <div class="edit_delete_comments">
                         <a href="{% url "comment_edit" post.slug post.id comment.id %}">

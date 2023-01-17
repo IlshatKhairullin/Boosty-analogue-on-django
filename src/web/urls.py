@@ -16,6 +16,7 @@ urlpatterns = [
          name='comment_delete'),
     path('home/<slug:slug>/<int:post_id>/comment/<int:id>/edit', login_required(views.UpdateCommentView.as_view()),
          name='comment_edit'),
+    path('author/<int:id>', views.AuthorProfile.as_view(), name='author_profile'),
     path('profile/stats', login_required(views.ProfileView.as_view()), name='profile_post_stats'),
     path('profile/', login_required(views.LikedPostsListView.as_view()), name='profile_liked_posts'),
     path('profile/edit/<int:id>', login_required(views.ProfileUserEditView.as_view()), name='user_profile_edit'),

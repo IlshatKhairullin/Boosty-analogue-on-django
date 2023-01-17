@@ -46,7 +46,8 @@
         </div>
 
         <p class="date">
-            Published {{ post.publish }} by {{ post.author }}
+            Published {{ post.publish }} by
+            <a href="{% url 'author_profile' id=post.author.id %}"><b>{{ post.author }}</b></a>
         </p>
         {{ post.body|truncatewords:30|linebreaks }}
         <br>
