@@ -2,17 +2,17 @@
 
 {% block title %}Edit {{ post.title }}{% endblock %}
 {% block content %}
-    <a href="{% url 'profile_user_posts' %}">Назад</a>
-    <a href="{% url 'post_edit' post.slug post.id %}">Редактировать</a>
-    <a href="{% url 'post_delete' post.slug post.id %}">Удалить</a>
+    <a href="{% url 'profile_user_posts' %}"><button class="btn btn-dark">Previous page</button></a>
+    <a href="{% url 'post_edit' post.slug post.id %}"><button class="btn btn-warning">Edit</button></a>
+    <a href="{% url 'post_delete' post.slug post.id %}"><button class="btn btn-danger">Delete</button></a>
     <h1>{{ post.title }}</h1>
     <p class="date">
         Published {{ post.publish }} by {{ post.author }}
     </p>
     {% if post.status == 'Published' %}
-        Status: Опубликовано
+        Status: Published
     {% else %}
-        Status: Черновик
+        Status: Draft
     {% endif %}
     <br>
     <br>

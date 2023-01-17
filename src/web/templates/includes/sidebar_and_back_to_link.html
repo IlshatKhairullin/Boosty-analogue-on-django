@@ -1,6 +1,10 @@
 {% block content %}
-    <a href="{% url 'post_list' %}" id="post_list_button">Back to people's posts</a>
-    <a href="{% url 'user_profile_edit' id=user.id %}" class="not-visible" id="back_link">Back to edit profile</a>
+    <a href="{% url 'post_list' %}" id="post_list_button">
+        <button class="btn btn-dark">Back to people's posts</button>
+    </a>
+    <a href="{% url 'user_profile_edit' id=user.id %}" class="not-visible" id="back_link">
+        <button class="btn btn-dark">Back to edit profile</button>
+    </a>
 {% endblock %}
 
 <div class="profile_aside_block">
