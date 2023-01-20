@@ -3,7 +3,9 @@
 
 {% block title %}{{ post.title }}{% endblock %}
 {% block content %}
-   <a href="{% url 'post_list' %}"><button class="btn btn-dark">Previous page</button></a>
+    <a href="{% url 'post_list' %}">
+        <button class="btn btn-dark">Previous page</button>
+    </a>
     <br>
     <br>
 
@@ -132,10 +134,11 @@
                     {% for child_comment in comment.children %}
                         <p>
                             <img src="/media/{{ child_comment.author.profile_pic }}" alt="profile picture"
-                                 class="profile_img">
+                                 class="profile_img_comment">
                         </p>
                         {{ child_comment.created_date }} by
-                        <b><a href="#" class="user_profile_link">{{ child_comment.author }}</a></b>
+                        <b><a href="{% url 'author_profile' id=child_comment.author.id %}"
+                              class="user_profile_link">{{ child_comment.author }}</a></b>
 
                         {% if request.user == child_comment.author %}
                             <div class="edit_delete_comments">
