@@ -124,8 +124,13 @@
 
 
                 <a href="#" class="comment_reply_btn">Show replies below</a> |
-                {% if comment.children.count == 1 %}{{ comment.children.count }} Reply
-                    {% elif comment.children.count >= 0 %}{{ comment.children.count }} Replies{% endif %}
+                {{ comment.children.count }}
+                {% if comment.children.count == 1 %}
+                    Reply
+                {% else %}
+                    Replies
+                {% endif %}
+
 
             {% endif %}
 
