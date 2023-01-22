@@ -95,7 +95,15 @@ body {
 }
 
 .login_form {
-    margin-top: 122px;
+    display: inline-block;
+    margin-top: 65px;
+    padding-bottom: 30px;
+}
+
+.socialaccount_providers div {
+    display: flex;
+    gap: 8px;
+    margin-top: 30px;
 }
 
 .page-header .logout {
@@ -127,7 +135,44 @@ body {
     color: var(--main-white-color);
 }
 
-.main_page_msg {
+.separator {
+    width: 30%;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: auto;
+}
+
+.separator::before,
+.separator::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #000;
+}
+
+.separator:not(:empty)::before {
+    margin-right: .25em;
+}
+
+.separator:not(:empty)::after {
+    margin-left: .25em;
+}
+
+.register_page, .login_page {
+    text-align: center;
+}
+
+.socialaccount_provider {
+    padding-top: 20px;
+    text-align: center;
+    display: block;
+}
+
+.register_page h2 {
+    margin-bottom: 65px;
+}
+
+.main_page_msg, .login_page_msg {
     text-align: center;
     color: #04ce04;
 }
