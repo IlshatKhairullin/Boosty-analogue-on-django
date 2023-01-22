@@ -147,3 +147,5 @@ MEDIA_ROOT = 'media'
 MEDIA_URL = 'media/'
 
 SITE_ID = 1
+
+CAPTCHA_FONT_SIZE = 40
