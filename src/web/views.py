@@ -1,7 +1,6 @@
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
 from django.db.models import Q, Count
-from django.http import HttpResponseRedirect
 from django.utils.text import slugify
 from django.views import View
 from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView
@@ -102,41 +101,39 @@ class PostListView(ListView):
 
 
 def LikePostView(request, post_slug, post_id):
-    if 'post_like_post_detail' in request.POST:
-        if request.user.is_authenticated:
+    if request.user.is_authenticated:
+        if 'post_like_post_detail' in request.POST:
             post = get_object_or_404(Post, id=request.POST.get('post_like_post_detail'))
             if post.likes.filter(id=request.user.id).exists():
                 post.likes.remove(request.user)
             else:
                 post.likes.add(request.user)
-            return HttpResponseRedirect(reverse('post_detail', args=(post_slug, post_id)))
-        else:
-            return HttpResponseRedirect(reverse('register'))  # message to do
+            return redirect('post_detail', slug=post_slug, id=post_id)
 
-    if 'post_like_main_page':
-        if request.user.is_authenticated:
+        if 'post_like_main_page':
             post = get_object_or_404(Post, id=request.POST.get('post_like_main_page'))
             if post.likes.filter(id=request.user.id).exists():
                 post.likes.remove(request.user)
             else:
                 post.likes.add(request.user)
-            return HttpResponseRedirect(reverse('post_list'))
-        else:
-            return HttpResponseRedirect(reverse('register'))  # message to do
+            return redirect('post_list')
+    else:
+        messages.success(request, 'Чтобы поставить лайк нужно войти в аккаунт')
+        return redirect('login')
 
 
 def LikeCommentView(request, post_slug, post_id, comment_id):
-    if 'comment_like' in request.POST:
-        if request.user.is_authenticated:
+    if request.user.is_authenticated:
+        if 'comment_like' in request.POST:
             comment = get_object_or_404(Comment, id=comment_id)
             if comment.likes.filter(id=request.user.id).exists():
                 comment.likes.remove(request.user)
             else:
                 comment.likes.add(request.user)
-            return HttpResponseRedirect(
-                reverse('post_detail', args=(post_slug, post_id)))
-        else:
-            return HttpResponseRedirect(reverse('register'))  # message to do
+            return redirect('post_detail', slug=post_slug, id=post_id)
+    else:
+        messages.success(request, 'Чтобы поставить лайк нужно войти в аккаунт')
+        return redirect('login')
 
 
 class TagIndexView(ListView):
