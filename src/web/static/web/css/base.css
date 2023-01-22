@@ -127,6 +127,11 @@ body {
     color: var(--main-white-color);
 }
 
+.main_page_msg {
+    text-align: center;
+    color: #04ce04;
+}
+
 .form-error {
     color: red;
 }

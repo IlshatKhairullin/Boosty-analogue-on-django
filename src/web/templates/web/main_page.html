@@ -2,6 +2,15 @@
 
 {% block title %}My Blog{% endblock %}
 {% block content %}
+
+    <div class="main_page_msg">
+        {% if messages %}
+            {% for m in messages %}
+                {{ m }}
+            {% endfor %}
+        {% endif %}
+    </div>
+
     <h1><a href="{% url 'post_list' %}">People's posts</a></h1>
 
     <div>

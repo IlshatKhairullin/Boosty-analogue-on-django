@@ -1,3 +1,4 @@
+from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
 from django.db.models import Q, Count
 from django.http import HttpResponseRedirect
@@ -10,16 +11,6 @@ from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect, get_object_or_404
 
 from .models import *
-
-
-class CustomMessageMixin:
-    @property
-    def success_msg(self):
-        return False
-
-    def form_valid(self, form):
-        messages.success(self.request, self.success_msg)
-        return super().form_valid(form)
 
 
 class Register(View):
@@ -41,6 +32,7 @@ class Register(View):
             password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=password)
             login(request, user)
+            messages.success(request, 'Вы успешно зарегистрировались')
             return redirect('/home')
 
         context = {
@@ -162,11 +154,11 @@ class TagIndexView(ListView):
         }
 
 
-class DetailPostView(CustomMessageMixin, FormMixin, DetailView):
+class DetailPostView(SuccessMessageMixin, FormMixin, DetailView):
     # FormMixin - тк изначально в DetailView нет параметра form_class
     model = Post
     form_class = CommentForm
-    success_msg = 'Комментарий успешно добавлен'
+    success_message = 'Комментарий успешно добавлен'
     template_name = 'web/post_detail.html'
     slug_field = 'id'
     slug_url_kwarg = 'id'
