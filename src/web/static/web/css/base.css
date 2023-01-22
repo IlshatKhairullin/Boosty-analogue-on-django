@@ -127,6 +127,16 @@ body {
     color: var(--main-white-color);
 }
 
+.profile_private_alert {
+    text-align: center;
+    color: red;
+    margin-bottom: 50px;
+}
+
+.side_links hr {
+    width: 30%
+}
+
 .profile_img_comment {
     height: 50px;
     width: 50px;

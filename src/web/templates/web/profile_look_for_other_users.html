@@ -4,6 +4,10 @@
 {% block content %}
     <input name="action" type="submit" value="Previous page" class="btn btn-dark" onClick="javascript:history.go(-1);"/>
 
+    {% if request.user.id == user.id and request.user.is_private %}
+        <h1 class="profile_private_alert">Your profile is private! Other users can't see this information</h1>
+    {% endif %}
+
     {% if not user.is_private or request.user.id == user.id %}
         <div class="author_profile_block">
             <img src="/media/{{ user.profile_pic }}" alt="author avatar" class="profile_img">

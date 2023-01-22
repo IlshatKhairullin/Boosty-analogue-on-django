@@ -15,13 +15,13 @@
                 <br>
                 <br>
                 <a href="">My comments</a>
-                <hr style="width: 30%">
+                <hr>
                 <a href="{% url 'profile_user_posts' %}">My posts</a>
                 <a href="{% url 'profile_liked_posts' %}">Liked posts</a>
-                <hr style="width: 30%">
+                <hr>
                 <a href="{% url 'profile_post_stats' %}">Stats</a>
                 <a href="{% url 'user_profile_edit' id=user.id %}">Edit profile</a>
-                <a href="">Profile look for users</a>
+                <a href="{% url 'author_profile' id=user.id %}">Profile look for users</a>
                 <a href="{% url 'user_profile_settings' id=user.id %}">Profile settings</a>
             </div>
         {% endif %}
