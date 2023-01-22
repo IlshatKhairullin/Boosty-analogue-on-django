@@ -172,7 +172,12 @@ body {
     margin-bottom: 65px;
 }
 
-.main_page_msg, .login_page_msg {
+.alert {
+    line-height: 45px;
+    font-size: 15px;
+}
+
+.login_page_msg {
     text-align: center;
     color: #04ce04;
 }
