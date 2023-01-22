@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'taggit',
+    'captcha',
     'web',
     'allauth',
     'allauth.account',

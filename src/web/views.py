@@ -5,7 +5,7 @@ from django.utils.text import slugify
 from django.views import View
 from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView
 from django.views.generic.edit import FormMixin
-from .forms import UserCreationForm, RegisterUserForm, PostForm, CommentForm, ProfileUserChangeForm, ProfileSettingsForm
+from .forms import RegisterUserForm, PostForm, CommentForm, ProfileUserChangeForm, ProfileSettingsForm
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect, get_object_or_404
 
@@ -32,15 +32,17 @@ class Register(View):
         return render(request, self.template_name, context)
 
     def post(self, request):
-        form = UserCreationForm(request.POST)
+        form = RegisterUserForm(request.POST)
 
         if form.is_valid():
+            human = True
             form.save()
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=password)
             login(request, user)
             return redirect('/home')
+
         context = {
             'form': form
         }

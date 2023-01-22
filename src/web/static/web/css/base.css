@@ -127,6 +127,10 @@ body {
     color: var(--main-white-color);
 }
 
+.form-error {
+    color: red;
+}
+
 .profile_private_alert {
     text-align: center;
     color: red;
