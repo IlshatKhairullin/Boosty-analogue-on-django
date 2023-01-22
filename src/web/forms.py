@@ -22,11 +22,11 @@ class CustomUserCreationForm(UserCreationForm):
 
 
 class RegisterUserForm(CustomUserCreationForm):
-    username = forms.CharField(label='Логин', widget=forms.TextInput(attrs={'class': 'form-input'}))
-    email = forms.EmailField(label='Email', widget=forms.EmailInput(attrs={'class': 'form-input'}))
-    password1 = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
-    password2 = forms.CharField(label='Повтор пароля', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
-    captcha = CaptchaField()
+    username = forms.CharField(label='', widget=forms.TextInput(attrs={'placeholder': 'Username'}))
+    email = forms.EmailField(label='', widget=forms.EmailInput(attrs={'placeholder': 'Email'}))
+    password1 = forms.CharField(label='', widget=forms.PasswordInput(attrs={'placeholder': 'Password'}))
+    password2 = forms.CharField(label='', widget=forms.PasswordInput(attrs={'placeholder': 'Password repeat'}))
+    captcha = CaptchaField(label='')
 
     class Meta:
         model = User
