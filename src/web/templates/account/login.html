@@ -22,6 +22,10 @@
         {% endif %}
 
         <form action="{% url 'account_login' %}" method="post" class="login_form">
+            {% if request.GET.next %}
+                <input type="hidden" name="next" value="{{ request.GET.next }}">
+            {% endif %}
+
             {{ form.as_p }}
             <p><a href="{% url 'password_reset' %}">Forgot password?</a></p>
             {% csrf_token %}

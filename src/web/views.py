@@ -5,11 +5,28 @@ from django.utils.text import slugify
 from django.views import View
 from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView
 from django.views.generic.edit import FormMixin
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.decorators import login_required
 from .forms import RegisterUserForm, PostForm, CommentForm, ProfileUserChangeForm, ProfileSettingsForm
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect, get_object_or_404
 
 from .models import *
+
+
+def login_view(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            if 'next' in request.POST:
+                return redirect(request.POST.get('next'))
+            else:
+                return redirect('post_list')
+    else:
+        form = AuthenticationForm()
+    return render(request, 'account/login.html', {form: form})
 
 
 class Register(View):
@@ -100,40 +117,34 @@ class PostListView(ListView):
         }
 
 
+@login_required(login_url='/login/')
 def LikePostView(request, post_slug, post_id):
-    if request.user.is_authenticated:
-        if 'post_like_post_detail' in request.POST:
-            post = get_object_or_404(Post, id=request.POST.get('post_like_post_detail'))
-            if post.likes.filter(id=request.user.id).exists():
-                post.likes.remove(request.user)
-            else:
-                post.likes.add(request.user)
-            return redirect('post_detail', slug=post_slug, id=post_id)
+    if 'post_like_post_detail' in request.POST:
+        post = get_object_or_404(Post, id=request.POST.get('post_like_post_detail'))
+        if post.likes.filter(id=request.user.id).exists():
+            post.likes.remove(request.user)
+        else:
+            post.likes.add(request.user)
+        return redirect('post_detail', slug=post_slug, id=post_id)
 
-        if 'post_like_main_page':
-            post = get_object_or_404(Post, id=request.POST.get('post_like_main_page'))
-            if post.likes.filter(id=request.user.id).exists():
-                post.likes.remove(request.user)
-            else:
-                post.likes.add(request.user)
-            return redirect('post_list')
-    else:
-        messages.success(request, 'Чтобы поставить лайк нужно войти в аккаунт')
-        return redirect('login')
+    if 'post_like_main_page':
+        post = get_object_or_404(Post, id=request.POST.get('post_like_main_page'))
+        if post.likes.filter(id=request.user.id).exists():
+            post.likes.remove(request.user)
+        else:
+            post.likes.add(request.user)
+        return redirect('post_list')
 
 
+@login_required(login_url='/login/')
 def LikeCommentView(request, post_slug, post_id, comment_id):
-    if request.user.is_authenticated:
-        if 'comment_like' in request.POST:
-            comment = get_object_or_404(Comment, id=comment_id)
-            if comment.likes.filter(id=request.user.id).exists():
-                comment.likes.remove(request.user)
-            else:
-                comment.likes.add(request.user)
-            return redirect('post_detail', slug=post_slug, id=post_id)
-    else:
-        messages.success(request, 'Чтобы поставить лайк нужно войти в аккаунт')
-        return redirect('login')
+    if 'comment_like' in request.POST:
+        comment = get_object_or_404(Comment, id=comment_id)
+        if comment.likes.filter(id=request.user.id).exists():
+            comment.likes.remove(request.user)
+        else:
+            comment.likes.add(request.user)
+        return redirect('post_detail', slug=post_slug, id=post_id)
 
 
 class TagIndexView(ListView):
