@@ -60,4 +60,4 @@ class ProfileUserChangeForm(forms.ModelForm):
 class ProfileSettingsForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ('is_private',)
+        fields = ('email', 'is_private',)

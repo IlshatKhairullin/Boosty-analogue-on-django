@@ -135,6 +135,10 @@ body {
     color: var(--main-white-color);
 }
 
+.change_password_btn {
+    margin-top: 20px;
+}
+
 .separator {
     width: 30%;
     display: flex;
