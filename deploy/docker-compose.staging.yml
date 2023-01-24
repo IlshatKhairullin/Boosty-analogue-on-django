@@ -10,6 +10,9 @@ services:
       - 80:80
     depends_on:
       - app
+    volumes:
+      - media:/app/media
+    restart: always
 
   app:
     image: bikabu:latest
@@ -22,8 +25,10 @@ services:
       - postgres
     environment:
       DB_HOST: postgres
-      DEBUG: "false"
+      DEBUG: "true"
     restart: always
+    volumes:
+      - media:/app/media/
 
   postgres:
     image: postgres:14-alpine
@@ -38,3 +43,4 @@ services:
 
 volumes:
   db:
+  media:
