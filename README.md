@@ -1,13 +1,14 @@
-# Boosty/patreon analogue
+# Boosty/pikabu analogue
 
-- python3 -m venv .venv - создание виртуального окружения
+Для работы с проектом нужно установить [python](http://python.org) и 
+[poetry](https://python-poetry.org/). 
 
-- source ./.venv/bin/activate - вход в виртуальное окружение
+- `docker compose up -d` - поднять PostgreSQL с помощью Docker
 
-- docker-compose up -d - поднять PostgreSQL с помощью Docker или pgAdmin
+- `poetry shell` - вход в виртуальное окружение
 
-- pip install -r requirements.txt - установка зависимостей
+- `poetry install` - установка зависимостей
 
-- python src/manage.py migrate - выполнить миграции
+- `python src/manage.py migrate` - выполнить миграции
 
-- python src/manage.py runserver - запуск сервера для разработки на http://localhost:8000
+- `python src/manage.py runserver` - запуск сервера для разработки на http://127.0.0.1:8000
