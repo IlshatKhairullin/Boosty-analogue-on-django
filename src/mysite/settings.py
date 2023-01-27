@@ -149,3 +149,5 @@ MEDIA_URL = "media/"
 SITE_ID = 1
 
 CAPTCHA_FONT_SIZE = 40
+
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://127.0.0.1:6379/0")
