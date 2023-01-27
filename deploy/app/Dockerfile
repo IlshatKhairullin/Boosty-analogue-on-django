@@ -2,10 +2,14 @@ FROM python:3.10
 
 ENV PYTHONUNBUFFERED 1
 
+RUN pip install poetry==1.3.2 && poetry config virtualenvs.create false
+
 WORKDIR /app
 
-COPY requirements.txt .
-RUN pip install -r requirements.txt
+COPY pyproject.toml .
+COPY poetry.lock .
+RUN poetry install
+
 
 COPY . .
 
