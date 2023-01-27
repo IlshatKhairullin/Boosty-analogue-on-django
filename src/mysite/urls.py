@@ -20,10 +20,10 @@ from django.urls import path, include
 from django.conf import settings
 
 urlpatterns = [
-    path('', include('allauth.urls')),
-    path('admin/', admin.site.urls),
-    path('captcha/', include('captcha.urls')),
-    path('', include('web.urls'))
+    path("", include("allauth.urls")),
+    path("admin/", admin.site.urls),
+    path("captcha/", include("captcha.urls")),
+    path("", include("web.urls")),
 ]
 
 if settings.DEBUG:
