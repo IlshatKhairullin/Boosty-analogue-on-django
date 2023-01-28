@@ -257,3 +257,4 @@ cython_debug/
 
 media/
 /web/migrations/
+/static/
