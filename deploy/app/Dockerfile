@@ -16,7 +16,7 @@ RUN poetry install --no-root && pre-commit install --install-hooks
 
 COPY . .
 
-RUN pre-commit run -a && python src/manage.py collectstatic --noinput
+RUN pre-commit run -a && python3 src/manage.py collectstatic --noinput
 
 EXPOSE 8000
 
