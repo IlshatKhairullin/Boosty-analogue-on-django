@@ -180,10 +180,10 @@ class DetailPostView(SuccessMessageMixin, FormMixin, DetailView):
             return self.form_invalid(form)
 
     def form_valid(self, form):
-        self.object = form.save(commit=False)
-        self.object.post = self.get_object()
-        self.object.author = self.request.user
-        self.object.parent = self.parent_obj
+        user = None if self.request.user.is_anonymous else self.request.user
+        self.object = CommentForm(
+            data=self.request.POST, initial={"user": user, "post": self.get_object(), "parent": self.parent_obj}
+        )
         self.object.save()
         return super().form_valid(form)
 

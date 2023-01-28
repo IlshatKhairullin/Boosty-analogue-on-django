@@ -5,6 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from captcha.fields import CaptchaField
 
 from web.models import Post, Comment, User
+from web.tasks import send_comment_notification
 
 User = get_user_model()
 
@@ -36,6 +37,14 @@ class PostForm(forms.ModelForm):
 
 
 class CommentForm(forms.ModelForm):
+    def save(self, *args, **kwargs):
+        self.instance.author = self.initial["user"]
+        self.instance.post = self.initial["post"]
+        self.instance.parent = self.initial["parent"]
+        instance = super(CommentForm, self).save(*args, **kwargs)
+        send_comment_notification.delay(instance.id)
+        return instance
+
     class Meta:
         model = Comment
         fields = ("body",)
