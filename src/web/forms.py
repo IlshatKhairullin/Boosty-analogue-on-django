@@ -38,11 +38,15 @@ class PostForm(forms.ModelForm):
 
 class CommentForm(forms.ModelForm):
     def save(self, *args, **kwargs):
+        request = self.initial["request"]
+        post = self.initial["post"]
+        link_to_post = request.build_absolute_uri(post.get_absolute_url())
+
         self.instance.author = self.initial["user"]
-        self.instance.post = self.initial["post"]
+        self.instance.post = post
         self.instance.parent = self.initial["parent"]
         instance = super(CommentForm, self).save(*args, **kwargs)
-        send_comment_notification.delay(instance.id)
+        send_comment_notification.delay(instance.id, link_to_post)
         return instance
 
     class Meta:

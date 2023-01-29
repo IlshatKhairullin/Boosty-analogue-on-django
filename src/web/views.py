@@ -182,7 +182,8 @@ class DetailPostView(SuccessMessageMixin, FormMixin, DetailView):
     def form_valid(self, form):
         user = None if self.request.user.is_anonymous else self.request.user
         self.object = CommentForm(
-            data=self.request.POST, initial={"user": user, "post": self.get_object(), "parent": self.parent_obj}
+            data=self.request.POST,
+            initial={"user": user, "post": self.get_object(), "parent": self.parent_obj, "request": self.request},
         )
         self.object.save()
         return super().form_valid(form)
