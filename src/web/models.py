@@ -23,6 +23,7 @@ class User(AbstractUser):
     vk_url = models.CharField(max_length=255, null=True, blank=True)
     github_url = models.CharField(max_length=255, null=True, blank=True)
     is_private = models.BooleanField(default=False)
+    send_comment_on_post_notification = models.BooleanField(default=False)
 
 
 class Post(BaseModel):

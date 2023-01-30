@@ -40,13 +40,15 @@ class CommentForm(forms.ModelForm):
     def save(self, *args, **kwargs):
         request = self.initial["request"]
         post = self.initial["post"]
-        link_to_post = request.build_absolute_uri(post.get_absolute_url())
-
         self.instance.author = self.initial["user"]
         self.instance.post = post
         self.instance.parent = self.initial["parent"]
         instance = super(CommentForm, self).save(*args, **kwargs)
-        send_comment_notification.delay(instance.id, link_to_post)
+
+        if post.author.send_comment_on_post_notification and not post.author.id == request.user.id:
+            link_to_post = request.build_absolute_uri(post.get_absolute_url())
+            send_comment_notification.delay(instance.id, link_to_post)
+
         return instance
 
     class Meta:
@@ -79,4 +81,5 @@ class ProfileSettingsForm(forms.ModelForm):
         fields = (
             "email",
             "is_private",
+            "send_comment_on_post_notification",
         )
