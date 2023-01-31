@@ -27,7 +27,7 @@ SECRET_KEY = "django-insecure-xcf&1fa0qdlb#&)bxp)3bqe^*c3=qgqo+84^dl*48zb=jkcpd(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", "true").lower() == "true"
 
-ALLOWED_HOSTS = ["*"] if DEBUG else ["127.0.0.1"]
+ALLOWED_HOSTS = ["*"] if DEBUG else ["127.0.0.1", "localhost"]
 
 AUTH_USER_MODEL = "web.User"
 
@@ -44,8 +44,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.sites",
+    "rest_framework",
     "taggit",
     "captcha",
+    "api",
     "web",
     "allauth",
     "allauth.account",
