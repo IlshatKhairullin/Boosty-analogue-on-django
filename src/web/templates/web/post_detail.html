@@ -43,7 +43,7 @@
     <br>
     {{ post.body|linebreaks }}
     <br>
-    <hr>Comments ({{ post.comments_posts.all.count }})
+    <hr>Comments ({{ post.post_comments.all.count }})
     <br>
     <div class="comment_block">
 
@@ -62,7 +62,7 @@
         {% endif %}
         <br>
 
-        {% for comment in post.comments_posts.all %}
+        {% for comment in post.post_comments.all %}
 
             {% if comment.is_parent %}
                 <p>

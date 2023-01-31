@@ -29,12 +29,12 @@ class User(AbstractUser):
 class Post(BaseModel):
     title = models.CharField(max_length=250)
     slug = models.SlugField(max_length=250, unique_for_date="publish")
-    author = models.ForeignKey(User, related_name="blog_posts", on_delete=models.CASCADE)
+    author = models.ForeignKey(User, related_name="posts", on_delete=models.CASCADE)
     body = models.TextField()
     publish = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=10, choices=Status.choices, default=Status.draft)
     tags = TaggableManager()
-    likes = models.ManyToManyField(User, related_name="blog_post_from_like")
+    likes = models.ManyToManyField(User, related_name="post_like")
     views = models.ManyToManyField(User, related_name="post_views")
 
     def number_of_likes(self):
@@ -57,12 +57,11 @@ class Post(BaseModel):
 
 
 class Comment(BaseModel):
-    post = models.ForeignKey(Post, related_name="comments_posts", on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, related_name="post_comments", on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="commenter")
     parent = models.ForeignKey("self", null=True, blank=True, on_delete=models.CASCADE, related_name="replies")
     body = models.TextField(verbose_name="comment_text")
     is_active = models.BooleanField(default=True)
-    # objects = IsActiveFilterComments()
     likes = models.ManyToManyField(User, related_name="post_comment_like")
 
     @property
