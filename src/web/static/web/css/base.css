@@ -95,7 +95,15 @@ body {
 }
 
 .login_form {
-    margin-top: 122px;
+    display: inline-block;
+    margin-top: 65px;
+    padding-bottom: 30px;
+}
+
+.socialaccount_providers div {
+    display: flex;
+    gap: 8px;
+    margin-top: 30px;
 }
 
 .page-header .logout {
@@ -125,6 +133,91 @@ body {
     min-height: 350px;
     background-blend-mode: luminosity;
     color: var(--main-white-color);
+}
+
+.change_password_btn {
+    margin-top: 20px;
+}
+
+.separator {
+    width: 30%;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: auto;
+}
+
+.separator::before,
+.separator::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #000;
+}
+
+.separator:not(:empty)::before {
+    margin-right: .25em;
+}
+
+.separator:not(:empty)::after {
+    margin-left: .25em;
+}
+
+.register_page, .login_page {
+    text-align: center;
+}
+
+.socialaccount_provider {
+    padding-top: 20px;
+    text-align: center;
+    display: block;
+}
+
+.register_page h2 {
+    margin-bottom: 65px;
+}
+
+.alert {
+    line-height: 45px;
+    font-size: 15px;
+}
+
+.login_page_msg {
+    text-align: center;
+    color: #04ce04;
+}
+
+.form-error {
+    color: red;
+}
+
+.profile_private_alert {
+    text-align: center;
+    color: red;
+    margin-bottom: 50px;
+}
+
+.side_links hr {
+    width: 30%
+}
+
+.profile_img_comment {
+    height: 50px;
+    width: 50px;
+    margin-top: 20px;
+}
+
+.add_post_but {
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+.profile_img {
+    height: 200px;
+    width: 200px;
+}
+
+.author_profile_block {
+    text-align: center;
 }
 
 .edit_delete_comments button {
@@ -157,6 +250,18 @@ body {
 
 .like_form_on_reply {
     margin-bottom: 20px;
+}
+
+.like_form h2 {
+    display: flex;
+}
+
+.like_form a {
+    margin-right: 25px;
+}
+
+.like_form p {
+    margin-right: 25px;
 }
 
 .like_form_on_reply button {

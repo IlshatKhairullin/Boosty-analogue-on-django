@@ -2,14 +2,18 @@
 {% load posts %}
 
 {% block content %}
-    {% include 'includes/sidebar_and_back_to_link.html' %}
-    <a href="{% url 'post_create' %}">Add new post</a>
+        {% include 'includes/sidebar_and_back_to_link.html' %}
+     <div class="add_post_but">
+        <a href="{% url 'post_create' %}">
+            <button class="btn btn-success">Add new post</button>
+        </a>
+    </div>
     <h1>Your posts</h1>
     <p>
-        Выводить
-        {% filter_link "все посты" "" query_params %} |
-        {% filter_link "опубликованные посты" "published_posts" query_params %} |
-        {% filter_link "черновики" "draft_posts" query_params %}
+        Show
+        {% filter_link "all posts" "" query_params %} |
+        {% filter_link "published posts" "published_posts" query_params %} |
+        {% filter_link "draft posts" "draft_posts" query_params %}
     </p>
     <br>
     {% for post in posts %}

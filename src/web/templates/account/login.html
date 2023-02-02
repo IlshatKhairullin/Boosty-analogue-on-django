@@ -5,25 +5,42 @@
 {% block content %}
     {% get_providers as socialaccount_providers %}
 
-    <div>
+    <div class="login_page">
+
+        <h2>Login</h2>
+
+        <div class="login_page_msg">
+            {% if messages %}
+                {% for m in messages %}
+                    {{ m }}
+                {% endfor %}
+            {% endif %}
+        </div>
+
         {% if form.errors %}
             <p>{{ form.errors.error }}</p>
         {% endif %}
 
         <form action="{% url 'account_login' %}" method="post" class="login_form">
-            {{ form }}
+            {% if request.GET.next %}
+                <input type="hidden" name="next" value="{{ request.GET.next }}">
+            {% endif %}
+
+            {{ form.as_p }}
+            <p><a href="{% url 'password_reset' %}">Forgot password?</a></p>
             {% csrf_token %}
-            <button type="submit" class="input-button-enter btn-success">Enter</button>
+            <button type="submit" class="btn btn-success">Enter</button>
         </form>
 
-        <ul class="socialaccount_providers">
-            <div style="display: flex; gap: 8px">
-                Login via VK:
-                {% include "socialaccount/snippets/provider_list.html" with process="login" %}
-            </div>
-        </ul>
+        <div class="separator">OR</div>
 
-        <a href="{% url 'password_reset' %}">Forgot password?</a>
+
+            <div class="socialaccount_provider">
+                Login via social media:
+                {% include "includes/provider_list.html" with process="login" %}
+            </div>
+
+
     </div>
 
 {% endblock %}

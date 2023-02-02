@@ -2,12 +2,12 @@
 {% load posts %}
 
 {% block content %}
-    <a href="{% url 'post_detail' slug post_id  %}">Назад</a>
+    <a href="{% url 'post_detail' slug post_id  %}"><button class="btn btn-dark">Previous page</button></a>
     <br>
     <br>
     <form action="" method="post" class="comment_form">
         {% csrf_token %}
         {{ form.body|addclass:'comment_body_form' }}
-        <button class="btn btn-success">Редактировать комментарий</button>
+        <button class="btn btn-success">Edit comment</button>
     </form>
 {% endblock %}

@@ -1,28 +1,28 @@
 {% block content %}
-    <a href="{% url 'post_list' %}" id="post_list_button">Back to people's posts</a>
-    <a href="{% url 'user_profile_edit' id=user.author_info.id %}" class="not-visible" id="back_link">Back to edit profile</a>
+    <a href="{% url 'post_list' %}" id="post_list_button">
+        <button class="btn btn-dark">Back to people's posts</button>
+    </a>
+    <a href="{% url 'user_profile_edit' id=user.id %}" class="not-visible" id="back_link">
+        <button class="btn btn-dark">Back to edit profile</button>
+    </a>
 {% endblock %}
 
 <div class="profile_aside_block">
     <aside class="profile_aside">
         {% if user.is_authenticated %}
             <div class="side_links">
-                Username - {{ user }}
+                My username - {{ user.username }}
                 <br>
                 <br>
                 <a href="">My comments</a>
-                <hr style="width: 30%">
+                <hr>
                 <a href="{% url 'profile_user_posts' %}">My posts</a>
-                <a href="">Favourite posts</a>
-                <a href="">Watched posts</a>
-                <a href="">Liked posts</a>
-                <hr style="width: 30%">
+                <a href="{% url 'profile_liked_posts' %}">Liked posts</a>
+                <hr>
                 <a href="{% url 'profile_post_stats' %}">Stats</a>
-                <a href="{% url 'user_profile_edit' id=user.author_info.id %}">Edit profile</a>
-                <a href="">Profile look for users</a>
-                <a href="{% url 'user_profile_settings' id=user.author_info.id %}">Profile settings</a>
-                <hr style="width: 30%">
-                <a href="">Edit User</a>
+                <a href="{% url 'user_profile_edit' id=user.id %}">Edit profile</a>
+                <a href="{% url 'author_profile' id=user.id %}">Profile look for users</a>
+                <a href="{% url 'user_profile_settings' id=user.id %}">Profile settings</a>
             </div>
         {% endif %}
     </aside>

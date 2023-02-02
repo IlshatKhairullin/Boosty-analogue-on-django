@@ -7,9 +7,12 @@ services:
       context: ..
       dockerfile: deploy/nginx/Dockerfile
     ports:
-      - 84:84
+      - 80:80
     depends_on:
       - app
+    volumes:
+      - media:/app/media
+    restart: always
 
   app:
     image: bikabu:latest
@@ -22,20 +25,30 @@ services:
       - postgres
     environment:
       DB_HOST: postgres
-      DEBUG: "false"
+      DEBUG: "true"
     restart: always
+    volumes:
+      - media:/app/media/
 
   postgres:
     image: postgres:14-alpine
     ports:
       - 5432:5432
     environment:
-      POSTGRES_DB: postgres
+      POSTGRES_DB: boosty_analogue
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 230999
-
     volumes:
       - "db:/var/lib/postgresql/data"
 
+  redis:
+    image: redis:7-alpine
+    ports:
+      - 6379:6379
+    volumes:
+      - redis:/data
+
 volumes:
   db:
+  redis:
+  media:

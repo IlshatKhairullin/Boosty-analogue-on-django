@@ -8,14 +8,14 @@
     {% if user.is_authenticated %}
         <div id="alert-box"></div>
         <div class="user_profile_edit" id="image-box">
-            <form action="{% url 'user_profile_edit' id=authorinfo.id %}" method="post" id="image-form"
+            <form action="{% url 'user_profile_edit' id=user.id %}" method="post" id="image-form"
                   enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form.as_p }}
                 <button class="btn btn-success">Save</button>
             </form>
         </div>
-        <button class="btn btn-primary mt-3 not-visible" id="confirm-btn">confirm</button>
+        <button class="btn btn-primary mt-3 not-visible" id="confirm-btn">Confirm</button>
     {% endif %}
 
 {% endblock %}

@@ -16,19 +16,26 @@ class BaseModel(models.Model):
 
 
 class User(AbstractUser):
-    email = models.EmailField('Email', unique=True)
+    email = models.EmailField("Email", unique=True)
+    bio = models.TextField(null=True, blank=True)
+    profile_pic = models.ImageField(null=True, blank=True, upload_to="user_avatars")
+    profile_background = models.ImageField(null=True, blank=True, upload_to="user_backgrounds")
+    vk_url = models.CharField(max_length=255, null=True, blank=True)
+    github_url = models.CharField(max_length=255, null=True, blank=True)
+    is_private = models.BooleanField(default=False)
+    send_comment_on_post_notification = models.BooleanField(default=False)
 
 
 class Post(BaseModel):
     title = models.CharField(max_length=250)
-    slug = models.SlugField(max_length=250, unique_for_date='publish')
-    author = models.ForeignKey(User, related_name='blog_posts', on_delete=models.CASCADE)
+    slug = models.SlugField(max_length=250, unique_for_date="publish")
+    author = models.ForeignKey(User, related_name="posts", on_delete=models.CASCADE)
     body = models.TextField()
     publish = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=10, choices=Status.choices, default=Status.draft)
     tags = TaggableManager()
-    likes = models.ManyToManyField(User, related_name='blog_post_from_like')
-    views = models.ManyToManyField(User, related_name='post_views')
+    likes = models.ManyToManyField(User, related_name="post_like")
+    views = models.ManyToManyField(User, related_name="post_views")
 
     def number_of_likes(self):
         return self.likes.count()
@@ -37,58 +44,25 @@ class Post(BaseModel):
         return self.views.count()
 
     def get_absolute_url(self):
-        return reverse('post_detail', args=[self.slug, self.id])
+        return reverse("post_detail", args=[self.slug, self.id])
 
     def get_edit_absolute_url(self):
-        return reverse('post_edit_detail', args=[self.slug, self.id])
+        return reverse("post_edit_detail", args=[self.slug, self.id])
 
     class Meta:
-        ordering = ('-publish',)
+        ordering = ("-publish",)
 
     def __str__(self):
         return self.title
 
 
-class AuthorInfo(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Username', related_name='author_info')
-    bio = models.TextField(null=True, blank=True)
-    name = models.CharField(max_length=100, null=True, blank=True)
-    surname = models.CharField(max_length=100, null=True, blank=True)
-    profile_pic = models.ImageField(null=True, blank=True, upload_to='user_avatars')
-    profile_background = models.ImageField(null=True, blank=True, upload_to='user_backgrounds')
-    facebook_url = models.CharField(max_length=255, null=True, blank=True)
-    instagram_url = models.CharField(max_length=255, null=True, blank=True)
-    vk_url = models.CharField(max_length=255, null=True, blank=True)
-    github_url = models.CharField(max_length=255, null=True, blank=True)
-    is_private = models.BooleanField(default=False)
-
-    def __str__(self):
-        return str(self.user)
-
-
-# class Subscriber(models.Model):
-#     user = models.ForeignKey(User, related_name='subscriber',
-#                              on_delete=models.CASCADE)
-#     object_id = models.PositiveIntegerField()
-
-
-# class IsActiveFilterComments(models.Manager):
-#     def get_queryset(self):
-#         return super().get_queryset().filter(parent=None)
-
-# def get_queryset(self):
-#     return super().get_queryset().filter(is_active=True)
-
-
 class Comment(BaseModel):
-    post = models.ForeignKey(Post, related_name='comments_posts', on_delete=models.CASCADE)
-    author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='commenter')
-    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE,
-                               related_name='replies')
-    body = models.TextField(verbose_name='comment_text')
+    post = models.ForeignKey(Post, related_name="post_comments", on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="commenter")
+    parent = models.ForeignKey("self", null=True, blank=True, on_delete=models.CASCADE, related_name="replies")
+    body = models.TextField(verbose_name="comment_text")
     is_active = models.BooleanField(default=True)
-    # objects = IsActiveFilterComments()
-    likes = models.ManyToManyField(User, related_name='post_comment_like')
+    likes = models.ManyToManyField(User, related_name="post_comment_like")
 
     @property
     def children(self):  # replies to comment
@@ -104,7 +78,7 @@ class Comment(BaseModel):
         return self.likes.count()
 
     def __str__(self):
-        return f'Comment by {self.author} on {self.post}'
+        return f"Comment by {self.author} on {self.post}"
 
     class Meta:
-        ordering = ('-created_date',)
+        ordering = ("-created_date",)

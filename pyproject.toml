@@ -1,0 +1,35 @@
+[tool.poetry]
+name = "boosty-analogue"
+version = "0.1.0"
+description = ""
+authors = ["ilshatkhairullin <ilshat1941@yandex.ru>"]
+readme = "README.md"
+packages = [{include = "boosty_analogue"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+django = ">=4.1.5,<4.2.0"
+psycopg2-binary = "2.9.5"
+django-taggit = ">=3.0.0,<3.1.0"
+pillow = ">=9.3.0,<9.4.0"
+django-allauth = ">=0.51.0,<0.52.0"
+uwsgi = ">=2.0.21,<2.1.0"
+django-simple-captcha = ">=0.5.17,<0.6.0"
+poetry = ">=1.3.2,<1.4.0"
+celery = "^5.2.7"
+redis = "^4.4.2"
+python-dotenv = "^0.21.1"
+djangorestframework = "^3.14.0"
+pytest = "^7.2.1"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^22.12.0"
+pre-commit = "^3.0.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 120

@@ -3,15 +3,15 @@
 {% block content %}
 
     {% if id %}
-    <a href="{{ post.get_edit_absolute_url }}">Назад</a>
+    <a href="{{ post.get_edit_absolute_url }}"><button class="btn btn-dark">Previous page</button></a>
     {% else %}
-    <a href="{% url 'profile_user_posts' %}">Назад</a>
+    <a href="{% url 'profile_user_posts' %}"><button class="btn btn-dark">Previous page</button></a>
     {% endif %}
 
     {% if id %}
-        <h1>Редактирование поста</h1>
+        <h1>Edit post</h1>
     {% else %}
-        <h1>Добавление поста</h1>
+        <h1>Add post</h1>
     {% endif %}
 
     <form action="" method="post">
@@ -20,9 +20,9 @@
         {{ form.as_p }}
 
         {% if id %}
-            <button class="btn btn-success">Редактировать пост</button>
+            <button class="btn btn-success">Edit post</button>
         {% else %}
-            <button class="btn btn-success">Добавить пост</button>
+            <button class="btn btn-success">Add post</button>
         {% endif %}
 
     </form>

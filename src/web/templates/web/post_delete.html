@@ -2,12 +2,12 @@
 
 {% block content %}
 
-    <a href="{{ post.get_edit_absolute_url }}">Назад</a>
-    <h1>Вы действительно хотите удалить пост?</h1>
+    <a href="{{ post.get_edit_absolute_url }}"><button class="btn btn-dark">Previous page</button></a>
+    <h1>Are you sure you want to delete the post?</h1>
     <form action="" method="post">
         {{ form.as_p }}
         {% csrf_token %}
-        <button class="btn btn-danger">Удалить пост</button>
+        <button class="btn btn-danger">Delete post</button>
     </form>
 
 {% endblock %}
