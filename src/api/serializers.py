@@ -5,6 +5,8 @@ from web.models import Post, User, Comment
 
 
 class UserSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(read_only=True)
+
     class Meta:
         model = User
         fields = ("id", "username", "email")
