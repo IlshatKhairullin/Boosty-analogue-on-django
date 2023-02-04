@@ -1,5 +1,6 @@
 # Boosty/pikabu analogue
 
+
 Для работы с проектом нужно установить [python](http://python.org) и 
 [poetry](https://python-poetry.org/) <= `poetry init` после установки. 
 
