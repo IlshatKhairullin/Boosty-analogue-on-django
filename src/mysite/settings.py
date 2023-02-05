@@ -152,7 +152,6 @@ MEDIA_URL = "media/"
 SITE_ID = 1
 
 CAPTCHA_FONT_SIZE = 40
-
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://127.0.0.1:6379/0")
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
@@ -163,3 +162,11 @@ EMAIL_PORT = os.environ.get("EMAIL_PORT")
 
 EMAIL_USE_SSL = True  # для безопасности при использовании яндекс почты
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", EMAIL_HOST_USER)
+
+REST_FRAMEWORK = {
+    "DEFAULT_RENDERER_CLASSES": [
+        "rest_framework.renderers.JSONRenderer",
+        "rest_framework.renderers.BrowsableAPIRenderer",
+        # если убрать 1 строчку выше, то интерфейса rest'a не будет, только json'ы (необходимо в проде)
+    ],
+}
