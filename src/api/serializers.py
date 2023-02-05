@@ -5,11 +5,12 @@ from web.models import Post, User, Comment
 
 
 class UserSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(read_only=True)
+    first_name = serializers.CharField(read_only=True)
+    send_comment_on_post_notification = serializers.BooleanField(read_only=True)
 
     class Meta:
         model = User
-        fields = ("id", "username", "email")
+        fields = ("id", "username", "email", "first_name", "send_comment_on_post_notification")
 
 
 class CommentSerializer(serializers.ModelSerializer):

@@ -1,6 +1,6 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from rest_framework.generics import get_object_or_404
+from rest_framework import generics
 from rest_framework import status
 from rest_framework.views import APIView
 
@@ -30,7 +30,7 @@ def posts_view(request):
 
 @api_view(["GET", "PUT"])
 def post_view(request, pk: int):
-    post = get_object_or_404(Post, pk=pk)
+    post = generics.get_object_or_404(Post, pk=pk)
 
     # Put - обновление части данных у объекта
     if request.method == "PUT":
@@ -46,25 +46,13 @@ def post_view(request, pk: int):
     return Response(serializer.data)
 
 
-class UserAPIView(APIView):
-    def get(self, request, *args, **kwargs):
-        pk = kwargs.get("pk", None)
-        if pk:
-            user = get_object_or_404(User, pk=pk)
-            serializer = UserSerializer(user)
-            return Response(serializer.data)
+# для get и post запросов
+class UserAPIList(generics.ListCreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
-        users = User.objects.all()
-        serializer = UserSerializer(users, many=True)
-        return Response(serializer.data)
 
-    def put(self, request, *args, **kwargs):
-        pk = kwargs.get("pk", None)
-        if not pk:
-            return Response({"error": "Method PUT not allowed"})
-
-        user = get_object_or_404(User, pk=pk)
-        serializer = UserSerializer(instance=user, data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
+# полный круд для отдельного объекта
+class UserAPIDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = User.objects.all()  # будет выбрана 1 конкретная запись из данного сета(ленивый запрос)
+    serializer_class = UserSerializer
