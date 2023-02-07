@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
+from django.contrib import messages
 
 from .models import Post, User, Comment
 
@@ -13,13 +14,21 @@ class UserAdmin(UserAdmin):
 
 
 class PostAdmin(admin.ModelAdmin):
-    list_display = ("title", "slug", "author", "publish", "status")
-    list_filter = ("status", "created_date", "publish", "author")
-    search_fields = ("title", "body")
-    prepopulated_fields = {"slug": ("title",)}
+    list_display = ("id", "title", "body", "author", "publish", "status")  # то, что выводится на экран
+    list_display_links = ("id", "title")  # ссылки на объекты(теперь не только по id можно перейти)
+    list_filter = ("status", "created_date", "publish", "author")  # фильтрация справа sidebar
+    search_fields = ("title", "body")  # идет поиск по данным полям
+    # prepopulated_fields = {"slug": ("title",)}  # предзаполнение полей
     raw_id_fields = ("author",)
     date_hierarchy = "publish"
-    ordering = ["status", "publish"]
+    ordering = ("-publish",)  # порядок по умолчанию
+    readonly_fields = ("author", "likes", "views", "get_text_count")
+    exclude = ("slug",)  # убрать поле из видимости совсем
+
+    # какие то свои поля с логикой можно описать так
+    @admin.display(description="Text count")  # поменяли название у поля
+    def get_text_count(self, instance):
+        return len(instance.body)
 
 
 admin.site.register(Post, PostAdmin)
