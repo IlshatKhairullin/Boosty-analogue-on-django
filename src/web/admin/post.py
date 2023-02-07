@@ -1,16 +1,8 @@
 from django.contrib import admin
-from django.contrib.auth import get_user_model
-from django.contrib.auth.admin import UserAdmin
 from django.contrib import messages
 
-from .models import Post, User, Comment
-
-User = get_user_model()
-
-
-@admin.register(User)
-class UserAdmin(UserAdmin):
-    pass
+from web.models import Post
+from web.admin.comment import PostCommentInline
 
 
 # так можно создавать свои действия в админке(на подобии удаления)
@@ -26,10 +18,6 @@ def set_title_to_uppercase(modeladmin, request, queryset):
     )  # не через save, тк будет куча sql-запросов к базе(к каждому объекту списка)
 
     messages.add_message(request, messages.SUCCESS, f"Обновлено {len(objects)} объектов")  # сообщение при успехе
-
-
-class PostCommentInline(admin.TabularInline):
-    model = Comment
 
 
 class PostAdmin(admin.ModelAdmin):
@@ -50,30 +38,3 @@ class PostAdmin(admin.ModelAdmin):
     @admin.display(description="Text count")  # поменяли название у поля
     def get_text_count(self, instance):
         return len(instance.body)
-
-
-class CommentAdmin(admin.ModelAdmin):
-    list_display = (
-        "id",
-        "post",
-        "author",
-        "body",
-    )
-
-    # запрещаем удаление коммента через админку, но если коммент твой - то ок
-    def has_delete_permission(self, request, obj=None):
-        if obj is None:
-            return False
-        return request.user == obj.author
-
-    # изменение
-    def has_change_permission(self, request, obj=None):
-        return False
-
-    # добавление
-    def has_add_permission(self, request):
-        return False
-
-
-admin.site.register(Post, PostAdmin)
-admin.site.register(Comment, CommentAdmin)
