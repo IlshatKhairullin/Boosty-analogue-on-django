@@ -33,9 +33,9 @@ class Post(BaseModel):
     body = models.TextField()
     publish = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=10, choices=Status.choices, default=Status.draft)
-    tags = TaggableManager()
-    likes = models.ManyToManyField(User, related_name="post_like")
-    views = models.ManyToManyField(User, related_name="post_views")
+    tags = TaggableManager(blank=True)
+    likes = models.ManyToManyField(User, related_name="post_like", blank=True)
+    views = models.ManyToManyField(User, related_name="post_views", blank=True)
 
     def number_of_likes(self):
         return self.likes.count()

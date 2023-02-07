@@ -28,6 +28,10 @@ def set_title_to_uppercase(modeladmin, request, queryset):
     messages.add_message(request, messages.SUCCESS, f"Обновлено {len(objects)} объектов")  # сообщение при успехе
 
 
+class PostCommentInline(admin.TabularInline):
+    model = Comment
+
+
 class PostAdmin(admin.ModelAdmin):
     list_display = ("id", "title", "body", "author", "publish", "status")  # то, что выводится на экран
     list_display_links = ("id", "title")  # ссылки на объекты(теперь не только по id можно перейти)
@@ -40,6 +44,7 @@ class PostAdmin(admin.ModelAdmin):
     readonly_fields = ("author", "likes", "views", "get_text_count")
     exclude = ("slug",)  # убрать поле из видимости совсем
     actions = (set_title_to_uppercase,)  # тут объявляем действия
+    inlines = (PostCommentInline,)  # inlines работают только для FK, выводит список комментов на посте
 
     # какие то свои поля с логикой можно описать так
     @admin.display(description="Text count")  # поменяли название у поля
