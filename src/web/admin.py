@@ -13,6 +13,21 @@ class UserAdmin(UserAdmin):
     pass
 
 
+# так можно создавать свои действия в админке(на подобии удаления)
+@admin.display(description="Привести названия к верхнему регистру")
+def set_title_to_uppercase(modeladmin, request, queryset):
+    objects = []
+
+    for item in queryset:
+        item.title = item.title.upper()
+        objects.append(item)
+    Post.objects.bulk_update(
+        objects, ["title"]
+    )  # не через save, тк будет куча sql-запросов к базе(к каждому объекту списка)
+
+    messages.add_message(request, messages.SUCCESS, f"Обновлено {len(objects)} объектов")  # сообщение при успехе
+
+
 class PostAdmin(admin.ModelAdmin):
     list_display = ("id", "title", "body", "author", "publish", "status")  # то, что выводится на экран
     list_display_links = ("id", "title")  # ссылки на объекты(теперь не только по id можно перейти)
@@ -24,6 +39,7 @@ class PostAdmin(admin.ModelAdmin):
     ordering = ("-publish",)  # порядок по умолчанию
     readonly_fields = ("author", "likes", "views", "get_text_count")
     exclude = ("slug",)  # убрать поле из видимости совсем
+    actions = (set_title_to_uppercase,)  # тут объявляем действия
 
     # какие то свои поля с логикой можно описать так
     @admin.display(description="Text count")  # поменяли название у поля
