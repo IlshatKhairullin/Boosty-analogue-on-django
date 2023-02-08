@@ -67,7 +67,7 @@ class LikedPostsListView(ListView):
 
     def get_queryset(self):
         user = User.objects.get(id=self.request.user.id)
-        queryset = user.blog_post_from_like.all()
+        queryset = user.post_like.all()
         return queryset
 
 
