@@ -45,7 +45,8 @@
                         </button>
                     {% endif %}
                 </form>
-                {{ post.number_of_likes }} likes on post | {{ post.number_of_views }} views
+                {{ post.number_of_likes }} likes on post | {{ post.number_of_views }} views |
+                {{ post.post_comments.count }} comment
             </h2>
         </div>
 

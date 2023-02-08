@@ -85,7 +85,10 @@ class PostListView(ListView):
             queryset = queryset.annotate(total_views=Count("views", distinct=True)).order_by("-total_views")
         elif "rating_post" in self.request.GET:
             queryset = queryset.annotate(total_likes=Count("likes", distinct=True)).order_by("-total_likes")
-
+        elif "comments_post" in self.request.GET:
+            queryset = queryset.annotate(total_comments=Count("post_comments", distinct=True)).order_by(
+                "-total_comments"
+            )
         return self.filter_queryset(queryset)
 
     def filter_queryset(self, posts):
