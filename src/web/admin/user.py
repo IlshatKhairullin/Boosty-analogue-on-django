@@ -25,7 +25,11 @@ class MyUserAdmin(UserAdmin):
         (
             _("Permissions"),
             {
-                "fields": ("is_staff",),
+                "fields": (
+                    "is_staff",
+                    "groups",
+                    "user_permissions",
+                ),
             },
         ),
         (_("Dates"), {"fields": ("last_login", "date_joined")}),
