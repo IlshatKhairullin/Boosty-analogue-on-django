@@ -37,12 +37,6 @@ class Post(BaseModel):
     likes = models.ManyToManyField(User, related_name="post_like", blank=True)
     views = models.ManyToManyField(User, related_name="post_views", blank=True)
 
-    def number_of_likes(self):
-        return self.likes.count()
-
-    def number_of_views(self):
-        return self.views.count()
-
     def get_absolute_url(self):
         return reverse("post_detail", args=[self.slug, self.id])
 

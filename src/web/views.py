@@ -79,16 +79,19 @@ class PostListView(ListView):
     slug_url_kwarg = "id"
 
     def get_queryset(self):
-        queryset = Post.objects.filter(status=Status.published)
+        queryset = (
+            Post.objects.filter(status=Status.published)
+            .annotate(total_views=Count("views", distinct=True))
+            .annotate(total_likes=Count("likes", distinct=True))
+            .annotate(total_comments=Count("post_comments", distinct=True))
+        )
 
         if "popularity_post" in self.request.GET:
-            queryset = queryset.annotate(total_views=Count("views", distinct=True)).order_by("-total_views")
+            queryset = queryset.order_by("-total_views")
         elif "rating_post" in self.request.GET:
-            queryset = queryset.annotate(total_likes=Count("likes", distinct=True)).order_by("-total_likes")
+            queryset = queryset.order_by("-total_likes")
         elif "comments_post" in self.request.GET:
-            queryset = queryset.annotate(total_comments=Count("post_comments", distinct=True)).order_by(
-                "-total_comments"
-            )
+            queryset = queryset.order_by("-total_comments")
         return self.filter_queryset(queryset)
 
     def filter_queryset(self, posts):
@@ -193,8 +196,6 @@ class DetailPostView(SuccessMessageMixin, FormMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         post = get_object_or_404(Post, id=self.kwargs["id"])
-        total_post_likes = post.number_of_likes()
-        total_views = post.number_of_views()
 
         if self.request.user.is_authenticated:
             post.views.add(self.request.user)
@@ -205,9 +206,9 @@ class DetailPostView(SuccessMessageMixin, FormMixin, DetailView):
 
         return {
             **super(DetailPostView, self).get_context_data(**kwargs),
-            "total_post_likes": total_post_likes,
+            "total_post_likes": post.likes.count(),
             "post_liked": post_liked,
-            "post_views": total_views,
+            "post_views": post.views.count(),
         }
 
     def get_success_url(self, **kwargs):
