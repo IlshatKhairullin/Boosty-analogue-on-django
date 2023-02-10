@@ -262,7 +262,11 @@ class DetailPostEditView(DetailView):
     slug_url_kwarg = "id"
 
     def get_context_data(self, **kwargs):
-        return {**super(DetailPostEditView, self).get_context_data(**kwargs), "id": self.kwargs[self.slug_url_kwarg]}
+        return {
+            **super(DetailPostEditView, self).get_context_data(**kwargs),
+            "id": self.kwargs[self.slug_url_kwarg],
+            "tags": Post.objects.get(id=self.kwargs[self.slug_url_kwarg]).tags.all(),
+        }
 
 
 class PostCreateView(CreateView):
