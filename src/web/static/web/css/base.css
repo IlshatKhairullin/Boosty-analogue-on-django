@@ -135,6 +135,14 @@ body {
     color: var(--main-white-color);
 }
 
+.post_stats {
+    display: block;
+}
+
+.post_stats h1 {
+    margin-bottom: 20px;
+}
+
 .change_password_btn {
     margin-top: 20px;
 }
@@ -330,10 +338,6 @@ form.search input {
 
 .page-main div {
     max-width: 500px;
-}
-
-.page-main h1 {
-    margin-bottom: 20px;
 }
 
 .page-main p + p {

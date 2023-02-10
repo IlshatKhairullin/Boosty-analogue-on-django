@@ -3,5 +3,13 @@
 
 {% block content %}
     {% include 'includes/sidebar_and_back_to_link.html' %}
-    <h1>Your post stats</h1>
+    <h1>Your stats</h1>
+    <div class="post_stats">
+        <h5>You have <b>{{ total_posts }}</b> posts</h5>
+        <h5>You published <b>{{ total_published_posts }}</b> posts</h5>
+        <h5>First created post at <b>{{ first_created_at }}</b></h5>
+        <h5>Last created post at <b>{{ last_created_at }}</b></h5>
+        <h5>Your posts have <b>{{ total_likes_on_posts }}</b> likes</h5>
+        <h5>Most liked post have <b>{{ most_liked_post_obj }}</b> likes</h5>
+    </div>
 {% endblock %}
