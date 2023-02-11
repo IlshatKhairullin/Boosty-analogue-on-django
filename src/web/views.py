@@ -89,6 +89,8 @@ class PostListView(ListView):
     def get_queryset(self):
         queryset = (
             Post.objects.filter(status=Status.published)
+            .select_related("author")
+            .prefetch_related("post_comments")
             .annotate(total_views=Count("views", distinct=True))
             .annotate(total_likes=Count("likes", distinct=True))
             .annotate(total_comments=Count("post_comments", distinct=True))
