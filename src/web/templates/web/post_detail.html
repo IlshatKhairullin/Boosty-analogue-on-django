@@ -32,7 +32,7 @@
                     </button>
                 {% endif %}
 
-                {{ total_post_likes }} likes on post | {{ post_views }} views
+                {{ post.likes.count }} likes on post | {{ post.views.count }} views
             </form>
         </h1>
     </div>
@@ -43,7 +43,7 @@
     <br>
     {{ post.body|linebreaks }}
     <br>
-    <hr>Comments ({{ post.post_comments.all.count }})
+    <hr>Comments ({{ post.post_comments.count }})
     <br>
     <div class="comment_block">
 

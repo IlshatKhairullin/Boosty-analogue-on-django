@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
+from django.db.models import QuerySet, Count
 from django.urls import reverse
 from taggit.managers import TaggableManager
 
@@ -26,7 +27,20 @@ class User(AbstractUser):
     send_comment_on_post_notification = models.BooleanField(default=False)
 
 
+class PostQuerySet(QuerySet):
+    def optimize_for_post_info(self):
+        return (
+            self.select_related("author")
+            .prefetch_related("post_comments")
+            .annotate(total_views=Count("views", distinct=True))
+            .annotate(total_likes=Count("likes", distinct=True))
+            .annotate(total_comments=Count("post_comments", distinct=True))
+        )
+
+
 class Post(BaseModel):
+    objects = PostQuerySet.as_manager()
+
     title = models.CharField(max_length=250)
     slug = models.SlugField(max_length=250, unique_for_date="publish")
     author = models.ForeignKey(User, related_name="posts", on_delete=models.CASCADE)

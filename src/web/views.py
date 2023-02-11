@@ -87,14 +87,7 @@ class PostListView(ListView):
     slug_url_kwarg = "id"
 
     def get_queryset(self):
-        queryset = (
-            Post.objects.filter(status=Status.published)
-            .select_related("author")
-            .prefetch_related("post_comments")
-            .annotate(total_views=Count("views", distinct=True))
-            .annotate(total_likes=Count("likes", distinct=True))
-            .annotate(total_comments=Count("post_comments", distinct=True))
-        )
+        queryset = Post.objects.filter(status=Status.published).optimize_for_post_info()
 
         if "popularity_post" in self.request.GET:
             queryset = queryset.order_by("-total_views")
@@ -217,9 +210,7 @@ class DetailPostView(SuccessMessageMixin, FormMixin, DetailView):
 
         return {
             **super(DetailPostView, self).get_context_data(**kwargs),
-            "total_post_likes": post.likes.count(),
             "post_liked": post_liked,
-            "post_views": post.views.count(),
         }
 
     def get_success_url(self, **kwargs):
