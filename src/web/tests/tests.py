@@ -1,11 +1,9 @@
 from http import HTTPStatus
 from django.test import TestCase
 from django.urls import reverse
-from django.utils.text import slugify
 from requests import Response
 
-from web.models import User, Post
-from web.enums import Status
+from web.tests.factories import PostFactory
 
 
 class MainPageTestCase(TestCase):
@@ -18,11 +16,8 @@ class MainPageTestCase(TestCase):
         return response
 
     def test_post_list(self):
-        user = User.objects.create(email="test@yandex.ru")
-        post = Post.objects.create(
-            title="test post", slug=slugify("test post"), author=user, body="test", status=Status.published
-        )
-        self.client.force_login(user)
-        response = self.client.get(reverse("post_list"))
+        post = PostFactory()
+        self.client.force_login(post.author)
+        response = self._check_response(page="post_list")
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertContains(response, post.title)

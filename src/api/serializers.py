@@ -27,7 +27,6 @@ class PostSerializer(serializers.ModelSerializer):
     # проверяет все атрибуты сериализатора и выкидывает исключение если что то не так
     def validate(self, attrs):
         attrs["author"] = User.objects.last()  # attrs['author'] = self.context['request'].user.id
-        attrs["slug"] = slugify(attrs["title"])
         return attrs
 
     class Meta:

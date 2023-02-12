@@ -21,6 +21,7 @@ redis = "^4.4.2"
 python-dotenv = "^0.21.1"
 djangorestframework = "^3.14.0"
 pytest = "^7.2.1"
+factory-boy = "^3.2.1"
 
 
 [tool.poetry.group.dev.dependencies]
