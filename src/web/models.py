@@ -3,6 +3,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.db.models import QuerySet, Count
 from django.urls import reverse
+from django.utils.text import slugify
 from taggit.managers import TaggableManager
 
 from web.enums import Status
@@ -50,6 +51,11 @@ class Post(BaseModel):
     tags = TaggableManager(blank=True)
     likes = models.ManyToManyField(User, related_name="post_like", blank=True)
     views = models.ManyToManyField(User, related_name="post_views", blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        return super().save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse("post_detail", args=[self.slug, self.id])
