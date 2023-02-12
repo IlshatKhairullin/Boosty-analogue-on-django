@@ -22,7 +22,7 @@ class CommentSerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)
     post_comments = CommentSerializer(many=True, read_only=True)
-    body = serializers.CharField(write_only=True)
+    body = serializers.CharField()
 
     # проверяет все атрибуты сериализатора и выкидывает исключение если что то не так
     def validate(self, attrs):
@@ -32,4 +32,4 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ("id", "title", "body", "author", "post_comments", "status")
+        fields = ("id", "title", "body", "status", "author", "post_comments")
