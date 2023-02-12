@@ -31,8 +31,8 @@ ALLOWED_HOSTS = ["*"] if DEBUG else ["127.0.0.1", "localhost"]
 
 AUTH_USER_MODEL = "web.User"
 
-LOGIN_REDIRECT_URL = "/home"
-LOGOUT_REDIRECT_URL = "/home"
+LOGIN_REDIRECT_URL = "post_list"
+LOGOUT_REDIRECT_URL = "post_list"
 
 # Application definition
 
