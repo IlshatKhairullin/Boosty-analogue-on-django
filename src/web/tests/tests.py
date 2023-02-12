@@ -1,4 +1,5 @@
 from http import HTTPStatus
+from random import randint
 from django.test import TestCase
 from django.urls import reverse
 from requests import Response
@@ -14,6 +15,10 @@ class UnauthorizedTestCase(TestCase):
 
 
 class MainPageTestCase(TestCase):
+    def setUp(self) -> None:  # запускается перед каждым тестом
+        self.post = PostFactory()
+        self.client.force_login(self.post.author)
+
     def _check_response(self, page: str, equal: bool = True, query_params: dict = None) -> Response:
         response = self.client.get(reverse(page), data=query_params)
         if equal:
@@ -23,8 +28,16 @@ class MainPageTestCase(TestCase):
         return response
 
     def test_post_list(self):
-        post = PostFactory()
-        self.client.force_login(post.author)
         response = self._check_response(page="post_list")
         self.assertEqual(response.status_code, HTTPStatus.OK)
-        self.assertContains(response, post.title)
+        self.assertContains(response, self.post.title)
+
+    def test_post_list_with_search(self):
+        response = self._check_response(page="post_list", query_params={"search": self.post.title})
+        self.assertContains(response, self.post.title)
+
+    def test_post_list_with_search_empty(self):
+        response = self._check_response(
+            page="post_list", query_params={"search": randint(100, 200)}
+        )  # factory.Faker(text) вернет только строку
+        self.assertNotContains(response, self.post.title)
