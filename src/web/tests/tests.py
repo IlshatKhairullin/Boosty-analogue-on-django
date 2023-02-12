@@ -6,6 +6,13 @@ from requests import Response
 from web.tests.factories import PostFactory
 
 
+class UnauthorizedTestCase(TestCase):
+    def test_unauthorized(self):
+        response = self.client.get(reverse("post_list"))
+        registration_link = reverse("register")
+        self.assertContains(response, registration_link)
+
+
 class MainPageTestCase(TestCase):
     def _check_response(self, page: str, equal: bool = True, query_params: dict = None) -> Response:
         response = self.client.get(reverse(page), data=query_params)
