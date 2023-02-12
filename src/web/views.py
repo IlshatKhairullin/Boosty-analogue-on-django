@@ -333,7 +333,7 @@ class ProfileView(ListView):
             "last_created_at": post_stats["last_created_at"],
             "first_created_at": post_stats["first_created_at"],
             "total_likes_on_posts": post_stats["total_likes_on_posts"],
-            "most_liked_post_obj": post_stats["most_liked_post"],
+            "most_liked_post_count": post_stats["most_liked_post"],
         }
 
 
