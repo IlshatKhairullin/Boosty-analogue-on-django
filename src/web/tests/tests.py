@@ -41,3 +41,11 @@ class MainPageTestCase(TestCase):
             page="post_list", query_params={"search": randint(100, 200)}
         )  # factory.Faker(text) вернет только строку
         self.assertNotContains(response, self.post.title)
+
+    def test_post_like_on_main_page(self):
+        response = self.client.post(
+            reverse("post_like", args=(self.post.slug, self.post.id)),
+            {"post_like_main_page": self.post.id},
+            follow=True,
+        )
+        self.assertEqual(response.status_code, HTTPStatus.OK)
