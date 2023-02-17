@@ -2,9 +2,8 @@ from http import HTTPStatus
 from random import randint
 from django.test import TestCase
 from django.urls import reverse
-from requests import Response
 
-from web.tests.factories import PostFactory
+from web.tests.mixins import PostTestMixin
 
 
 class UnauthorizedTestCase(TestCase):
@@ -14,19 +13,7 @@ class UnauthorizedTestCase(TestCase):
         self.assertContains(response, registration_link)
 
 
-class MainPageTestCase(TestCase):
-    def setUp(self) -> None:  # запускается перед каждым тестом
-        self.post = PostFactory()
-        self.client.force_login(self.post.author)
-
-    def _check_response(self, page: str, equal: bool = True, query_params: dict = None) -> Response:
-        response = self.client.get(reverse(page), data=query_params)
-        if equal:
-            self.assertEqual(response.status_code, HTTPStatus.OK)
-        else:
-            self.assertNotEqual(response.status_code, HTTPStatus.OK)
-        return response
-
+class MainPageTestCase(PostTestMixin):
     def test_post_list(self):
         response = self._check_response(page="post_list")
         self.assertEqual(response.status_code, HTTPStatus.OK)
@@ -42,10 +29,30 @@ class MainPageTestCase(TestCase):
         )  # factory.Faker(text) вернет только строку
         self.assertNotContains(response, self.post.title)
 
-    def test_post_like_on_main_page(self):
+    def test_post_like_main_page(self):
         response = self.client.post(
             reverse("post_like", args=(self.post.slug, self.post.id)),
             {"post_like_main_page": self.post.id},
+            follow=True,
+        )
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+
+
+class PostDetailPageTestCase(PostTestMixin):
+    def test_post_detail(self):
+        response = self._check_response(page="post_detail", slug=self.post.slug, id=self.post.id)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+
+    def test_send_comment_post_detail(self):
+        response = self.client.post(
+            reverse("post_detail", args=(self.post.slug, self.post.id)), data={"body": "123"}, follow=True
+        )
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+
+    def test_comment_like_post_detail(self):
+        response = self.client.post(
+            reverse("comment_like", args=(self.post.slug, self.post.id, self.comment.id)),
+            {"comment_like": self.comment.id},
             follow=True,
         )
         self.assertEqual(response.status_code, HTTPStatus.OK)

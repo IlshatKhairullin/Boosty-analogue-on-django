@@ -3,12 +3,13 @@ from django.test import TestCase
 from django.urls import reverse
 from http import HTTPStatus
 
-from web.tests.factories import PostFactory
+from web.tests.factories import PostFactory, CommentFactory
 
 
 class PostTestMixin(TestCase):
     def setUp(self) -> None:  # запускается перед каждым тестом
         self.post = PostFactory()
+        self.comment = CommentFactory(post=self.post)
         self.client.force_login(self.post.author)
 
     def _check_response(self, page: str, equal: bool = True, query_params: dict = None, **kwargs) -> Response:

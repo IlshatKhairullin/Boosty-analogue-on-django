@@ -27,6 +27,9 @@ class User(AbstractUser):
     is_private = models.BooleanField(default=False)
     send_comment_on_post_notification = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.username
+
 
 class PostQuerySet(QuerySet):
     def optimize_for_post_info(self):
