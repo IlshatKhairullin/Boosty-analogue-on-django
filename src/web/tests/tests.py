@@ -6,7 +6,7 @@ from django.urls import reverse
 from web.tests.mixins import PostTestMixin
 
 
-class UnauthorizedTestCase(TestCase):
+class UnauthorizedTestCase(TestCase):  # unittest's below
     def test_unauthorized(self):
         response = self.client.get(reverse("post_list"))
         registration_link = reverse("register")
