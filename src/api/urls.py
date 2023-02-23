@@ -6,7 +6,7 @@ from api.views import status_view, posts_view, post_view, UserViewSet
 # роутеры помогают не прописывать пути, предоставляют совсем общие шаблоны - users/ лист юзеров,
 # user/4/ - конкретный юзер
 router = routers.SimpleRouter()
-router.register(r"users", UserViewSet)
+router.register(r"users", UserViewSet, basename="users")
 
 # если же роутеры не подходят, то url с помощью viewset'ов можно написать так:
 # path('api/v1/userlist/', UserViewSet.as_view({'get': 'list'})), название в документации - viewset actions
@@ -17,5 +17,4 @@ urlpatterns = [
     path("", status_view, name="status"),
     path("posts/", posts_view, name="posts"),
     path("posts/<int:pk>/", post_view, name="post"),
-    path("", include(router.urls), name="users"),
-]
+] + router.urls
