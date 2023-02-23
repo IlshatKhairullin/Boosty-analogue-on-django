@@ -170,4 +170,6 @@ REST_FRAMEWORK = {
         "rest_framework.renderers.BrowsableAPIRenderer",
         # если убрать 1 строчку выше, то интерфейса rest'a не будет, только json'ы (необходимо в проде)
     ],
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
+    "PAGE_SIZE": 10,
 }

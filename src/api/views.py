@@ -1,3 +1,4 @@
+from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -54,6 +55,8 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class NoteViewSet(viewsets.ModelViewSet):
+    pagination_class = LimitOffsetPagination
+    page_size = 10
     permission_classes = [IsAuthenticated]
     serializer_class = NoteSerializer
 
