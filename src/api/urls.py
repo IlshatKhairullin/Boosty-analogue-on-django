@@ -1,12 +1,13 @@
 from django.urls import path, include
 from rest_framework import routers
 
-from api.views import status_view, posts_view, post_view, UserViewSet
+from api.views import status_view, posts_view, post_view, UserViewSet, NoteViewSet
 
 # роутеры помогают не прописывать пути, предоставляют совсем общие шаблоны - users/ лист юзеров,
 # user/4/ - конкретный юзер
 router = routers.SimpleRouter()
 router.register(r"users", UserViewSet, basename="users")
+router.register(r"notes", NoteViewSet, basename="notes")
 
 # если же роутеры не подходят, то url с помощью viewset'ов можно написать так:
 # path('api/v1/userlist/', UserViewSet.as_view({'get': 'list'})), название в документации - viewset actions

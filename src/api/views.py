@@ -1,15 +1,16 @@
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import generics, viewsets
 from rest_framework import status
 
-from api.serializers import PostSerializer, UserSerializer
-from web.models import Post, User
+from api.serializers import PostSerializer, UserSerializer, NoteSerializer
+from web.models import Post, User, Note
 
 
 @api_view()
 def status_view(request):
-    return Response({"status": "ok"})
+    return Response({"status": "ok", "user_id": request.user.id})
 
 
 @api_view(["GET", "POST"])
@@ -50,3 +51,9 @@ def post_view(request, pk: int):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+
+class NoteViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = Note.objects.select_related("author")
+    serializer_class = NoteSerializer
