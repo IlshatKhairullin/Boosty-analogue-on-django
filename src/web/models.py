@@ -99,3 +99,18 @@ class Comment(BaseModel):
 
     class Meta:
         ordering = ("-created_date",)
+
+
+class Note(BaseModel):
+    author = models.ForeignKey(User, related_name="notes", on_delete=models.CASCADE)
+    title = models.CharField(max_length=250)
+    body = models.TextField(verbose_name="note_text")
+    alert_send_at = models.DateTimeField(null=True, blank=True, verbose_name="Alert time")
+
+    def __str__(self):
+        return f"Note №{self.id} '{self.author}'"
+
+    class Meta:
+        verbose_name = "note"
+        verbose_name_plural = "notes"
+        ordering = ("created_date",)
