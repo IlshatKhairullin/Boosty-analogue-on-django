@@ -55,5 +55,8 @@ class UserViewSet(viewsets.ModelViewSet):
 
 class NoteViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
-    queryset = Note.objects.select_related("author")
     serializer_class = NoteSerializer
+
+    def get_queryset(self):
+        author = self.request.user
+        return Note.objects.select_related("author").filter(author=author)

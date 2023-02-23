@@ -25,7 +25,7 @@ class PostSerializer(serializers.ModelSerializer):
 
     # проверяет все атрибуты сериализатора и выкидывает исключение если что то не так
     def validate(self, attrs):
-        attrs["author"] = self.context["request"].user.id
+        attrs["author_id"] = self.context["request"].user.id
         return attrs
 
     class Meta:
@@ -38,7 +38,7 @@ class NoteSerializer(serializers.ModelSerializer):
     alert_send_at = serializers.ReadOnlyField()
 
     def validate(self, attrs):
-        attrs["author"] = self.context["request"].user.id
+        attrs["author_id"] = self.context["request"].user.id
         return attrs
 
     class Meta:
