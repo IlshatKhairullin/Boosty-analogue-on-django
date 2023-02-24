@@ -1,3 +1,4 @@
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -9,13 +10,16 @@ from api.serializers import PostSerializer, UserSerializer, NoteSerializer
 from web.models import Post, User, Note
 
 
+@swagger_auto_schema(method="GET", operation_id="api_status")  # operation_id название в redoc
 @api_view()
 def status_view(request):
+    """Status view"""  # название апи метода в swagger
     return Response({"status": "ok", "user_id": request.user.id})
 
 
 @api_view(["GET", "POST"])
 def posts_view(request):
+    """Post's api"""
     if request.method == "POST":
         serializer = PostSerializer(
             data=request.data, context={"request": request}
@@ -31,6 +35,7 @@ def posts_view(request):
 
 @api_view(["GET", "PUT"])
 def post_view(request, pk: int):
+    """Single post api"""
     post = generics.get_object_or_404(Post, pk=pk)
 
     # Put - обновление части данных у объекта
