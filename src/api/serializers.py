@@ -3,6 +3,11 @@ from rest_framework import serializers
 from web.models import Post, User, Comment, Note
 
 
+class StatusSerializer(serializers.Serializer):
+    status = serializers.CharField()
+    user_id = serializers.IntegerField()
+
+
 class UserSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField(read_only=True)
     send_comment_on_post_notification = serializers.BooleanField(read_only=True)
@@ -31,6 +36,15 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ("id", "title", "body", "status", "author", "post_comments")
+
+
+class NoteEditorSerializer(serializers.ModelSerializer):
+    body = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = Note
+        fields = ("id", "body")
+        read_only_fields = ("title",)
 
 
 class NoteSerializer(serializers.ModelSerializer):
