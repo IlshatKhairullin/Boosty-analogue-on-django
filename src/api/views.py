@@ -6,17 +6,29 @@ from rest_framework.decorators import api_view
 from rest_framework import generics, viewsets
 from rest_framework import status
 
-from api.serializers import PostSerializer, UserSerializer, NoteSerializer
+from api.serializers import PostSerializer, UserSerializer, NoteSerializer, StatusSerializer, NoteEditorSerializer
 from web.models import Post, User, Note
 
 
-@swagger_auto_schema(method="GET", operation_id="api_status")  # operation_id название в redoc
+@swagger_auto_schema(
+    method="GET", operation_id="api_status", responses={status.HTTP_200_OK: StatusSerializer()}
+)  # operation_id название в redoc
 @api_view()
 def status_view(request):
     """Status view"""  # название апи метода в swagger
-    return Response({"status": "ok", "user_id": request.user.id})
+    return Response(StatusSerializer({"status": "ok", "user_id": request.user.id}).data)
 
 
+@swagger_auto_schema(
+    methods=["GET"],
+    operation_id="api_posts_get",
+    responses={
+        status.HTTP_200_OK: PostSerializer(),
+    },
+)
+@swagger_auto_schema(
+    methods=["POST"], operation_id="api_posts_post", responses={status.HTTP_201_CREATED: PostSerializer()}
+)
 @api_view(["GET", "POST"])
 def posts_view(request):
     """Post's api"""
@@ -63,7 +75,11 @@ class NoteViewSet(viewsets.ModelViewSet):
     pagination_class = LimitOffsetPagination
     page_size = 10
     permission_classes = [IsAuthenticated]
-    serializer_class = NoteSerializer
+
+    def get_serializer_class(self):
+        if self.action in ("create", "update", "partial_update"):
+            return NoteEditorSerializer
+        return NoteSerializer
 
     def get_queryset(self):
         author = self.request.user
