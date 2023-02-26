@@ -1,39 +1,81 @@
 {% load static socialaccount %}
 
-
-<html lang="ru">
-
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+
     <!-- cropper link -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropper/4.1.0/cropper.min.css">
-
     <!-- bootstrap link -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
-
-    <link
-            href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css"
-            rel="stylesheet" type='text/css'>
-
-    <!-- custom css link-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- custom css links-->
     <link rel="stylesheet" href="{% static 'web/css/base.css' %}" type="text/css">
-
-    <title>{% block title %}{% endblock %}</title>
-    <meta charset="utf-8">
 </head>
 
-<div class="wrapper">
+<body class="main_page_body">
+<nav class="navbar navbar-expand-md bg-dark navbar-dark">
+    <a class="navbar-brand" href={% url 'post_list' %}>Bikabu</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href={% url 'post_list' %}>Home</a>
+            </li>
 
-    {% include 'includes/header.html' %}
+            {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href={% url 'profile_post_stats' %}>Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href={% url 'logout' %}>Logout</a>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href={% url 'login' %}>Sign in</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href={% url 'register' %}>Register</a>
+                </li>
+            {% endif %}
 
-    <div id="content">
-        {% block content %}
-        {% endblock %}
+            <li class="nav-item">
+                <form class="filter-posts d-flex" action="{% url 'post_list' %}" method="get">
+                    {% csrf_token %}
+                    <span class="nav-link filter-posts-blank">
+                        Filter posts by:
+                    </span>
+                    <button class="nav-link" name="relevance_post">Relevance</button>
+                    <button class="nav-link" name="popularity_post">Views</button>
+                    <button class="nav-link" name="rating_post">Likes</button>
+                    <button class="nav-link" name="comments_post">Comments</button>
+                </form>
+            </li>
+        </ul>
+        <form action="" method="get" class="form-inline ml-auto">
+            <label>
+                <input class="form-control mr-sm-2" type="text" name="search" placeholder="Search..."
+                       aria-label="Search"
+                       value="{{ search|default_if_none:'' }}">
+            </label>
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
     </div>
+</nav>
 
-    {% include 'includes/footer.html' %}
-
+<div class="container my-5">
+    {% block content %}
+    {% endblock %}
 </div>
+
+<footer class="bg-light py-3 page-footer">
+    <div class="container text-center">
+        <p>&copy; 2023 Bikabu</p>
+    </div>
+</footer>
 
 <!-- jquery script -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
@@ -42,24 +84,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropper/4.1.0/cropper.min.js"></script>
 
 <!-- bootstrap script -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
-        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <!-- custom js-->
 <script src="{% static 'web/js/script.js' %}"></script>
-<script>
-    function ChangeColor(Element) {
-        if (Element.style.color === 'black') Element.style.color = 'green';
-        else Element.style.color = 'black';
-        return false;
-    }
-
-    function ChangeColorOut(Element) {
-        if (Element.style.color === 'green') Element.style.color = 'black';
-        else Element.style.color = 'green';
-        return false;
-    }
-</script>
-
+</body>
 </html>

@@ -124,15 +124,24 @@ body {
     margin-left: 10px;
 }
 
+.filter-posts button {
+    border: None;
+}
+
+.filter-posts button:focus {
+    outline: none;
+}
+
+.filter-posts-blank {
+    margin-left: 370px;
+}
+
 /* MAIN
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
-.page-main {
+.main_page_body {
     display: flex;
-    justify-content: center;
-    flex-grow: 1;
-    min-height: 350px;
-    background-blend-mode: luminosity;
-    color: var(--main-white-color);
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 .post_stats {
@@ -291,7 +300,6 @@ body {
     border: none;
 }
 
-
 .like_form_on_comment button {
     margin-left: 23px;
     border: none;
@@ -315,41 +323,6 @@ body {
     padding: 12px;
 }
 
-.search_button, .search_input {
-    display: inline-block;
-    padding: 10px 15px;
-    font-size: 17px;
-    -webkit-appearance: none;
-    border-radius: 15px;
-}
-
-form.search button {
-    background: #2196F3;
-    color: white;
-    padding: 14px;
-    border: 1px solid grey;
-    cursor: pointer;
-}
-
-form.search input {
-    border: 1px solid grey;
-    background: #f1f1f1;
-}
-
-.page-main div {
-    max-width: 500px;
-}
-
-.page-main p + p {
-    margin-top: 10px;
-}
-
-.page-main .main_page_text {
-    width: 550px;
-    padding: 20px;
-    margin-top: 55px;
-}
-
 .main_img {
     float: right;
     margin-left: 100px;
@@ -361,12 +334,12 @@ form.search input {
     height: 200px;
 }
 
-.page-main .card-text {
-    margin-bottom: 20px;
-}
-
 .not-visible {
     display: none;
+}
+
+.read_more {
+    margin-top: 15px;
 }
 
 /* Aside
@@ -375,7 +348,6 @@ form.search input {
 .profile_aside_block {
     padding-left: 115px;
 }
-
 
 .profile_aside {
     width: 40%;
@@ -400,64 +372,14 @@ form.search input {
 /* FOOTER
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 .page-footer {
-    display: flex;
-    flex-direction: column-reverse;
-    background: var(--main-white-color);
+    margin-top: auto;
 }
-
-.page-footer ul {
-    display: flex;
-    font-size: 1.5rem;
-    margin-bottom: 5px;
-}
-
-.page-footer ul li:not(:last-child) {
-    margin-right: 20px;
-}
-
 
 /* MQ
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
-@media screen and (min-width: 550px) {
-    .page-header ul {
-        width: auto;
-        margin-top: 0;
-    }
-
-    .page-header .register {
-        order: 1;
-    }
-
-    .page-header form {
-        display: flex;
-    }
-
-    .page-header b {
-        margin-right: 12px;
-    }
-
-    .page-header button {
-        border: none;
-    }
-
-    .page-footer {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: auto;
-    }
-
-    .page-footer ul {
-        margin-bottom: 0;
-    }
-}
 
 @media screen and (min-width: 768px) {
     body {
         font-size: 18px;
-    }
-
-    .page-main {
-        padding-left: 90px;
     }
 }

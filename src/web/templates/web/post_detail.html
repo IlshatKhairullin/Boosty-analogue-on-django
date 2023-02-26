@@ -65,10 +65,12 @@
         {% for comment in post.post_comments.all %}
 
             {% if comment.is_parent %}
-                <p>
-                    <img src="/media/{{ comment.author.profile_pic }}" alt="profile picture"
-                         class="profile_img_comment">
-                </p>
+                {% if comment.author.profile_pic %}
+                    <p>
+                        <img src="/media/{{ comment.author.profile_pic }}" alt="profile picture"
+                             class="profile_img_comment">
+                    </p>
+                {% endif %}
                 {{ comment.created_date }} by
                 <b><a href="{% url 'author_profile' id=comment.author.id %}"
                       class="user_profile_link">{{ comment.author }}</a></b>
@@ -137,10 +139,12 @@
             <div class="reply_comment_block">
                 <div class="reply_jquery_block" style="display: none">
                     {% for child_comment in comment.children %}
-                        <p>
-                            <img src="/media/{{ child_comment.author.profile_pic }}" alt="profile picture"
-                                 class="profile_img_comment">
-                        </p>
+                        {% if comment.author.profile_pic %}
+                            <p>
+                                <img src="/media/{{ child_comment.author.profile_pic }}" alt="profile picture"
+                                     class="profile_img_comment">
+                            </p>
+                        {% endif %}
                         {{ child_comment.created_date }} by
                         <b><a href="{% url 'author_profile' id=child_comment.author.id %}"
                               class="user_profile_link">{{ child_comment.author }}</a></b>

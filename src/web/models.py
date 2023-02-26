@@ -36,6 +36,7 @@ class PostQuerySet(QuerySet):
         return (
             self.select_related("author")
             .prefetch_related("post_comments")
+            .prefetch_related("tagged_items__tag")
             .annotate(total_views=Count("views", distinct=True))
             .annotate(total_likes=Count("likes", distinct=True))
             .annotate(total_comments=Count("post_comments", distinct=True))
