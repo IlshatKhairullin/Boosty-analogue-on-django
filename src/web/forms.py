@@ -33,7 +33,7 @@ class RegisterUserForm(CustomUserCreationForm):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ("title", "tags", "body", "status")
+        fields = ("title", "tags", "body", "status", "post_pic")
 
 
 class CommentForm(forms.ModelForm):

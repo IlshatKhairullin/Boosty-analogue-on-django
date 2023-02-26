@@ -55,6 +55,7 @@ class Post(BaseModel):
     tags = TaggableManager(blank=True)
     likes = models.ManyToManyField(User, related_name="post_like", blank=True)
     views = models.ManyToManyField(User, related_name="post_views", blank=True)
+    post_pic = models.ImageField(null=True, blank=True, upload_to="user_post_pictures")
 
     def save(self, *args, **kwargs):
         if not self.slug:

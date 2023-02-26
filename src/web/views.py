@@ -267,7 +267,6 @@ class PostCreateView(CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
-        form.instance.slug = slugify(form.instance.title)
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -279,10 +278,6 @@ class PostUpdateView(UpdateView):
     form_class = PostForm
     slug_field = "id"
     slug_url_kwarg = "id"
-
-    def form_valid(self, form):
-        form.instance.slug = slugify(form.instance.title)
-        return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         return {**super(PostUpdateView, self).get_context_data(**kwargs), "id": self.kwargs[self.slug_url_kwarg]}
