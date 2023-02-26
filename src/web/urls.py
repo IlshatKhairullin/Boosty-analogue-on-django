@@ -5,7 +5,7 @@ from web import views
 
 urlpatterns = [
     path("", include("django.contrib.auth.urls")),
-    path("home/", views.PostListView.as_view(), name="post_list"),
+    path("", views.PostListView.as_view(), name="post_list"),
     path("login/", views.login_view, name="login"),
     path("register/", views.Register.as_view(), name="register"),
     path("home/<slug:slug>/<int:id>", views.DetailPostView.as_view(), name="post_detail"),

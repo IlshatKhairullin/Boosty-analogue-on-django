@@ -1,3 +1,4 @@
+from random import randrange
 from django import template
 
 register = template.Library()
@@ -14,3 +15,8 @@ def filter_link(title, url_part, query_params):
 @register.filter(name="addclass")
 def addclass(value, arg):
     return value.as_widget(attrs={"class": arg})
+
+
+@register.filter(name="random_id")
+def random_id(range2: int) -> int:
+    return randrange(range2)

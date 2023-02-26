@@ -22,17 +22,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-xcf&1fa0qdlb#&)bxp)3bqe^*c3=qgqo+84^dl*48zb=jkcpd("
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG", "true").lower() == "true"
+DEBUG = os.environ.get("DEBUG", "false").lower() == "true"
 
 ALLOWED_HOSTS = ["*"] if DEBUG else ["127.0.0.1", "localhost"]
 
 AUTH_USER_MODEL = "web.User"
 
-LOGIN_REDIRECT_URL = "/home"
-LOGOUT_REDIRECT_URL = "/home"
+LOGIN_REDIRECT_URL = "post_list"
+LOGOUT_REDIRECT_URL = "post_list"
 
 # Application definition
 
@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.sites",
     "rest_framework",
+    "drf_yasg",
     "taggit",
     "captcha",
     "api",
@@ -63,6 +64,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "mysite.debug.SqlPrintingMiddleware",
 ]
 
 ROOT_URLCONF = "mysite.urls"
@@ -152,7 +154,6 @@ MEDIA_URL = "media/"
 SITE_ID = 1
 
 CAPTCHA_FONT_SIZE = 40
-
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://127.0.0.1:6379/0")
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
@@ -163,3 +164,13 @@ EMAIL_PORT = os.environ.get("EMAIL_PORT")
 
 EMAIL_USE_SSL = True  # для безопасности при использовании яндекс почты
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", EMAIL_HOST_USER)
+
+REST_FRAMEWORK = {
+    "DEFAULT_RENDERER_CLASSES": [
+        "rest_framework.renderers.JSONRenderer",
+        "rest_framework.renderers.BrowsableAPIRenderer",
+        # если убрать 1 строчку выше, то интерфейса rest'a не будет, только json'ы (необходимо в проде)
+    ],
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
+    "PAGE_SIZE": 10,
+}

@@ -3,8 +3,8 @@
 {% block content %}
     {% include 'includes/sidebar_and_back_to_link.html' %}
 
-    <h2 style="margin-top: 25px">You liked {{ liked_posts.count }}
-        {% if liked_posts.count == 1 %}
+    <h2 style="margin-top: 25px">You liked {{ liked_posts_count }}
+        {% if liked_posts_count == 1 %}
             post:
         {% else %}
             posts:

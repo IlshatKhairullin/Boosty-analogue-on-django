@@ -1,7 +1,9 @@
 from django.contrib.auth.models import AbstractUser
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
+from django.db.models import QuerySet, Count
 from django.urls import reverse
+from django.utils.text import slugify
 from taggit.managers import TaggableManager
 
 from web.enums import Status
@@ -25,23 +27,40 @@ class User(AbstractUser):
     is_private = models.BooleanField(default=False)
     send_comment_on_post_notification = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.username
+
+
+class PostQuerySet(QuerySet):
+    def optimize_for_post_info(self):
+        return (
+            self.select_related("author")
+            .prefetch_related("post_comments")
+            .prefetch_related("tagged_items__tag")
+            .annotate(total_views=Count("views", distinct=True))
+            .annotate(total_likes=Count("likes", distinct=True))
+            .annotate(total_comments=Count("post_comments", distinct=True))
+        )
+
 
 class Post(BaseModel):
+    objects = PostQuerySet.as_manager()
+
     title = models.CharField(max_length=250)
     slug = models.SlugField(max_length=250, unique_for_date="publish")
     author = models.ForeignKey(User, related_name="posts", on_delete=models.CASCADE)
     body = models.TextField()
     publish = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=10, choices=Status.choices, default=Status.draft)
-    tags = TaggableManager()
-    likes = models.ManyToManyField(User, related_name="post_like")
-    views = models.ManyToManyField(User, related_name="post_views")
+    tags = TaggableManager(blank=True)
+    likes = models.ManyToManyField(User, related_name="post_like", blank=True)
+    views = models.ManyToManyField(User, related_name="post_views", blank=True)
+    post_pic = models.ImageField(null=True, blank=True, upload_to="user_post_pictures")
 
-    def number_of_likes(self):
-        return self.likes.count()
-
-    def number_of_views(self):
-        return self.views.count()
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        return super().save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse("post_detail", args=[self.slug, self.id])
@@ -82,3 +101,18 @@ class Comment(BaseModel):
 
     class Meta:
         ordering = ("-created_date",)
+
+
+class Note(BaseModel):
+    author = models.ForeignKey(User, related_name="notes", on_delete=models.CASCADE)
+    title = models.CharField(max_length=250)
+    body = models.TextField(verbose_name="note_text")
+    alert_send_at = models.DateTimeField(null=True, blank=True, verbose_name="Alert time")
+
+    def __str__(self):
+        return f"Note №{self.id} '{self.author}'"
+
+    class Meta:
+        verbose_name = "note"
+        verbose_name_plural = "notes"
+        ordering = ("created_date",)

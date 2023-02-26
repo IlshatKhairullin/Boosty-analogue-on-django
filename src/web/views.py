@@ -1,7 +1,6 @@
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
-from django.db.models import Q, Count
-from django.utils.text import slugify
+from django.db.models import Q, Max, Min
 from django.views import View
 from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView
 from django.views.generic.edit import FormMixin
@@ -12,6 +11,7 @@ from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect, get_object_or_404
 
 from .models import *
+from web.enums import Status
 
 
 def login_view(request):
@@ -65,9 +65,16 @@ class LikedPostsListView(ListView):
     context_object_name = "liked_posts"
     paginate_by = 40
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        user = User.objects.get(id=self.request.user.id)
+        return {
+            **super(LikedPostsListView, self).get_context_data(**kwargs),
+            "liked_posts_count": user.post_like.count(),
+        }
+
     def get_queryset(self):
         user = User.objects.get(id=self.request.user.id)
-        queryset = user.blog_post_from_like.all()
+        queryset = user.post_like.all()
         return queryset
 
 
@@ -79,20 +86,22 @@ class PostListView(ListView):
     slug_url_kwarg = "id"
 
     def get_queryset(self):
-        queryset = Post.objects.filter(status=Status.published)
+        queryset = Post.objects.filter(status=Status.published).optimize_for_post_info()
 
         if "popularity_post" in self.request.GET:
-            queryset = queryset.annotate(total_views=Count("views", distinct=True)).order_by("-total_views")
+            queryset = queryset.order_by("-total_views")
         elif "rating_post" in self.request.GET:
-            queryset = queryset.annotate(total_likes=Count("likes", distinct=True)).order_by("-total_likes")
-
+            queryset = queryset.order_by("-total_likes")
+        elif "comments_post" in self.request.GET:
+            queryset = queryset.order_by("-total_comments")
         return self.filter_queryset(queryset)
 
     def filter_queryset(self, posts):
         self.search = self.request.GET.get("search", None)
 
         if self.search:
-            # Q - спец объект, у которого определены логические операции (и, или...)
+            # Q - спец объект, у которого определены логические операции (и, или...),
+            # с помощью него прописываются условия
             posts = posts.filter(Q(title__icontains=self.search) | Q(body__icontains=self.search))
         return posts
 
@@ -190,8 +199,6 @@ class DetailPostView(SuccessMessageMixin, FormMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         post = get_object_or_404(Post, id=self.kwargs["id"])
-        total_post_likes = post.number_of_likes()
-        total_views = post.number_of_views()
 
         if self.request.user.is_authenticated:
             post.views.add(self.request.user)
@@ -202,9 +209,7 @@ class DetailPostView(SuccessMessageMixin, FormMixin, DetailView):
 
         return {
             **super(DetailPostView, self).get_context_data(**kwargs),
-            "total_post_likes": total_post_likes,
             "post_liked": post_liked,
-            "post_views": total_views,
         }
 
     def get_success_url(self, **kwargs):
@@ -249,7 +254,11 @@ class DetailPostEditView(DetailView):
     slug_url_kwarg = "id"
 
     def get_context_data(self, **kwargs):
-        return {**super(DetailPostEditView, self).get_context_data(**kwargs), "id": self.kwargs[self.slug_url_kwarg]}
+        return {
+            **super(DetailPostEditView, self).get_context_data(**kwargs),
+            "id": self.kwargs[self.slug_url_kwarg],
+            "tags": Post.objects.get(id=self.kwargs[self.slug_url_kwarg]).tags.all(),
+        }
 
 
 class PostCreateView(CreateView):
@@ -258,7 +267,6 @@ class PostCreateView(CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
-        form.instance.slug = slugify(form.instance.title)
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -270,10 +278,6 @@ class PostUpdateView(UpdateView):
     form_class = PostForm
     slug_field = "id"
     slug_url_kwarg = "id"
-
-    def form_valid(self, form):
-        form.instance.slug = slugify(form.instance.title)
-        return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         return {**super(PostUpdateView, self).get_context_data(**kwargs), "id": self.kwargs[self.slug_url_kwarg]}
@@ -305,6 +309,27 @@ class ProfileView(ListView):
     template_name = "web/profile_post_stats.html"
     model = Post
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        filtered_posts = Post.objects.filter(author=self.request.user)
+        post_stats = filtered_posts.aggregate(
+            last_created_at=Max("created_date"),
+            first_created_at=Min("created_date"),
+            total_posts=Count("id"),
+            total_published_posts=Count("id", filter=Q(status=Status.published)),
+            total_likes_on_posts=Count("likes"),
+            most_liked_post=Max("likes"),
+        )
+
+        return {
+            **super(ProfileView, self).get_context_data(**kwargs),
+            "total_posts": post_stats["total_posts"],
+            "total_published_posts": post_stats["total_published_posts"],
+            "last_created_at": post_stats["last_created_at"],
+            "first_created_at": post_stats["first_created_at"],
+            "total_likes_on_posts": post_stats["total_likes_on_posts"],
+            "most_liked_post_count": post_stats["most_liked_post"],
+        }
+
 
 class ProfileUserEditView(UpdateView):
     model = User
@@ -329,7 +354,7 @@ class ProfileSettings(UpdateView):
 
 
 class ProfileUserPostsView(ListView):
-    template_name = "web/user_posts.html"
+    template_name = "web/profile_user_posts.html"
     context_object_name = "posts"
 
     def get_queryset(self):

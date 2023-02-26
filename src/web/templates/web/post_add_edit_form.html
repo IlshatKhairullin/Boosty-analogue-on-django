@@ -3,9 +3,13 @@
 {% block content %}
 
     {% if id %}
-    <a href="{{ post.get_edit_absolute_url }}"><button class="btn btn-dark">Previous page</button></a>
+        <a href="{{ post.get_edit_absolute_url }}">
+            <button class="btn btn-dark">Previous page</button>
+        </a>
     {% else %}
-    <a href="{% url 'profile_user_posts' %}"><button class="btn btn-dark">Previous page</button></a>
+        <a href="{% url 'profile_user_posts' %}">
+            <button class="btn btn-dark">Previous page</button>
+        </a>
     {% endif %}
 
     {% if id %}
@@ -14,16 +18,13 @@
         <h1>Add post</h1>
     {% endif %}
 
-    <form action="" method="post">
-
+    <form action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
-
         {% if id %}
-            <button class="btn btn-success">Edit post</button>
+            <button class="btn btn-success">Edit</button>
         {% else %}
-            <button class="btn btn-success">Add post</button>
+            <button class="btn btn-success">Add</button>
         {% endif %}
-
     </form>
 {% endblock %}
