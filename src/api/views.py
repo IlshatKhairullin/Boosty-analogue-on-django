@@ -40,7 +40,7 @@ def posts_view(request):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    posts = Post.objects.optimize_for_post_info()
+    posts = Post.objects.all()
     serializer = PostSerializer(posts, many=True)  # many = True, тк постов много
     return Response(serializer.data)
 

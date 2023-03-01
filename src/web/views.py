@@ -86,7 +86,7 @@ class PostListView(ListView):
     slug_url_kwarg = "id"
 
     def get_queryset(self):
-        queryset = Post.objects.filter(status=Status.published).optimize_for_post_info()
+        queryset = Post.objects.filter(status=Status.published)
 
         if "popularity_post" in self.request.GET:
             queryset = queryset.order_by("-total_views")
