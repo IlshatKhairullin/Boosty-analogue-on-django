@@ -7,6 +7,12 @@ from web.models import User
 class Command(BaseCommand):
     def handle(self, *args, **options):
         password = "123"
-        user = User(is_staff=True, is_superuser=True, username=123, password=make_password(password))
+        user = User(
+            is_staff=True,
+            is_superuser=True,
+            username=123,
+            password=make_password(password),
+            email="ilshat1941@yandex.ru",
+        )
         user.save()
         print(f"superuser created, username - {user.username}, password - {user.password}")
