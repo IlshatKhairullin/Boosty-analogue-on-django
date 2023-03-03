@@ -1,8 +1,9 @@
+from django.shortcuts import get_object_or_404
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, action
 from rest_framework import generics, viewsets
 from rest_framework import status
 
@@ -84,3 +85,14 @@ class NoteViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         author = self.request.user
         return Note.objects.select_related("author").filter(author=author)
+
+    @action(methods=["get"], detail=False, description="note_titles")
+    def titles(self, request):
+        titles = Note.objects.values_list("title", flat=True).exclude(title__exact="")
+        # flat - false, значит будут кортежи, exclude - SQL: select ... where NOT (условие), возвращает new queryset
+        return Response({"note_titles": [title for title in titles]})
+
+    @action(methods=["get"], detail=True, description="note_title")
+    def title(self, request, pk):
+        note = get_object_or_404(Note, id=pk)
+        return Response({"note_title": note.title})
