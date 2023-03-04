@@ -19,6 +19,7 @@ default_router.register(r"notes", NoteViewSet, basename="notes")
 # path('api/v1/userlist/', UserViewSet.as_view({'get': 'list'})), название в документации - viewset actions
 # path('api/v1/user/<int:pk>/', UserViewSet.as_view({'put': 'update'}))
 # viewset один, а пути разные в зависимости от http-запроса
+# также можно легко определять свои кастомные роутеры(при необходимости)
 
 schema_view = get_schema_view(
     openapi.Info(
