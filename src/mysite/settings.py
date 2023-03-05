@@ -151,7 +151,7 @@ LOGIN_URL = "/login/"
 MEDIA_ROOT = "media"
 MEDIA_URL = "media/"
 
-SITE_ID = 1
+SITE_ID = 2  # настройка, которая по таблице django_site определяет приложение(домен и имя)
 
 CAPTCHA_FONT_SIZE = 40
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://127.0.0.1:6379/0")

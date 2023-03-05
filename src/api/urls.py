@@ -1,4 +1,4 @@
-from django.urls import path, re_path
+from django.urls import path, re_path, include
 from rest_framework import routers
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
@@ -35,6 +35,7 @@ schema_view = get_schema_view(
 urlpatterns = (
     [
         path("", status_view, name="status"),
+        path("drf-auth/", include("rest_framework.urls")),
         path("posts/", posts_view, name="posts"),
         path("posts/<int:pk>/", post_view, name="post"),
         re_path("^swagger(?P<format>\.json|\.yaml)$", schema_view.without_ui(cache_timeout=0), name="schema-json"),
