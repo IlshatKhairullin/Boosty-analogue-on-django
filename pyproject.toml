@@ -24,6 +24,7 @@ pytest = "^7.2.1"
 factory-boy = "^3.2.1"
 pytest-django = "^4.5.2"
 drf-yasg = "^1.21.5"
+djoser = "^2.1.0"
 
 
 [tool.poetry.group.dev.dependencies]

@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, action
 from rest_framework import generics, viewsets
@@ -75,7 +76,8 @@ class UserViewSet(viewsets.ModelViewSet):
 class NoteViewSet(viewsets.ModelViewSet):
     pagination_class = LimitOffsetPagination
     page_size = 10
-    permission_classes = [IsAuthenticated]
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (TokenAuthentication,)  # так можно настраивать специфичную авторизацию для каждого класса
 
     def get_serializer_class(self):
         if self.action in ("create", "update", "partial_update"):
