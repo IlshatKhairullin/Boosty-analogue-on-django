@@ -37,7 +37,6 @@ urlpatterns = (
         path("", status_view, name="status"),
         path("drf-auth/", include("rest_framework.urls")),
         path("djoser-auth/", include("djoser.urls")),
-        re_path(r"^djoser-auth/", include("djoser.urls.authtoken")),
         path("posts/", posts_view, name="posts"),
         path("posts/<int:pk>/", post_view, name="post"),
         re_path("^swagger(?P<format>\.json|\.yaml)$", schema_view.without_ui(cache_timeout=0), name="schema-json"),

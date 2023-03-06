@@ -15,13 +15,14 @@ Including another URLconf
 """
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 
 from django.conf import settings
 
 urlpatterns = [
     path("", include("allauth.urls")),
     path("api/v1/", include("api.urls")),
+    re_path(r"^djoser-auth/", include("djoser.urls.authtoken")),
     path("admin/", admin.site.urls),
     path("captcha/", include("captcha.urls")),
     path("", include("web.urls")),
