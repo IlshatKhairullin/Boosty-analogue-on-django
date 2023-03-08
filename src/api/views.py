@@ -77,7 +77,8 @@ class NoteViewSet(viewsets.ModelViewSet):
     pagination_class = LimitOffsetPagination
     page_size = 10
     permission_classes = (IsAuthenticated,)
-    authentication_classes = (TokenAuthentication,)  # так можно настраивать специфичную авторизацию для каждого класса
+    # authentication_classes = (TokenAuthentication,)  # так можно настраивать специфичную авторизацию для каждого класса
+    # закомментировать верхнюю строку для работы с jwt авторизацией, раскомментировать - токены с djoser
 
     def get_serializer_class(self):
         if self.action in ("create", "update", "partial_update"):
