@@ -46,7 +46,7 @@ class Register(View):
             user = authenticate(username=username, password=password)
             login(request, user)
             messages.success(request, "Вы успешно зарегистрировались")
-            return redirect("")
+            return redirect("post_list")
 
         context = {"form": form}
         return render(request, self.template_name, context)
