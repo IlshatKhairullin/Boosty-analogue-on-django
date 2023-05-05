@@ -39,12 +39,14 @@ class PostSerializer(serializers.ModelSerializer):
 
 
 class NoteEditorSerializer(serializers.ModelSerializer):
-    body = serializers.CharField(write_only=True)
+    def validate(self, attrs):
+        attrs["author_id"] = self.context["request"].user.id
+        return attrs
 
     class Meta:
         model = Note
-        fields = ("id", "body")
-        read_only_fields = ("title",)
+        fields = ("body", "title")
+        # read_only_fields = ("id",) - вот так еще можно указывать read-only филды
 
 
 class NoteSerializer(serializers.ModelSerializer):

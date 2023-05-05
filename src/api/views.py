@@ -1,8 +1,10 @@
+from django.shortcuts import get_object_or_404
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, action
 from rest_framework import generics, viewsets
 from rest_framework import status
 
@@ -40,7 +42,7 @@ def posts_view(request):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    posts = Post.objects.optimize_for_post_info()
+    posts = Post.objects.all()
     serializer = PostSerializer(posts, many=True)  # many = True, тк постов много
     return Response(serializer.data)
 
@@ -74,7 +76,9 @@ class UserViewSet(viewsets.ModelViewSet):
 class NoteViewSet(viewsets.ModelViewSet):
     pagination_class = LimitOffsetPagination
     page_size = 10
-    permission_classes = [IsAuthenticated]
+    permission_classes = (IsAuthenticated,)
+    # authentication_classes = (TokenAuthentication,)  # так можно настраивать специфичную авторизацию для каждого класса
+    # закомментировать верхнюю строку для работы с jwt авторизацией, раскомментировать - токены с djoser
 
     def get_serializer_class(self):
         if self.action in ("create", "update", "partial_update"):
@@ -84,3 +88,14 @@ class NoteViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         author = self.request.user
         return Note.objects.select_related("author").filter(author=author)
+
+    @action(methods=["get"], detail=False, description="note_titles")
+    def titles(self, request):
+        titles = Note.objects.values_list("title", flat=True).exclude(title__exact="")
+        # flat - false, значит будут кортежи, exclude - SQL: select ... where NOT (условие), возвращает new queryset
+        return Response({"note_titles": [title for title in titles]})
+
+    @action(methods=["get"], detail=True, description="note_title")
+    def title(self, request, pk):
+        note = get_object_or_404(Note, id=pk)
+        return Response({"note_title": note.title})

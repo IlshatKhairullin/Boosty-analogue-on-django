@@ -26,6 +26,11 @@ services:
     environment:
       DB_HOST: postgres
       DEBUG: "true"
+      SECRET_KEY: django-insecure-xcf&1fa0qdlb#&)bxp)3bqe^*c3=qgqo+84^dl*48zb=jkcpd(
+      EMAIL_HOST: smtp.yandex.ru
+      EMAIL_HOST_USER: testdjangoo@yandex.ru
+      EMAIL_HOST_PASSWORD: fskiyyptdffmuibs
+      EMAIL_PORT: 465
     restart: always
     volumes:
       - media:/app/media/

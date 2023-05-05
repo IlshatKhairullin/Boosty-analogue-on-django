@@ -40,14 +40,13 @@ class Register(View):
         form = RegisterUserForm(request.POST)
 
         if form.is_valid():
-            human = True
             form.save()
             username = form.cleaned_data.get("username")
             password = form.cleaned_data.get("password1")
             user = authenticate(username=username, password=password)
             login(request, user)
             messages.success(request, "Вы успешно зарегистрировались")
-            return redirect("/home")
+            return redirect("post_list")
 
         context = {"form": form}
         return render(request, self.template_name, context)
@@ -86,7 +85,7 @@ class PostListView(ListView):
     slug_url_kwarg = "id"
 
     def get_queryset(self):
-        queryset = Post.objects.filter(status=Status.published).optimize_for_post_info()
+        queryset = Post.objects.filter(status=Status.published)
 
         if "popularity_post" in self.request.GET:
             queryset = queryset.order_by("-total_views")

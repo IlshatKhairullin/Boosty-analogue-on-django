@@ -15,13 +15,19 @@ Including another URLconf
 """
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 
 from django.conf import settings
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
     path("", include("allauth.urls")),
     path("api/v1/", include("api.urls")),
+    re_path(r"^djoser-auth/", include("djoser.urls.authtoken")),  # auth via djoser tokens
+    path(
+        "api/v1/jwt-auth/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"
+    ),  # jwt auth via drf simple jwt
+    path("api/v1/jwt-auth/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("admin/", admin.site.urls),
     path("captcha/", include("captcha.urls")),
     path("", include("web.urls")),
