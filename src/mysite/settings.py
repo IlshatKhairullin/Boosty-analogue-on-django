@@ -96,9 +96,9 @@ WSGI_APPLICATION = "mysite.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ.get("DB_NAME", "boosty_analogue"),
-        "USER": os.environ.get("DB_USER", "postgres1"),
-        "PASSWORD": os.environ.get("DB_PASSWORD", "23099999"),
+        "NAME": os.environ.get("POSTGRES_DB", "boosty_analogue"),
+        "USER": os.environ.get("POSTGRES_USER", "postgres1"),
+        "PASSWORD": os.environ.get("POSTGRES_PASSWORD", "23099999"),
         "HOST": os.environ.get("DB_HOST", "localhost"),
         "PORT": int(os.environ.get("DB_PORT", 5432)),
     }
