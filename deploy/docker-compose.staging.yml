@@ -24,6 +24,9 @@ services:
     depends_on:
       - postgres
     environment:
+      POSTGRES_DB: boosty_analogue
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 230999
       DB_HOST: postgres
       DEBUG: "true"
       SECRET_KEY: django-insecure-xcf&1fa0qdlb#&)bxp)3bqe^*c3=qgqo+84^dl*48zb=jkcpd(
