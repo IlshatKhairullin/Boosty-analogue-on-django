@@ -1,0 +1,13 @@
+image: bikabu/docker:latest
+
+deploy_prod:
+  stage: deploy
+  script:
+    - docker-compose -f deploy/docker-compose.staging.yml -p bikabu build app
+    - docker-compose -f deploy/docker-compose.staging.yml -p bikabu build nginx
+    - docker-compose --file deploy/docker-compose.staging.yml -p bikabu up
+        --build --force-recreate --detach
+  tags:
+    - saas-linux-large-amd64
+  only:
+    - main
